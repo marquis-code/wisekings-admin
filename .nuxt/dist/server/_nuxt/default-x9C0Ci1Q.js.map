@@ -1,0 +1,1 @@
+{"version":3,"file":"default-x9C0Ci1Q.js","sources":["../../../../layouts/default.vue"],"sourcesContent":["<template>\n  <div class=\"min-h-screen bg-dark-950\">\n    <slot />\n  </div>\n</template>\n"],"names":["_ssrRenderAttrs","_mergeProps"],"mappings":";;;;;;;;;;;;;;;;;;;;;AACO,QAAA,OAAAA,eAAAC,WAAA,EAAA,OAAM,8BAA0B,MAAA,CAAA,CAAA,GAAA;;;;;;;;;;;"}

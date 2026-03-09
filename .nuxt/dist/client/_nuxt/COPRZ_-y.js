@@ -1,0 +1,1 @@
+import{_ as s,o as t,c,M as o}from"./CviBs5XW.js";const r={},n={class:"min-h-screen bg-dark-950"};function a(e,_){return t(),c("div",n,[o(e.$slots,"default")])}const l=s(r,[["render",a]]);export{l as default};

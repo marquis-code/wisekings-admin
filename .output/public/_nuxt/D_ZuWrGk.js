@@ -1,0 +1,1 @@
+import{g as s}from"./CviBs5XW.js";function d(){const{$api:t}=s();return{findAll(r){return t("/orders",{params:r})},findById(r){return t(`/orders/${r}`)},getStats(){return t("/orders/stats")},updateStatus(r,e){return t(`/orders/${r}/status`,{method:"PATCH",body:{status:e}})}}}export{d as u};
