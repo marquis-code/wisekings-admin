@@ -1,1 +1,0 @@
-import{g as n}from"./CviBs5XW.js";function s(){const{$api:e}=n();return{findAll(r){return e("/partners",{params:r})},findById(r){return e(`/partners/${r}`)},update(r,t){return e(`/partners/${r}`,{method:"PUT",body:t})},approve(r){return e(`/partners/${r}/approve`,{method:"PATCH"})},suspend(r,t){return e(`/partners/${r}/suspend`,{method:"PATCH",body:{reason:t}})}}}export{s as u};

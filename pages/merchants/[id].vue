@@ -2,163 +2,547 @@
   <div>
     <definePageMeta :layout="'dashboard'" />
 
-    <div class="flex items-center gap-3 mb-6">
-      <NuxtLink to="/merchants" class="btn-ghost btn-sm">
-        <Icon name="lucide:arrow-left" class="w-4 h-4" />
-      </NuxtLink>
-      <h1 class="text-2xl font-bold text-white">Merchant Details</h1>
-    </div>
-
-    <div v-if="loading" class="text-center py-20 text-dark-400">
-      <Icon name="lucide:loader-2" class="w-8 h-8 animate-spin mx-auto" />
-    </div>
-
-    <div v-else-if="merchant" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Profile -->
-      <div class="card lg:col-span-1">
-        <div class="text-center">
-          <div class="w-20 h-20 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">
-            {{ merchant.fullName?.[0] || '?' }}
-          </div>
-          <h2 class="text-xl font-bold text-white">{{ merchant.fullName }}</h2>
-          <p class="text-dark-400 text-sm">{{ merchant.email }}</p>
-          <code class="text-xs bg-dark-800 px-2 py-0.5 rounded mt-2 inline-block">{{ merchant.merchantCode }}</code>
-          <div class="mt-3">
-            <span :class="merchant.status === 'active' ? 'badge-success' : merchant.status === 'suspended' ? 'badge-danger' : 'badge-warning'">
-              {{ merchant.status }}
-            </span>
-          </div>
-        </div>
-
-        <div class="mt-6 space-y-3 border-t border-dark-700 pt-4">
-          <div class="flex justify-between text-sm">
-            <span class="text-dark-400">Phone</span>
-            <span class="text-dark-200">{{ merchant.phone || '—' }}</span>
-          </div>
-          <div class="flex justify-between text-sm">
-            <span class="text-dark-400">Category</span>
-            <span class="badge-info capitalize">{{ merchant.category }}</span>
-          </div>
-          <div class="flex justify-between text-sm">
-            <span class="text-dark-400">Rank</span>
-            <span class="badge-neutral capitalize">{{ merchant.rank }}</span>
-          </div>
-          <div class="flex justify-between text-sm">
-            <span class="text-dark-400">Commission</span>
-            <span class="text-dark-200">{{ merchant.commissionRate }}%</span>
-          </div>
-          <div class="flex justify-between text-sm">
-            <span class="text-dark-400">Joined</span>
-            <span class="text-dark-200">{{ new Date(merchant.createdAt).toLocaleDateString() }}</span>
-          </div>
-        </div>
-
-        <div class="mt-6 flex gap-2">
-          <button v-if="merchant.status === 'active'" @click="handleSuspend" class="btn-danger btn-sm flex-1">
-            <Icon name="lucide:ban" class="w-4 h-4" /> Suspend
-          </button>
-          <button v-if="merchant.status === 'suspended'" @click="handleActivate" class="btn-primary btn-sm flex-1">
-            <Icon name="lucide:check-circle" class="w-4 h-4" /> Activate
-          </button>
-        </div>
-      </div>
-
-      <!-- Stats & Details -->
-      <div class="lg:col-span-2 space-y-6">
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-          <div class="stat-card">
-            <span class="text-dark-400 text-sm">Total Sales</span>
-            <p class="text-xl font-bold text-white">₦{{ (merchant.totalSalesValue || 0).toLocaleString() }}</p>
-          </div>
-          <div class="stat-card">
-            <span class="text-dark-400 text-sm">Monthly Sales</span>
-            <p class="text-xl font-bold text-white">₦{{ (merchant.monthlySalesValue || 0).toLocaleString() }}</p>
-          </div>
-          <div class="stat-card">
-            <span class="text-dark-400 text-sm">Orders Referred</span>
-            <p class="text-xl font-bold text-white">{{ merchant.totalOrdersReferred || 0 }}</p>
-          </div>
-        </div>
-
-        <!-- Referral Link -->
-        <div class="card">
-          <h3 class="text-lg font-semibold text-white mb-3">Referral Link</h3>
-          <div class="flex items-center gap-2">
-            <input :value="merchant.referralLink" readonly class="input flex-1" />
-            <button @click="copyLink" class="btn-secondary btn-sm">
-              <Icon name="lucide:copy" class="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-
-        <!-- Bank Details -->
-        <div v-if="merchant.bankAccountDetails" class="card">
-          <h3 class="text-lg font-semibold text-white mb-3">Bank Details</h3>
-          <div class="space-y-2 text-sm">
-            <div class="flex justify-between">
-              <span class="text-dark-400">Bank</span>
-              <span class="text-dark-200">{{ merchant.bankAccountDetails.bankName }}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-dark-400">Account Name</span>
-              <span class="text-dark-200">{{ merchant.bankAccountDetails.accountName }}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-dark-400">Account Number</span>
-              <span class="text-dark-200">{{ merchant.bankAccountDetails.accountNumber }}</span>
-            </div>
+    <!-- Header & Navigation -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+      <div class="flex items-center gap-4">
+        <NuxtLink 
+          to="/merchants" 
+          class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 hover:text-gray-900 shadow-sm transition-all"
+        >
+          <Icon name="lucide:arrow-left" class="w-5 h-5" />
+        </NuxtLink>
+        <div>
+          <h1 class="text-2xl font-black text-gray-900 tracking-tight">Merchant Profile</h1>
+          <div class="flex items-center gap-2 mt-0.5">
+            <span class="text-xs text-gray-500 font-medium uppercase tracking-widest">Enterprise Merchant</span>
+            <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+            <code class="text-[10px] font-mono font-black text-[#033958] uppercase">{{ merchant?.merchantCode }}</code>
           </div>
         </div>
       </div>
+
+      <div class="flex items-center gap-3">
+        <button 
+          v-if="merchant?.status === 'suspended'" 
+          @click="handleActivate" 
+          class="h-11 px-6 flex items-center justify-center gap-2 rounded-xl bg-emerald-600 text-white font-black text-xs uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-600/20"
+        >
+          <Icon name="lucide:check-circle" class="w-4 h-4" /> Activate Account
+        </button>
+        <button 
+          v-if="merchant?.status === 'active'" 
+          @click="handleSuspend" 
+          class="h-11 px-6 flex items-center justify-center gap-2 rounded-xl bg-rose-50 text-rose-600 font-black text-xs uppercase tracking-widest hover:bg-rose-600 hover:text-white transition-all shadow-sm"
+        >
+          <Icon name="lucide:ban" class="w-4 h-4" /> Suspend
+        </button>
+      </div>
     </div>
+
+    <div v-if="loading" class="flex flex-col items-center justify-center py-24 bg-white rounded-[2.5rem] border border-gray-100 shadow-sm">
+      <Icon name="lucide:loader-2" class="w-10 h-10 animate-spin text-[#033958]/20" />
+      <p class="mt-4 text-sm font-bold text-gray-400">Loading merchant profile...</p>
+    </div>
+
+    <template v-else-if="merchant">
+      <!-- Tab Navigation -->
+      <div class="flex items-center gap-2 mb-8 bg-white p-1.5 rounded-2xl border border-gray-100 shadow-sm w-fit">
+        <button 
+          v-for="tab in tabs" 
+          :key="tab.id"
+          @click="activeTab = tab.id"
+          :class="[
+            'px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 flex items-center gap-2',
+            activeTab === tab.id 
+              ? 'bg-[#033958] text-white shadow-lg shadow-[#033958]/20' 
+              : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
+          ]"
+        >
+          <Icon :name="tab.icon" class="w-4 h-4" />
+          {{ tab.name }}
+          <span v-if="tab.id === 'kyc' && pendingKycCount > 0" class="flex h-2 w-2 rounded-full bg-amber-500 animate-pulse"></span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Main Content Area -->
+        <div class="lg:col-span-8">
+          <TransitionGroup name="fade" mode="out-in">
+            <!-- Overview Tab -->
+            <div v-if="activeTab === 'overview'" key="overview" class="space-y-8">
+              <!-- Stats Cards -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm relative overflow-hidden group">
+                  <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Total Sales</span>
+                  <div class="flex items-baseline gap-1">
+                    <span class="text-sm font-black text-gray-400">₦</span>
+                    <p class="text-3xl font-black text-gray-900 tracking-tight leading-none">
+                      {{ (merchant.totalSalesValue || 0).toLocaleString() }}
+                    </p>
+                  </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm relative overflow-hidden group">
+                  <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Monthly Sales</span>
+                  <div class="flex items-baseline gap-1">
+                    <span class="text-sm font-black text-gray-400">₦</span>
+                    <p class="text-3xl font-black text-emerald-600 tracking-tight leading-none">
+                      {{ (merchant.monthlySalesValue || 0).toLocaleString() }}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm relative overflow-hidden group">
+                  <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Orders</span>
+                  <p class="text-3xl font-black text-[#033958] tracking-tight leading-none">
+                    {{ merchant.totalOrdersReferred || 0 }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Referral Link -->
+              <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
+                <div class="flex items-center justify-between mb-6">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600">
+                      <Icon name="lucide:link" class="w-5 h-5" />
+                    </div>
+                    <h3 class="text-lg font-black text-gray-900 tracking-tight">Referral Link</h3>
+                  </div>
+                  <button @click="copyLink" class="px-5 py-2.5 bg-[#033958] text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-lg shadow-[#033958]/10">
+                    Copy Link
+                  </button>
+                </div>
+                <div class="relative">
+                  <input 
+                    :value="merchant.referralLink" 
+                    readonly 
+                    class="w-full bg-gray-50 border-gray-100 rounded-2xl px-6 py-4 text-sm font-bold text-gray-600 pr-12 focus:ring-0" 
+                  />
+                </div>
+              </div>
+
+              <!-- Merchant Details -->
+              <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
+                <h3 class="text-lg font-black text-gray-900 tracking-tight mb-8">Business Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12">
+                  <div class="space-y-4">
+                    <div class="flex flex-col">
+                      <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Full Name</span>
+                      <span class="text-base font-bold text-gray-800">{{ merchant.fullName }}</span>
+                    </div>
+                    <div class="flex flex-col">
+                      <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Email Address</span>
+                      <span class="text-base font-bold text-gray-800">{{ merchant.email }}</span>
+                    </div>
+                  </div>
+                  <div class="space-y-4">
+                    <div class="flex flex-col">
+                      <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Phone Number</span>
+                      <span class="text-base font-bold text-gray-800">{{ merchant.phone || '—' }}</span>
+                    </div>
+                    <div class="flex flex-col">
+                      <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Merchant Rank</span>
+                      <span class="text-base font-bold text-gray-800">{{ merchant.rank }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- KYC Documents Tab -->
+            <div v-else-if="activeTab === 'kyc'" key="kyc" class="space-y-6">
+              <div class="flex items-center justify-between mb-2">
+                <div>
+                  <h3 class="text-xl font-black text-gray-900 tracking-tight">KYC Verification</h3>
+                  <p class="text-gray-500 text-sm font-medium">Review and verify submitted merchant documents.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="px-3 py-1.5 bg-amber-50 text-amber-600 rounded-xl text-[10px] font-black uppercase tracking-widest border border-amber-100">
+                    {{ pendingKycCount }} Pending
+                  </div>
+                </div>
+              </div>
+
+              <div v-if="!merchant.kyc?.documents?.length" class="bg-white rounded-[2.5rem] p-12 border border-dashed border-gray-200 flex flex-col items-center text-center">
+                <div class="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-300 mb-4">
+                  <Icon name="lucide:file-question" class="w-8 h-8" />
+                </div>
+                <h4 class="text-lg font-black text-gray-900">No Documents Found</h4>
+                <p class="text-gray-500 text-sm font-medium mt-1">This merchant has not been assigned any KYC requirements yet.</p>
+              </div>
+
+              <div v-else class="grid grid-cols-1 gap-4">
+                <div 
+                  v-for="doc in merchant.kyc.documents" 
+                  :key="doc._id"
+                  class="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row md:items-center gap-6"
+                >
+                  <div class="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-[#033958] shrink-0">
+                    <Icon :name="getDocIcon(doc.documentType)" class="w-6 h-6" />
+                  </div>
+                  
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1">
+                      <h4 class="font-black text-gray-900 truncate">{{ doc.documentLabel }}</h4>
+                      <span v-if="doc.isRequired" class="px-2 py-0.5 bg-red-50 text-red-600 text-[8px] font-black uppercase tracking-widest rounded-md border border-red-100 shrink-0">Required</span>
+                    </div>
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                      <span v-if="doc.idNumber">ID: <span class="text-gray-700 tracking-normal">{{ doc.idNumber }}</span></span>
+                      <span v-if="doc.submittedAt" class="flex items-center gap-1">
+                        <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+                        Submitted {{ formatDate(doc.submittedAt) }}
+                      </span>
+                    </p>
+                  </div>
+
+                  <div class="flex items-center gap-4">
+                    <div class="text-right">
+                      <span :class="[
+                        'px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest border',
+                        getBadgeClasses(doc.status)
+                      ]">
+                        {{ doc.status }}
+                      </span>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                      <button 
+                        v-if="doc.documentUrl" 
+                        @click="openDocPreview(doc)"
+                        class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 text-gray-400 hover:text-[#033958] hover:bg-gray-100 transition-all"
+                        title="View Document"
+                      >
+                        <Icon name="lucide:eye" class="w-5 h-5" />
+                      </button>
+                      
+                      <template v-if="doc.status === 'pending'">
+                        <button 
+                          @click="updateDocStatus(doc, 'approved')"
+                          class="w-10 h-10 flex items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
+                          title="Approve"
+                        >
+                          <Icon name="lucide:check" class="w-5 h-5" />
+                        </button>
+                        <button 
+                          @click="updateDocStatus(doc, 'rejected')"
+                          class="w-10 h-10 flex items-center justify-center rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition-all shadow-sm"
+                          title="Reject"
+                        >
+                          <Icon name="lucide:x" class="w-5 h-5" />
+                        </button>
+                      </template>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Activity Tab -->
+            <div v-else-if="activeTab === 'activity'" key="activity" class="space-y-6">
+              <div class="bg-white rounded-[2.5rem] p-12 border border-dashed border-gray-200 flex flex-col items-center text-center">
+                <div class="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-300 mb-4">
+                  <Icon name="lucide:activity" class="w-8 h-8" />
+                </div>
+                <h4 class="text-lg font-black text-gray-900">Activity Logs</h4>
+                <p class="text-gray-500 text-sm font-medium mt-1">Detailed marketing activity and referral logs will be visible here.</p>
+              </div>
+            </div>
+
+            <!-- Settlement Tab -->
+            <div v-else-if="activeTab === 'settlement'" key="settlement" class="space-y-8">
+              <div v-if="merchant.bankAccountDetails" class="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-4 mb-10">
+                  <div class="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 border border-emerald-100">
+                    <Icon name="lucide:landmark" class="w-7 h-7" />
+                  </div>
+                  <div>
+                    <h3 class="text-xl font-black text-gray-900 tracking-tight">Payout Details</h3>
+                    <p class="text-gray-500 text-sm font-medium uppercase tracking-widest mt-0.5">Configured Settlement Method</p>
+                  </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                  <div class="p-8 bg-gray-100 rounded-[2rem] flex flex-col justify-center">
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Bank Institution</p>
+                    <p class="text-2xl font-black text-[#033958] leading-tight">
+                      {{ merchant.bankAccountDetails.bankName }}
+                    </p>
+                  </div>
+
+                  <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-2xl border border-gray-50">
+                      <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Account Name</p>
+                      <p class="text-lg font-bold text-gray-900 italic tracking-tight">{{ merchant.bankAccountDetails.accountName }}</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-50">
+                      <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Account Number</p>
+                      <p class="text-2xl font-black text-indigo-600 tracking-[0.2em] font-mono">{{ merchant.bankAccountDetails.accountNumber }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div v-else class="bg-white rounded-[2.5rem] p-12 border border-dashed border-gray-200 flex flex-col items-center text-center">
+                <div class="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-300 mb-4">
+                  <Icon name="lucide:credit-card" class="w-8 h-8" />
+                </div>
+                <h4 class="text-lg font-black text-gray-900">No Settlement Link</h4>
+                <p class="text-gray-500 text-sm font-medium mt-1">This merchant has not added their payout account yet.</p>
+              </div>
+            </div>
+          </TransitionGroup>
+        </div>
+
+        <!-- Sidebar Column -->
+        <div class="lg:col-span-4 space-y-6">
+          <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
+            <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-6 border-b border-gray-50 pb-4">Merchant Status</h4>
+            
+            <div class="space-y-6">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gray-500">Account status</span>
+                <span :class="[
+                  'px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest border',
+                  merchant.status === 'active' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 
+                  merchant.status === 'suspended' ? 'bg-red-50 text-red-600 border-red-100' : 
+                  'bg-amber-50 text-amber-600 border-amber-100'
+                ]">
+                  {{ merchant.status }}
+                </span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gray-500">KYC Status</span>
+                <span :class="[
+                  'px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest border',
+                  overallKycStatus === 'approved' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 
+                  overallKycStatus === 'pending' ? 'bg-amber-50 text-amber-600 border-amber-100' : 
+                  'bg-gray-50 text-gray-400 border-gray-100'
+                ]">
+                  {{ overallKycStatus }}
+                </span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gray-500">Level/Category</span>
+                <span class="px-2.5 py-1 bg-blue-50 text-blue-700 text-[10px] font-black rounded-lg border border-blue-100 uppercase tracking-widest">
+                  {{ merchant.category }}
+                </span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gray-500">Commission Rate</span>
+                <span class="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs font-black rounded-lg border border-indigo-100">
+                  {{ merchant.commissionRate }}%
+                </span>
+              </div>
+            </div>
+
+            <div v-if="merchant.status === 'suspended' && merchant.suspensionReason" class="mt-8 p-4 bg-red-50 rounded-2xl border border-red-100">
+              <p class="text-[10px] font-black text-red-600 uppercase tracking-widest mb-1">Suspension Reason</p>
+              <p class="text-sm font-medium text-red-700">{{ merchant.suspensionReason }}</p>
+            </div>
+          </div>
+
+          <div class="bg-[#033958] rounded-[2.5rem] p-8 shadow-xl shadow-[#033958]/20 relative overflow-hidden text-white">
+            <Icon name="lucide:shield" class="absolute right-[-10%] top-[-10%] w-32 h-32 opacity-10" />
+            <h4 class="text-sm font-black uppercase tracking-[0.2em] mb-2 opacity-60">Audit Info</h4>
+            <div class="space-y-6 mt-8 relative z-10">
+              <div>
+                <p class="text-[10px] font-black uppercase tracking-widest opacity-40 mb-1">Joined WiseKings On</p>
+                <p class="text-base font-bold">{{ formatDate(merchant.createdAt) }}</p>
+              </div>
+              <div>
+                <p class="text-[10px] font-black uppercase tracking-widest opacity-40 mb-1">Record Last Updated</p>
+                <p class="text-base font-bold">{{ formatDate(merchant.updatedAt) }}</p>
+              </div>
+              <div class="pt-4 flex items-center gap-3">
+                <div class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400"></div>
+                <p class="text-[10px] font-black uppercase tracking-widest">Data synchronized</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- KYC Document Modal -->
+    <CoreKycDocumentModal 
+      :show="showDocModal" 
+      :document="selectedDoc" 
+      @close="showDocModal = false"
+      @approve="handleModalApprove"
+      @reject="handleModalReject"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Merchant } from '~/types'
+import { ref, computed, onMounted } from 'vue'
+import { merchants_api } from '@/api_factory/modules/merchants'
+import { useCustomToast } from '@/composables/core/useCustomToast'
+import { useConfirm } from '@/composables/core/useConfirm'
 
 definePageMeta({ layout: 'dashboard' })
 
 const route = useRoute()
-const api = useMerchantsApi()
-const toast = useToast()
+const { showToast } = useCustomToast()
+const { openConfirm } = useConfirm()
 
-const merchant = ref<Merchant | null>(null)
+const merchant = ref<any>(null)
 const loading = ref(true)
+const activeTab = ref('overview')
+
+// Modal State
+const showDocModal = ref(false)
+const selectedDoc = ref<any>(null)
+
+function openDocPreview(doc: any) {
+  selectedDoc.value = doc
+  showDocModal.value = true
+}
+
+async function handleModalApprove(doc: any) {
+  showDocModal.value = false
+  await updateDocStatus(doc, 'approved')
+}
+
+async function handleModalReject(doc: any) {
+  showDocModal.value = false
+  await updateDocStatus(doc, 'rejected')
+}
+
+const tabs = [
+  { id: 'overview', name: 'Overview', icon: 'lucide:layout-grid' },
+  { id: 'kyc', name: 'KYC Documents', icon: 'lucide:shield-check' },
+  { id: 'activity', name: 'Activity', icon: 'lucide:activity' },
+  { id: 'settlement', name: 'Settlement', icon: 'lucide:landmark' }
+]
+
+const pendingKycCount = computed(() => {
+  if (!merchant.value?.kyc?.documents) return 0
+  return merchant.value.kyc.documents.filter((d: any) => d.status === 'pending').length
+})
+
+const overallKycStatus = computed(() => {
+  if (!merchant.value?.kyc?.documents?.length) return 'not_submitted'
+  const docs = merchant.value.kyc.documents
+  if (docs.every((d: any) => d.status === 'approved')) return 'approved'
+  if (docs.some((d: any) => d.status === 'pending')) return 'pending'
+  if (docs.some((d: any) => d.status === 'rejected')) return 'rejected'
+  return 'not_submitted'
+})
 
 async function fetchMerchant() {
   loading.value = true
   try {
-    const res = await api.findById(route.params.id as string)
-    merchant.value = res as any
-  } catch { toast.error('Failed to load merchant') }
-  finally { loading.value = false }
+    const res = await merchants_api.getById(route.params.id as string)
+    merchant.value = res.data || res
+  } catch (err: any) {
+    showToast({ title: 'Error', message: 'Merchant not found', toastType: 'error' })
+  } finally {
+    loading.value = false
+  }
 }
 
 async function handleSuspend() {
-  const reason = prompt('Reason for suspension:')
-  if (!reason) return
-  try {
-    await api.suspend(merchant.value!._id, reason)
-    toast.success('Merchant suspended')
-    fetchMerchant()
-  } catch { toast.error('Failed to suspend') }
+  if (await openConfirm({
+    title: 'Suspend Merchant',
+    message: 'Are you sure you want to suspend this merchant account?',
+    confirmText: 'Suspend',
+    confirmClass: 'bg-rose-600 text-white shadow-rose-600/20',
+    icon: 'lucide:ban'
+  })) {
+    const reason = prompt('Reason for suspension:')
+    if (!reason) return
+    try {
+      await merchants_api.suspend(merchant.value!._id, { reason })
+      showToast({ title: 'Suspended', message: 'Merchant suspended', toastType: 'warning' })
+      fetchMerchant()
+    } catch { showToast({ title: 'Error', message: 'Failed to suspend', toastType: 'error' }) }
+  }
 }
 
 async function handleActivate() {
-  try {
-    await api.activate(merchant.value!._id)
-    toast.success('Merchant activated')
-    fetchMerchant()
-  } catch { toast.error('Failed to activate') }
+  if (await openConfirm({
+    title: 'Activate Merchant',
+    message: 'Are you sure you want to activate this merchant?',
+    confirmText: 'Activate',
+    confirmClass: 'bg-emerald-600 text-white shadow-emerald-600/20',
+    icon: 'lucide:user-check'
+  })) {
+    try {
+      await merchants_api.activate(merchant.value!._id)
+      showToast({ title: 'Success', message: 'Merchant activated', toastType: 'success' })
+      fetchMerchant()
+    } catch { showToast({ title: 'Error', message: 'Failed to activate', toastType: 'error' }) }
+  }
+}
+
+async function updateDocStatus(doc: any, status: 'approved' | 'rejected') {
+  let reason = ''
+  if (status === 'rejected') {
+    reason = prompt('Reason for rejection:') || ''
+    if (!reason) return
+  }
+
+  const title = status === 'approved' ? 'Approve Document' : 'Reject Document'
+  const message = `Are you sure you want to ${status} "${doc.documentLabel}"?`
+  
+  if (await openConfirm({
+    title,
+    message,
+    confirmText: status.charAt(0).toUpperCase() + status.slice(1),
+    confirmClass: status === 'approved' ? 'bg-emerald-600 text-white shadow-emerald-600/20' : 'bg-rose-600 text-white shadow-rose-600/20',
+    icon: status === 'approved' ? 'lucide:check-circle' : 'lucide:alert-circle'
+  })) {
+    try {
+      await merchants_api.updateKycDocumentStatus(merchant.value._id, {
+        documentType: doc.documentType,
+        status,
+        reason: reason || undefined
+      })
+      showToast({ title: 'Success', message: `Document ${status} successfully`, toastType: 'success' })
+      fetchMerchant()
+    } catch (err: any) {
+      showToast({ title: 'Error', message: err.message || 'Failed to update status', toastType: 'error' })
+    }
+  }
 }
 
 function copyLink() {
   if (merchant.value?.referralLink) {
     navigator.clipboard.writeText(merchant.value.referralLink)
-    toast.success('Copied to clipboard')
+    showToast({ title: 'Copied', message: 'Link copied to clipboard', toastType: 'success' })
   }
+}
+
+function getDocIcon(type: string) {
+  if (type.includes('id') || type.includes('passport') || type.includes('license') || type.includes('pvc')) return 'lucide:id-card'
+  if (type.includes('cac') || type.includes('cert') || type.includes('tin')) return 'lucide:building-2'
+  if (type.includes('address') || type.includes('bill')) return 'lucide:home'
+  return 'lucide:file-text'
+}
+
+function getBadgeClasses(status: string) {
+  if (status === 'approved') return 'bg-emerald-50 text-emerald-600 border-emerald-100'
+  if (status === 'pending') return 'bg-amber-50 text-amber-600 border-amber-100'
+  if (status === 'rejected') return 'bg-rose-50 text-rose-600 border-rose-100'
+  return 'bg-gray-50 text-gray-400 border-gray-100'
+}
+
+function formatDate(date: any) {
+  if (!date) return 'N/A'
+  return new Date(date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
 onMounted(fetchMerchant)
 </script>
+
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+</style>

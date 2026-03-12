@@ -35,4 +35,18 @@ export const auth_api = {
     const url = "/auth/logout"
     return GATEWAY_ENDPOINT.post(url, {})
   },
+  completeInvitation: (payload: any) => {
+    const url = "/auth/complete-invitation"
+    return GATEWAY_ENDPOINT.post(url, payload)
+  },
+
+  verifyLoginOtp: (payload: { email: string; otpCode: string }) => {
+    const url = "/auth/verify-login-otp"
+    return GATEWAY_ENDPOINT.post(url, payload)
+  },
+
+  socialLogin: (payload: { idToken: string }) => {
+    const url = "/auth/social-login"
+    return GATEWAY_ENDPOINT.post(url, payload)
+  },
 }

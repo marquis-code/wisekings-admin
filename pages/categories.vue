@@ -1,48 +1,200 @@
 <template>
   <div>
     <definePageMeta :layout="'dashboard'" />
-    <div class="flex items-center justify-between mb-6">
-      <div><h1 class="text-2xl font-bold text-white">Categories</h1><p class="text-dark-400 text-sm mt-1">Manage product categories and settings</p></div>
-      <button @click="showForm = true; editingId = ''" class="btn-primary"><Icon name="lucide:plus" class="w-4 h-4" /> Add Category</button>
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Categories</h1>
+        <p class="text-gray-500 text-sm mt-1 font-medium">Manage and organize your product catalog</p>
+      </div>
+      <button 
+        @click="openAddModal" 
+        class="group btn-primary !rounded-2xl !px-6 !py-3 shadow-lg shadow-[#033958]/10 hover:shadow-[#033958]/20 transition-all duration-300"
+      >
+        <span class="flex items-center gap-2">
+          <Icon name="lucide:plus" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" /> 
+          Add Category
+        </span>
+      </button>
     </div>
 
-    <!-- Category Form Modal -->
-    <div v-if="showForm" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div class="bg-dark-850 border border-dark-700 rounded-2xl p-6 w-full max-w-md animate-slide-up">
-        <h2 class="text-lg font-semibold text-white mb-4">{{ editingId ? 'Edit' : 'New' }} Category</h2>
-        <form @submit.prevent="handleSave" class="space-y-4">
-          <div><label class="label">Name</label><input v-model="form.name" class="input" required /></div>
-          <div><label class="label">Slug</label><input v-model="form.slug" class="input" required /></div>
-          <div><label class="label">Description</label><textarea v-model="form.description" class="input min-h-[80px]" /></div>
-          <div><label class="label">Sort Order</label><input v-model.number="form.sortOrder" type="number" class="input" /></div>
-          <div class="flex items-center gap-2">
-            <input v-model="form.isActive" type="checkbox" id="catActive" class="rounded bg-dark-800 border-dark-600 text-primary-600" />
-            <label for="catActive" class="text-sm text-dark-300">Active</label>
-          </div>
-          <div class="flex gap-3">
-            <button type="submit" class="btn-primary flex-1" :disabled="saving">{{ saving ? 'Saving...' : 'Save' }}</button>
-            <button type="button" @click="showForm = false" class="btn-secondary flex-1">Cancel</button>
-          </div>
-        </form>
-      </div>
+    <!-- Categories Table -->
+    <div class="table-container bg-white shadow-sm border-gray-100 overflow-hidden !rounded-3xl">
+      <table class="data-table">
+        <thead>
+          <tr class="!bg-gray-50/50">
+            <th class="!py-5 !pl-6">Image</th>
+            <th class="!py-5">Category Name</th>
+            <th class="!py-5">Slug</th>
+            <th class="!py-5">Description</th>
+            <th class="!py-5">Sort Order</th>
+            <th class="!py-5">Status</th>
+            <th class="!py-5 !pr-6 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-if="loading">
+            <td colspan="7" class="!p-0">
+              <CoreSkeletonLoader :rows="5" avatar />
+            </td>
+          </tr>
+          <tr v-else-if="categories.length === 0">
+            <td colspan="7" class="!py-10">
+              <CoreEmptyState 
+                icon="lucide:layers" 
+                title="No categories found" 
+                description="Organize your products by creating categories for better discoverability."
+              />
+            </td>
+          </tr>
+          <tr v-for="c in categories" :key="c._id" class="group">
+            <td class="!py-4 !pl-6">
+              <div class="w-12 h-12 rounded-2xl bg-gray-50 overflow-hidden border border-gray-100 flex-shrink-0">
+                <img v-if="c.image" :src="c.image" class="w-full h-full object-cover" />
+                <div v-else class="w-full h-full flex items-center justify-center">
+                  <Icon name="lucide:image" class="w-5 h-5 text-gray-300" />
+                </div>
+              </div>
+            </td>
+            <td class="!py-4 font-bold text-gray-900">{{ c.name }}</td>
+            <td class="!py-4">
+              <span class="inline-flex px-2 py-1 rounded-lg bg-gray-100 text-gray-600 text-[10px] font-bold uppercase tracking-wider">
+                {{ c.slug }}
+              </span>
+            </td>
+            <td class="!py-4 max-w-xs truncate text-gray-500 font-medium">{{ c.description || '—' }}</td>
+            <td class="!py-4 text-center font-mono font-bold">{{ c.sortOrder }}</td>
+            <td class="!py-4">
+              <span :class="c.isActive ? 'badge-success !bg-emerald-50 !text-emerald-700 !border-emerald-100' : 'badge-danger !bg-red-50 !text-red-700 !border-red-100'">
+                {{ c.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+            <td class="!py-4 !pr-6 text-right">
+              <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <button 
+                  @click="editCategory(c)" 
+                  class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#033958] hover:text-white transition-all duration-300"
+                  title="Edit Category"
+                >
+                  <Icon name="lucide:edit" class="w-4 h-4" />
+                </button>
+                <button 
+                  @click="handleDelete(c)" 
+                  class="w-9 h-9 flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300"
+                  title="Delete Category"
+                >
+                  <Icon name="lucide:trash-2" class="w-4 h-4" />
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-    <!-- Categories List -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <div v-for="c in categories" :key="c._id" class="card-hover">
-        <div class="flex items-center justify-between mb-2">
-          <h3 class="font-semibold text-white">{{ c.name }}</h3>
-          <span :class="c.isActive ? 'badge-success' : 'badge-danger'">{{ c.isActive ? 'Active' : 'Inactive' }}</span>
+    <!-- Category Form Modal (Premium White Design) -->
+    <Teleport to="body">
+      <Transition name="modal-fade">
+        <div v-if="showForm" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <!-- Backdrop -->
+          <div class="absolute inset-0 bg-black/20 backdrop-blur-sm" @click="showForm = false"></div>
+          
+          <!-- Modal Content -->
+          <div class="relative bg-white rounded-[2.5rem] p-8 w-full max-w-2xl shadow-2xl animate-modal-in overflow-hidden border border-white">
+            <div class="relative z-10">
+              <div class="flex items-center justify-between mb-8">
+                <div>
+                  <h2 class="text-2xl font-black text-gray-900 tracking-tight">{{ editingId ? 'Update' : 'Create' }} Category</h2>
+                  <p class="text-gray-500 text-sm font-medium mt-1">Fill in the details for your product category</p>
+                </div>
+                <button 
+                  @click="showForm = false" 
+                  class="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center text-gray-400 hover:bg-gray-200 hover:text-gray-900 transition-all duration-300"
+                >
+                  <Icon name="lucide:x" class="w-6 h-6" />
+                </button>
+              </div>
+
+              <form @submit.prevent="handleSave" class="space-y-6">
+                <!-- Image Upload Section -->
+                <div class="mb-8">
+                  <ImageUpload 
+                    v-model="form.image" 
+                    label="Category Image" 
+                    folder="categories"
+                    class="!rounded-[2rem]"
+                  />
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <AnimatedInput 
+                    v-model="form.name" 
+                    label="Category Name" 
+                    required 
+                    placeholder="e.g. Snacks"
+                  />
+                  <AnimatedInput 
+                    v-model="form.slug" 
+                    label="Slug" 
+                    required 
+                    placeholder="e.g. snacks"
+                  />
+                </div>
+
+                <AnimatedInput 
+                  v-model="form.description" 
+                  label="Description" 
+                  type="textarea" 
+                  :rows="3"
+                  placeholder="Tell us a bit about this category..."
+                />
+
+                <div class="flex flex-col md:flex-row md:items-center gap-6">
+                  <div class="flex-1">
+                    <AnimatedInput 
+                      v-model.number="form.sortOrder" 
+                      label="Sort Order" 
+                      type="number" 
+                    />
+                  </div>
+                  <div class="flex items-center gap-3 px-4 py-4 bg-gray-50 rounded-2xl border border-gray-100 min-w-[200px]">
+                    <div class="relative">
+                      <input 
+                        v-model="form.isActive" 
+                        type="checkbox" 
+                        id="catActive" 
+                        class="custom-checkbox !w-6 !h-6" 
+                      />
+                    </div>
+                    <label for="catActive" class="text-sm font-bold text-gray-700 cursor-pointer select-none">Mark as Active</label>
+                  </div>
+                </div>
+
+                <div class="flex gap-4 pt-4">
+                  <button 
+                    type="submit" 
+                    class="flex-[2] btn-primary !rounded-[1.5rem] !py-4 shadow-xl shadow-[#033958]/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+                    :disabled="saving"
+                  >
+                    <Icon v-if="saving" name="lucide:loader-2" class="w-5 h-5 animate-spin mr-2" />
+                    {{ saving ? 'Processing...' : (editingId ? 'Save Changes' : 'Create Category') }}
+                  </button>
+                  <button 
+                    type="button" 
+                    @click="showForm = false" 
+                    class="flex-1 btn-secondary !rounded-[1.5rem] !py-4 hover:bg-gray-200 transition-all duration-300"
+                  >
+                    Discard
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Absolute decorative element -->
+            <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-gray-50/50 rounded-full blur-3xl -z-0"></div>
+          </div>
         </div>
-        <p class="text-dark-400 text-sm mb-3">{{ c.description || 'No description' }}</p>
-        <code class="text-xs bg-dark-800 px-2 py-0.5 rounded text-dark-300">{{ c.slug }}</code>
-        <div class="flex gap-2 mt-4">
-          <button @click="editCategory(c)" class="btn-ghost btn-sm"><Icon name="lucide:edit" class="w-3.5 h-3.5" /> Edit</button>
-          <button @click="handleDelete(c)" class="btn-ghost btn-sm text-red-400"><Icon name="lucide:trash-2" class="w-3.5 h-3.5" /> Delete</button>
-        </div>
-      </div>
-      <div v-if="categories.length === 0" class="col-span-full text-center py-12 text-dark-400">No categories yet</div>
-    </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 
@@ -51,20 +203,32 @@ import type { Category } from '~/types'
 import { useFetchCategories } from '@/composables/modules/products/useFetchCategories'
 import { useSaveCategory } from '@/composables/modules/products/useSaveCategory'
 import { useDeleteCategory } from '@/composables/modules/products/useDeleteCategory'
+import { useConfirm } from '@/composables/core/useConfirm'
+import AnimatedInput from '@/components/core/AnimatedInput.vue'
+import ImageUpload from '@/components/core/ImageUpload.vue'
 
 definePageMeta({ layout: 'dashboard' })
 
 const { categories, loading, fetchCategories } = useFetchCategories()
 const { saveCategory: saveAction, loading: saving } = useSaveCategory()
 const { deleteCategory: deleteAction } = useDeleteCategory()
+const { confirmDelete } = useConfirm()
 
 const showForm = ref(false)
 const editingId = ref('')
-const form = ref({ name: '', slug: '', description: '', sortOrder: 0, isActive: true })
+const form = ref({ name: '', slug: '', description: '', image: '', sortOrder: 0, isActive: true })
 
 watch(() => form.value.name, (n) => {
-  if (!editingId.value) form.value.slug = n.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+  if (!editingId.value) {
+    form.value.slug = n.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+  }
 })
+
+function openAddModal() {
+  editingId.value = ''
+  form.value = { name: '', slug: '', description: '', image: '', sortOrder: 0, isActive: true }
+  showForm.value = true
+}
 
 function editCategory(c: Category) {
   editingId.value = c._id
@@ -72,6 +236,7 @@ function editCategory(c: Category) {
     name: c.name,
     slug: c.slug,
     description: c.description || '',
+    image: c.image || '',
     sortOrder: c.sortOrder,
     isActive: c.isActive
   })
@@ -82,13 +247,12 @@ async function handleSave() {
   const success = await saveAction(form.value, editingId.value)
   if (success) {
     showForm.value = false
-    form.value = { name: '', slug: '', description: '', sortOrder: 0, isActive: true }
     fetchCategories()
   }
 }
 
 async function handleDelete(c: Category) {
-  if (confirm(`Delete "${c.name}"?`)) {
+  if (await confirmDelete('Delete Category', `Are you sure you want to delete "${c.name}"? This action cannot be undone.`)) {
     const success = await deleteAction(c._id)
     if (success) fetchCategories()
   }
@@ -96,3 +260,38 @@ async function handleDelete(c: Category) {
 
 onMounted(() => fetchCategories())
 </script>
+
+<style scoped>
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.4s ease;
+}
+
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+}
+
+.animate-modal-in {
+  animation: modalIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.badge-success {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-bold border;
+}
+
+.badge-danger {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-bold border;
+}
+</style>

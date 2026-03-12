@@ -1,26 +1,102 @@
 <template>
   <div>
     <definePageMeta :layout="'dashboard'" />
-    <div class="mb-6"><h1 class="text-2xl font-bold text-white">Audit Trail</h1><p class="text-dark-400 text-sm mt-1">Track all system actions and changes</p></div>
-    <div class="table-container">
-      <table class="data-table">
-        <thead><tr><th>User</th><th>Action</th><th>Resource</th><th>IP</th><th>Timestamp</th></tr></thead>
-        <tbody>
-          <tr v-if="loading"><td colspan="5" class="text-center py-12 text-dark-400"><Icon name="lucide:loader-2" class="w-6 h-6 animate-spin mx-auto" /></td></tr>
-          <tr v-else-if="logs.length === 0"><td colspan="5" class="text-center py-12 text-dark-400">No audit logs</td></tr>
-          <tr v-for="l in logs" :key="l._id" v-else>
-            <td class="text-dark-200 text-sm">{{ typeof l.userId === 'object' ? (l.userId as any)?.fullName : l.userId }}</td>
-            <td><span class="badge-info">{{ l.action }}</span></td>
-            <td class="text-dark-300 text-sm">{{ l.resource }}</td>
-            <td class="text-dark-400 text-xs font-mono">{{ l.ipAddress || '—' }}</td>
-            <td class="text-dark-400 text-xs">{{ new Date(l.timestamp).toLocaleString() }}</td>
-          </tr>
-        </tbody>
-      </table>
+    
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-8">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Audit Trail</h1>
+        <p class="text-gray-500 text-sm mt-1 font-medium">Global history of system actions and security events</p>
+      </div>
+      <div class="flex gap-3">
+        <div class="px-5 py-2.5 bg-gray-50 rounded-2xl border border-gray-100 flex items-center gap-2">
+          <Icon name="lucide:clipboard-list" class="w-4 h-4 text-gray-400" />
+          <span class="text-xs font-black text-gray-500 uppercase tracking-widest">System Logs</span>
+        </div>
+      </div>
     </div>
-    <div v-if="totalPages > 1" class="flex items-center justify-between mt-4">
-      <p class="text-sm text-dark-400">Page {{ page }} of {{ totalPages }}</p>
-      <div class="flex gap-2"><button @click="page--; handleFetch()" :disabled="page <= 1" class="btn-secondary btn-sm">Prev</button><button @click="page++; handleFetch()" :disabled="page >= totalPages" class="btn-secondary btn-sm">Next</button></div>
+
+    <!-- Table -->
+    <div class="bg-white shadow-sm border border-gray-100 overflow-hidden !rounded-3xl">
+      <div class="overflow-x-auto">
+        <table class="data-table w-full">
+          <thead>
+            <tr class="!bg-gray-50/50">
+              <th class="!py-5 !pl-6">Actor/User</th>
+              <th class="!py-5">Event/Action</th>
+              <th class="!py-5">Target Resource</th>
+              <th class="!py-5 text-center">Origin (IP)</th>
+              <th class="!py-5 !pr-6 text-right">Timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="loading">
+              <td colspan="5" class="!p-0">
+                <CoreSkeletonLoader :rows="8" />
+              </td>
+            </tr>
+            <tr v-else-if="logs.length === 0">
+              <td colspan="5" class="!py-10">
+                <CoreEmptyState 
+                  icon="lucide:history" 
+                  title="No logs found" 
+                  description="System activity logs will appear here as users interact with the platform."
+                />
+              </td>
+            </tr>
+            <tr v-for="l in logs" :key="l._id" v-else class="hover:bg-gray-50/50 transition-colors">
+              <td class="!py-4 !pl-6">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500">
+                    <Icon name="lucide:user" class="w-4 h-4" />
+                  </div>
+                  <span class="text-sm font-bold text-gray-900 truncate max-w-[150px]">
+                    {{ typeof l.userId === 'object' ? (l.userId as any)?.fullName : l.userId || 'System' }}
+                  </span>
+                </div>
+              </td>
+              <td class="!py-4 text-sm font-medium">
+                <span class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 text-[10px] font-black uppercase tracking-widest border border-blue-100">
+                  {{ l.action }}
+                </span>
+              </td>
+              <td class="!py-4">
+                <code class="text-[10px] font-mono font-bold text-gray-500 bg-gray-50 px-2 py-0.5 rounded border border-gray-100">
+                  {{ l.resource }}
+                </code>
+              </td>
+              <td class="!py-4 text-center">
+                <span class="text-xs font-mono text-gray-400 font-medium">{{ l.ipAddress || '—' }}</span>
+              </td>
+              <td class="!py-4 !pr-6 text-right">
+                <div class="text-[11px] font-bold text-gray-900">{{ new Date(l.timestamp).toLocaleDateString() }}</div>
+                <div class="text-[10px] text-gray-400 font-medium lowercase">{{ new Date(l.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div v-if="totalPages > 1" class="flex flex-col sm:flex-row items-center justify-between mt-8 bg-white p-4 rounded-[2rem] border border-gray-100 shadow-sm gap-4">
+      <p class="text-sm font-bold text-gray-500 ml-4">Showing page {{ page }} of {{ totalPages }}</p>
+      <div class="flex gap-2">
+        <button 
+          @click="page--; handleFetch()" 
+          :disabled="page <= 1" 
+          class="btn-secondary !rounded-2xl !px-6 disabled:opacity-20 transition-all font-bold"
+        >
+          Previous
+        </button>
+        <button 
+          @click="page++; handleFetch()" 
+          :disabled="page >= totalPages" 
+          class="btn-primary !rounded-2xl !px-6 disabled:opacity-20 transition-all font-bold"
+        >
+          Next
+        </button>
+      </div>
     </div>
   </div>
 </template>

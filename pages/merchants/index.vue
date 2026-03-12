@@ -3,101 +3,177 @@
     <definePageMeta :layout="'dashboard'" />
 
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-8">
       <div>
-        <h1 class="text-2xl font-bold text-white">Merchants</h1>
-        <p class="text-dark-400 text-sm mt-1">Manage all merchants on the platform</p>
+        <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Merchants</h1>
+        <p class="text-gray-500 text-sm mt-1 font-medium">Manage and monitor all onboarded store partners</p>
+      </div>
+      <div class="flex gap-3">
+        <div class="px-5 py-2.5 bg-emerald-50 rounded-2xl border border-emerald-100 flex items-center gap-2">
+          <Icon name="lucide:store" class="w-4 h-4 text-emerald-600" />
+          <span class="text-xs font-black text-emerald-700 uppercase tracking-widest">{{ total }} Total Merchants</span>
+        </div>
       </div>
     </div>
 
     <!-- Filters -->
-    <div class="card mb-6">
+    <div class="bg-white rounded-[2rem] p-4 shadow-sm border border-gray-100 mb-8 flex flex-wrap gap-4 items-center">
+      <div class="relative flex-1 min-w-[300px]">
+        <Icon name="lucide:search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+        <input 
+          v-model="search" 
+          type="text" 
+          placeholder="Search by name, email or code..." 
+          class="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-2xl text-sm focus:ring-2 focus:ring-[#033958]/10 transition-all font-medium" 
+          @input="debouncedFetch" 
+        />
+      </div>
       <div class="flex flex-wrap gap-3">
-        <input v-model="search" type="text" placeholder="Search merchants..." class="input max-w-xs" @input="debouncedFetch" />
-        <select v-model="statusFilter" class="input max-w-[160px]" @change="handleFetch">
+        <select 
+          v-model="statusFilter" 
+          class="bg-gray-50 border-none rounded-2xl px-5 py-3 text-sm font-bold text-gray-700 focus:ring-2 focus:ring-[#033958]/10 transition-all outline-none min-w-[150px]" 
+          @change="handleFetch"
+        >
           <option value="">All Statuses</option>
           <option value="active">Active</option>
           <option value="pending">Pending</option>
           <option value="suspended">Suspended</option>
         </select>
-        <select v-model="categoryFilter" class="input max-w-[160px]" @change="handleFetch">
+        <select 
+          v-model="categoryFilter" 
+          class="bg-gray-50 border-none rounded-2xl px-5 py-3 text-sm font-bold text-gray-700 focus:ring-2 focus:ring-[#033958]/10 transition-all outline-none min-w-[150px]" 
+          @change="handleFetch"
+        >
           <option value="">All Categories</option>
           <option value="standard">Standard</option>
           <option value="gold">Gold</option>
           <option value="premium">Premium</option>
         </select>
+        <button @click="handleFetch" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#033958]/5 text-[#033958] hover:bg-[#033958] hover:text-white transition-all">
+          <Icon name="lucide:rotate-cw" class="w-5 h-5" :class="{ 'animate-spin': loading }" />
+        </button>
       </div>
     </div>
 
     <!-- Table -->
-    <div class="table-container">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Merchant</th>
-            <th>Code</th>
-            <th>Category</th>
-            <th>Rank</th>
-            <th>Commission</th>
-            <th>Sales</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="loading">
-            <td colspan="8" class="text-center py-12 text-dark-400">
-              <Icon name="lucide:loader-2" class="w-6 h-6 animate-spin mx-auto mb-2" />
-              Loading merchants...
-            </td>
-          </tr>
-          <tr v-else-if="merchants.length === 0">
-            <td colspan="8" class="text-center py-12 text-dark-400">
-              <Icon name="lucide:store" class="w-8 h-8 mx-auto mb-2 opacity-50" />
-              No merchants found
-            </td>
-          </tr>
-          <tr v-for="m in merchants" :key="m._id" v-else>
-            <td>
-              <div>
-                <p class="font-medium text-white">{{ m.fullName }}</p>
-                <p class="text-xs text-dark-400">{{ m.email }}</p>
-              </div>
-            </td>
-            <td><code class="text-xs bg-dark-800 px-2 py-0.5 rounded">{{ m.merchantCode }}</code></td>
-            <td><span class="badge-info capitalize">{{ m.category }}</span></td>
-            <td><span class="badge-neutral capitalize">{{ m.rank }}</span></td>
-            <td>{{ m.commissionRate }}%</td>
-            <td>₦{{ (m.totalSalesValue || 0).toLocaleString() }}</td>
-            <td>
-              <span :class="m.status === 'active' ? 'badge-success' : m.status === 'suspended' ? 'badge-danger' : 'badge-warning'">
-                {{ m.status }}
-              </span>
-            </td>
-            <td>
-              <div class="flex items-center gap-2">
-                <NuxtLink :to="`/merchants/${m._id}`" class="btn-ghost btn-sm">
-                  <Icon name="lucide:eye" class="w-3.5 h-3.5" />
-                </NuxtLink>
-                <button v-if="m.status === 'active'" @click="handleSuspend(m)" class="btn-ghost btn-sm text-red-400">
-                  <Icon name="lucide:ban" class="w-3.5 h-3.5" />
-                </button>
-                <button v-if="m.status === 'suspended'" @click="handleActivate(m)" class="btn-ghost btn-sm text-emerald-400">
-                  <Icon name="lucide:check-circle" class="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="bg-white shadow-sm border border-gray-100 overflow-hidden !rounded-3xl">
+      <div class="overflow-x-auto">
+        <table class="data-table w-full">
+          <thead>
+            <tr class="!bg-gray-50/50">
+              <th class="!py-5 !pl-6">Merchant Details</th>
+              <th class="!py-5">Rank/Category</th>
+              <th class="!py-5">Commission</th>
+              <th class="!py-5">Total Sales</th>
+              <th class="!py-5">Status</th>
+              <th class="!py-5 !pr-6 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="loading">
+              <td colspan="6" class="!p-0">
+                <CoreSkeletonLoader :rows="5" avatar />
+              </td>
+            </tr>
+            <tr v-else-if="merchants.length === 0">
+              <td colspan="6" class="!py-10">
+                <CoreEmptyState 
+                  icon="lucide:store" 
+                  title="No merchants found" 
+                  description="When business partners register, they will appear here for management."
+                />
+              </td>
+            </tr>
+            <tr v-for="m in merchants" :key="m._id" v-else class="group">
+              <td class="!py-4 !pl-6">
+                <div class="flex items-center gap-4">
+                  <div class="w-11 h-11 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 font-black text-sm uppercase">
+                    {{ m.fullName.charAt(0) }}
+                  </div>
+                  <div>
+                    <p class="font-bold text-gray-900 text-sm leading-tight">{{ m.fullName }}</p>
+                    <p class="text-[10px] font-medium text-gray-400 mt-0.5 tracking-tight uppercase">{{ m.merchantCode }} • {{ m.email }}</p>
+                  </div>
+                </div>
+              </td>
+              <td class="!py-4 text-sm">
+                <div class="flex flex-col gap-1">
+                  <span class="inline-flex px-2 py-0.5 rounded bg-gray-50 text-gray-600 text-[10px] font-black uppercase tracking-widest border border-gray-100 max-w-fit">
+                    {{ m.category }}
+                  </span>
+                  <span class="text-xs font-bold text-gray-400 capitalize">{{ m.rank }}</span>
+                </div>
+              </td>
+              <td class="!py-4">
+                <div class="flex items-center gap-1.5">
+                  <Icon name="lucide:percent" class="w-3.5 h-3.5 text-blue-500" />
+                  <span class="text-sm font-bold text-gray-700">{{ m.commissionRate }}%</span>
+                </div>
+              </td>
+              <td class="!py-4">
+                <span class="font-black text-gray-900 text-sm">₦{{ (m.totalSalesValue || 0).toLocaleString() }}</span>
+              </td>
+              <td class="!py-4">
+                <span :class="[
+                  'px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest border',
+                  m.status === 'active' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 
+                  m.status === 'suspended' ? 'bg-red-50 text-red-600 border-red-100' : 
+                  'bg-amber-50 text-amber-600 border-amber-100'
+                ]">
+                  {{ m.status }}
+                </span>
+              </td>
+              <td class="!py-4 !pr-6 text-right">
+                <div class="flex items-center justify-end gap-2">
+                  <NuxtLink 
+                    :to="`/merchants/${m._id}`" 
+                    class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#033958] hover:text-white transition-all duration-300"
+                    title="View Details"
+                  >
+                    <Icon name="lucide:eye" class="w-4 h-4" />
+                  </NuxtLink>
+                  <button 
+                    v-if="m.status === 'active'" 
+                    @click="handleSuspend(m)" 
+                    class="w-10 h-10 flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300"
+                    title="Suspend Merchant"
+                  >
+                    <Icon name="lucide:ban" class="w-4 h-4" />
+                  </button>
+                  <button 
+                    v-if="m.status === 'suspended'" 
+                    @click="handleActivate(m)" 
+                    class="w-10 h-10 flex items-center justify-center rounded-xl bg-emerald-50 text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all duration-300"
+                    title="Activate Merchant"
+                  >
+                    <Icon name="lucide:check-circle" class="w-4 h-4" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Pagination -->
-    <div v-if="totalPages > 1" class="flex items-center justify-between mt-4">
-      <p class="text-sm text-dark-400">Page {{ page }} of {{ totalPages }} ({{ total }} total)</p>
+    <div v-if="totalPages > 1" class="flex flex-col sm:flex-row items-center justify-between mt-8 bg-white p-4 rounded-[2rem] border border-gray-100 shadow-sm gap-4">
+      <p class="text-sm font-bold text-gray-500 ml-4">Showing page {{ page }} of {{ totalPages }} ({{ total }} total)</p>
       <div class="flex gap-2">
-        <button @click="page--; handleFetch()" :disabled="page <= 1" class="btn-secondary btn-sm">Previous</button>
-        <button @click="page++; handleFetch()" :disabled="page >= totalPages" class="btn-secondary btn-sm">Next</button>
+        <button 
+          @click="page--; handleFetch()" 
+          :disabled="page <= 1" 
+          class="btn-secondary !rounded-2xl !px-6 disabled:opacity-20 transition-all font-bold"
+        >
+          Previous
+        </button>
+        <button 
+          @click="page++; handleFetch()" 
+          :disabled="page >= totalPages" 
+          class="btn-primary !rounded-2xl !px-6 disabled:opacity-20 transition-all font-bold"
+        >
+          Next
+        </button>
       </div>
     </div>
   </div>
@@ -108,12 +184,14 @@ import type { Merchant } from '~/types'
 import { useFetchMerchants } from '@/composables/modules/merchants/useFetchMerchants'
 import { useSuspendMerchant } from '@/composables/modules/merchants/useSuspendMerchant'
 import { useActivateMerchant } from '@/composables/modules/merchants/useActivateMerchant'
+import { useConfirm } from '@/composables/core/useConfirm'
 
 definePageMeta({ layout: 'dashboard' })
 
 const { merchants, loading, total, fetchMerchants } = useFetchMerchants()
 const { suspendMerchant: suspendAction } = useSuspendMerchant()
 const { activateMerchant: activateAction } = useActivateMerchant()
+const { openConfirm } = useConfirm()
 
 const page = ref(1)
 const limit = ref(10)
@@ -140,15 +218,29 @@ function handleFetch() {
 }
 
 async function handleSuspend(m: Merchant) {
-  if (confirm(`Suspend Merchant "${m.fullName}"?`)) {
+  if (await openConfirm({
+    title: 'Suspend Merchant',
+    message: `Are you sure you want to suspend "${m.fullName}"?`,
+    confirmText: 'Suspend',
+    confirmClass: 'bg-rose-600 text-white hover:bg-rose-700 shadow-rose-600/20',
+    icon: 'lucide:ban'
+  })) {
     const success = await suspendAction(m._id)
     if (success) handleFetch()
   }
 }
 
 async function handleActivate(m: Merchant) {
-  const success = await activateAction(m._id)
-  if (success) handleFetch()
+  if (await openConfirm({
+    title: 'Activate Merchant',
+    message: `Are you sure you want to activate "${m.fullName}"?`,
+    confirmText: 'Activate',
+    confirmClass: 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-600/20',
+    icon: 'lucide:check-circle'
+  })) {
+    const success = await activateAction(m._id)
+    if (success) handleFetch()
+  }
 }
 
 onMounted(handleFetch)

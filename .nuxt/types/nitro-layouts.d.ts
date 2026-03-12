@@ -1,4 +1,4 @@
-export type LayoutKey = "dashboard" | "default"
+export type LayoutKey = "auth" | "chat" | "dashboard" | "default"
 declare module 'nitropack' {
   interface NitroRouteConfig {
     appLayout?: LayoutKey | false

@@ -2,5 +2,10 @@
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
-  <ToastContainer />
 </template>
+
+<style>
+body {
+    font-family: 'Onest', sans-serif;
+}
+</style>

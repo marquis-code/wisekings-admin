@@ -5,7 +5,8 @@ export const merchants_api = {
     getById: (id: string) => GATEWAY_ENDPOINT.get(`/merchants/${id}`),
     create: (payload: any) => GATEWAY_ENDPOINT.post("/merchants", payload),
     update: (id: string, payload: any) => GATEWAY_ENDPOINT.put(`/merchants/${id}`, payload),
-    suspend: (id: string) => GATEWAY_ENDPOINT.patch(`/merchants/${id}/suspend`),
+    suspend: (id: string, payload: { reason: string }) => GATEWAY_ENDPOINT.patch(`/merchants/${id}/suspend`, payload),
     activate: (id: string) => GATEWAY_ENDPOINT.patch(`/merchants/${id}/activate`),
-    getStats: (id: string) => GATEWAY_ENDPOINT.get(`/merchants/${id}/stats`),
+    getStats: () => GATEWAY_ENDPOINT.get("/merchants/stats"),
+    updateKycDocumentStatus: (id: string, payload: { documentType: string; status: string; reason?: string }) => GATEWAY_ENDPOINT.patch(`/merchants/${id}/kyc-document-status`, payload),
 }

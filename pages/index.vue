@@ -1,61 +1,93 @@
 <template>
-  <div>
+  <div class="space-y-10">
     <definePageMeta :layout="'dashboard'" />
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      <div v-for="stat in stats" :key="stat.label" class="stat-card">
-        <div class="flex items-center justify-between">
-          <span class="text-dark-400 text-sm">{{ stat.label }}</span>
-          <div :class="['w-10 h-10 rounded-lg flex items-center justify-center', stat.bgColor]">
-            <Icon :name="stat.icon" :class="['w-5 h-5', stat.iconColor]" />
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div v-for="stat in stats" :key="stat.label" class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-4">
+          <div :class="['w-12 h-12 rounded-2xl flex items-center justify-center shadow-sm', stat.bgColor]">
+            <Icon :name="stat.icon" :class="['w-6 h-6', stat.iconColor]" />
+          </div>
+          <div class="text-right">
+            <span class="text-gray-400 text-xs font-bold uppercase tracking-wider">{{ stat.label }}</span>
+            <p class="text-2xl font-black text-gray-900 mt-1">{{ stat.value }}</p>
           </div>
         </div>
-        <p class="text-2xl font-bold text-white">{{ stat.value }}</p>
-        <p class="text-xs text-dark-400">{{ stat.subtitle }}</p>
+        <div class="flex items-center gap-2 mt-4 pt-4 border-t border-gray-50">
+          <span class="flex items-center text-[10px] font-bold text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-full">
+            <Icon name="lucide:arrow-up-right" class="w-3 h-3 mr-0.5" />
+            12%
+          </span>
+          <span class="text-[10px] font-medium text-gray-400">{{ stat.subtitle }}</span>
+        </div>
       </div>
     </div>
 
     <!-- Recent Activity -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <!-- Recent Orders -->
-      <div class="card">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="text-lg font-semibold text-white">Recent Orders</h2>
-          <NuxtLink to="/orders" class="text-primary-400 text-sm hover:text-primary-300">View all →</NuxtLink>
+      <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <h2 class="text-xl font-bold text-gray-900 tracking-tight">Recent Orders</h2>
+            <p class="text-sm text-gray-500 font-medium">Manage and track latest purchases</p>
+          </div>
+          <NuxtLink to="/orders" class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gray-50 text-gray-400 hover:text-gray-900 transition-all border border-gray-100">
+            <Icon name="lucide:arrow-right" class="w-5 h-5" />
+          </NuxtLink>
         </div>
-        <div v-if="recentOrders.length === 0" class="text-center py-8 text-dark-400">
-          <Icon name="lucide:package" class="w-8 h-8 mx-auto mb-2 opacity-50" />
-          <p>No orders yet</p>
+        
+        <div v-if="recentOrders.length === 0" class="text-center py-12 bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
+          <Icon name="lucide:package" class="w-12 h-12 mx-auto mb-3 text-gray-300" />
+          <p class="text-gray-500 font-medium">No orders found yet</p>
         </div>
-        <div v-else class="space-y-3">
-          <div v-for="order in recentOrders" :key="order._id" class="flex items-center justify-between py-2 border-b border-dark-700/50 last:border-0">
-            <div>
-              <p class="text-sm font-medium text-dark-200">{{ order.orderNumber }}</p>
-              <p class="text-xs text-dark-400">₦{{ order.totalAmount.toLocaleString() }}</p>
+        
+        <div v-else class="space-y-4">
+          <div v-for="order in recentOrders" :key="order._id" class="flex items-center justify-between p-4 bg-gray-50/30 rounded-2xl border border-transparent hover:border-gray-100 hover:bg-white transition-all group">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-gray-400 group-hover:text-[#033958] transition-colors">
+                <Icon name="lucide:shopping-bag" class="w-5 h-5" />
+              </div>
+              <div>
+                <p class="text-sm font-bold text-gray-900">{{ order.orderNumber }}</p>
+                <p class="text-xs text-gray-500 font-medium">₦{{ order.totalAmount.toLocaleString() }}</p>
+              </div>
             </div>
-            <span :class="statusBadge(order.status)">{{ order.status }}</span>
+            <span :class="['px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider', statusBadge(order.status)]">{{ order.status }}</span>
           </div>
         </div>
       </div>
 
       <!-- Recent Merchants -->
-      <div class="card">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="text-lg font-semibold text-white">Recent Merchants</h2>
-          <NuxtLink to="/merchants" class="text-primary-400 text-sm hover:text-primary-300">View all →</NuxtLink>
+      <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <h2 class="text-xl font-bold text-gray-900 tracking-tight">Latest Merchants</h2>
+            <p class="text-sm text-gray-500 font-medium">Professional store partners</p>
+          </div>
+          <NuxtLink to="/merchants" class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gray-50 text-gray-400 hover:text-gray-900 transition-all border border-gray-100">
+            <Icon name="lucide:arrow-right" class="w-5 h-5" />
+          </NuxtLink>
         </div>
-        <div v-if="recentMerchants.length === 0" class="text-center py-8 text-dark-400">
-          <Icon name="lucide:store" class="w-8 h-8 mx-auto mb-2 opacity-50" />
-          <p>No merchants yet</p>
+
+        <div v-if="recentMerchants.length === 0" class="text-center py-12 bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
+          <Icon name="lucide:store" class="w-12 h-12 mx-auto mb-3 text-gray-300" />
+          <p class="text-gray-500 font-medium">No merchants registered</p>
         </div>
-        <div v-else class="space-y-3">
-          <div v-for="merchant in recentMerchants" :key="merchant._id" class="flex items-center justify-between py-2 border-b border-dark-700/50 last:border-0">
-            <div>
-              <p class="text-sm font-medium text-dark-200">{{ merchant.fullName }}</p>
-              <p class="text-xs text-dark-400">{{ merchant.merchantCode }}</p>
+
+        <div v-else class="space-y-4">
+          <div v-for="merchant in recentMerchants" :key="merchant._id" class="flex items-center justify-between p-4 bg-gray-50/30 rounded-2xl border border-transparent hover:border-gray-100 hover:bg-white transition-all group">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-all">
+                <Icon name="lucide:store" class="w-5 h-5" />
+              </div>
+              <div>
+                <p class="text-sm font-bold text-gray-900">{{ merchant.fullName }}</p>
+                <p class="text-xs text-gray-500 font-medium tracking-tight">{{ merchant.merchantCode }}</p>
+              </div>
             </div>
-            <span :class="statusBadge(merchant.status)">{{ merchant.status }}</span>
+            <span :class="['px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider', statusBadge(merchant.status)]">{{ merchant.status || 'active' }}</span>
           </div>
         </div>
       </div>
@@ -114,16 +146,16 @@ const stats = computed(() => [
 
 function statusBadge(status: string) {
   const map: Record<string, string> = {
-    active: 'badge-success',
-    pending: 'badge-warning',
-    suspended: 'badge-danger',
-    completed: 'badge-success',
-    delivered: 'badge-success',
-    processing: 'badge-info',
-    shipped: 'badge-info',
-    cancelled: 'badge-danger',
+    active: 'bg-emerald-50 text-emerald-600 border border-emerald-100',
+    pending: 'bg-amber-50 text-amber-600 border border-amber-100',
+    suspended: 'bg-rose-50 text-rose-600 border border-rose-100',
+    completed: 'bg-emerald-50 text-emerald-600 border border-emerald-100',
+    delivered: 'bg-emerald-50 text-emerald-600 border border-emerald-100',
+    processing: 'bg-blue-50 text-blue-600 border border-blue-100',
+    shipped: 'bg-blue-50 text-blue-600 border border-blue-100',
+    cancelled: 'bg-gray-50 text-gray-600 border border-gray-100',
   }
-  return map[status?.toLowerCase()] || 'badge-neutral'
+  return map[status?.toLowerCase()] || 'bg-gray-100 text-gray-800'
 }
 
 onMounted(async () => {

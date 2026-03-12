@@ -21,15 +21,27 @@ export const useLogin = () => {
         errorMessage.value = ''
         try {
             const res = await auth_api.login(credentials.value) as any
+            const data = res?.data || res
+
+            if (data?.mfaRequired) {
+                showToast({
+                    title: "OTP Required",
+                    message: "Please enter the code sent to your email",
+                    toastType: "info",
+                })
+                router.push(`/otp?email=${credentials.value.email}`)
+                return
+            }
+
             if (res.data) {
-                setAuth(res.data.user, res.data.tokens)
+                const { user, tokens } = res.data
+                setAuth(user, tokens)
                 showToast({
                     title: "Success",
-                    message: "Login successful",
+                    message: res.message || "Login successful",
                     toastType: "success",
                 })
                 router.push('/')
-                return res.data
             }
         } catch (err: any) {
             errorMessage.value = err.message || "Invalid credentials"
@@ -42,6 +54,7 @@ export const useLogin = () => {
             loading.value = false
         }
     }
+
 
     return { loading, login, credentials, errorMessage }
 }

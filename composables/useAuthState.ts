@@ -8,15 +8,28 @@ const user = ref<User | null>(null)
 const isAuthenticated = computed(() => !!accessToken.value && !!user.value)
 
 export function useAuthState() {
-    // Hydrate from cookie on first call (SSR-safe)
+    // Hydrate from localStorage on client
     if (import.meta.client && !accessToken.value) {
-        const tokenCookie = useCookie<string>('wk_admin_access_token')
-        const refreshCookie = useCookie<string>('wk_admin_refresh_token')
-        const userCookie = useCookie<User | null>('wk_admin_user')
+        const savedToken = localStorage.getItem('wk_admin_token')
+        const savedRefresh = localStorage.getItem('wk_admin_refresh')
+        const savedUser = localStorage.getItem('wk_admin_user')
 
-        if (tokenCookie.value) accessToken.value = tokenCookie.value
-        if (refreshCookie.value) refreshTokenValue.value = refreshCookie.value
-        if (userCookie.value) user.value = userCookie.value
+        if (savedToken) accessToken.value = savedToken
+        if (savedRefresh) refreshTokenValue.value = savedRefresh
+        if (savedUser) {
+            try {
+                user.value = JSON.parse(savedUser)
+            } catch {
+                user.value = null
+            }
+        }
+
+        // Also sync to cookies for SSR
+        if (!useCookie('wk_admin_token').value && savedToken) {
+            useCookie('wk_admin_token').value = savedToken
+            useCookie('wk_admin_refresh').value = savedRefresh
+            useCookie('wk_admin_user').value = savedUser
+        }
     }
 
     function setAuth(userData: User, tokens: AuthTokens) {
@@ -24,13 +37,16 @@ export function useAuthState() {
         refreshTokenValue.value = tokens.refreshToken
         user.value = userData
 
-        const tokenCookie = useCookie('wk_admin_access_token', { maxAge: 60 * 60 }) // 1h
-        const refreshCookie = useCookie('wk_admin_refresh_token', { maxAge: 60 * 60 * 24 * 7 }) // 7d
-        const userCookie = useCookie('wk_admin_user', { maxAge: 60 * 60 * 24 * 7 })
+        if (import.meta.client) {
+            localStorage.setItem('wk_admin_token', tokens.accessToken)
+            localStorage.setItem('wk_admin_refresh', tokens.refreshToken)
+            localStorage.setItem('wk_admin_user', JSON.stringify(userData))
+        }
 
-        tokenCookie.value = tokens.accessToken
-        refreshCookie.value = tokens.refreshToken
-        userCookie.value = JSON.stringify(userData) as any
+        // SSR-safe cookies
+        useCookie('wk_admin_token', { maxAge: 60 * 60 * 24 * 7 }).value = tokens.accessToken
+        useCookie('wk_admin_refresh', { maxAge: 60 * 60 * 24 * 7 }).value = tokens.refreshToken
+        useCookie('wk_admin_user', { maxAge: 60 * 60 * 24 * 7 }).value = JSON.stringify(userData)
     }
 
     function logout() {
@@ -38,13 +54,15 @@ export function useAuthState() {
         refreshTokenValue.value = ''
         user.value = null
 
-        const tokenCookie = useCookie('wk_admin_access_token')
-        const refreshCookie = useCookie('wk_admin_refresh_token')
-        const userCookie = useCookie('wk_admin_user')
+        if (import.meta.client) {
+            localStorage.removeItem('wk_admin_token')
+            localStorage.removeItem('wk_admin_refresh')
+            localStorage.removeItem('wk_admin_user')
+        }
 
-        tokenCookie.value = null
-        refreshCookie.value = null
-        userCookie.value = null
+        useCookie('wk_admin_token').value = null
+        useCookie('wk_admin_refresh').value = null
+        useCookie('wk_admin_user').value = null
     }
 
     async function refresh(): Promise<boolean> {

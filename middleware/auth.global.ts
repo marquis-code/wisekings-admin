@@ -1,7 +1,7 @@
 export default defineNuxtRouteMiddleware((to) => {
     const { isAuthenticated, user } = useAuthState()
 
-    const publicPages = ['/login', '/forgot-password', '/reset-password']
+    const publicPages = ['/login', '/forgot-password', '/reset-password', '/signup', '/otp']
     const isPublicPage = publicPages.some((p) => to.path.startsWith(p))
 
     // Redirect unauthenticated users to login

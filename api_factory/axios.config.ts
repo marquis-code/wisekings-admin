@@ -14,7 +14,8 @@ GATEWAY_ENDPOINT.interceptors.request.use(
     // In Nuxt, we can't directly use composables outside setup easily 
     // without passing context or using a specific pattern.
     // However, since we're using a standard structure, we'll try to get the cookie.
-    const token = decodeURIComponent(document.cookie.split('; ').find(row => row.startsWith('wk_admin_token='))?.split('=')[1] || '');
+    const rawToken = document.cookie.split('; ').find(row => row.startsWith('wk_admin_token='))?.split('=')[1] || '';
+    const token = decodeURIComponent(rawToken).replace(/^"|"$/g, '');
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

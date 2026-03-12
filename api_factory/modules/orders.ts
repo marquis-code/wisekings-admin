@@ -4,5 +4,6 @@ export const orders_api = {
     get: (params?: any) => GATEWAY_ENDPOINT.get("/orders", { params }),
     getById: (id: string) => GATEWAY_ENDPOINT.get(`/orders/${id}`),
     updateStatus: (id: string, payload: any) => GATEWAY_ENDPOINT.patch(`/orders/${id}/status`, payload),
-    getStats: () => GATEWAY_ENDPOINT.get("/orders/stats/admin"),
+    bulkUpdateStatus: (payload: { ids: string[]; status: string }) => GATEWAY_ENDPOINT.patch("/orders/bulk/status", payload),
+    getStats: () => GATEWAY_ENDPOINT.get("/orders/stats"),
 }

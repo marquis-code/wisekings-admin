@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     modules: [
         '@nuxtjs/tailwindcss',
         '@nuxt/icon',
+        '@nuxtjs/i18n'
     ],
 
     runtimeConfig: {
@@ -37,4 +38,31 @@ export default defineNuxtConfig({
     tailwindcss: {
         cssPath: '~/assets/css/main.css',
     },
+    i18n: {
+        locales: [
+            { code: 'en', iso: 'en-US', name: 'English', file: 'en.json' },
+            { code: 'fr', iso: 'fr-FR', name: 'Français', file: 'fr.json' },
+            { code: 'es', iso: 'es-ES', name: 'Español', file: 'es.json' },
+        ],
+        lazy: true,
+        langDir: 'locales',
+        defaultLocale: 'en',
+        strategy: 'no_prefix',
+        detectBrowserLanguage: {
+            useCookie: true,
+            cookieKey: 'i18n_redirected',
+            alwaysRedirect: true,
+            fallbackLocale: 'en',
+        },
+    },
+      googleFonts: {
+    families: {
+      "Inter": [400, 500, 600, 700],
+      "Poppins": [400, 500, 600, 700],
+      "Onest": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+    },
+    display: "swap",
+    preload: true,
+  },
+  css: ['/assets/font/stylesheet.css', "/assets/css/main.css"],
 })
