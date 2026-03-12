@@ -1,0 +1,1 @@
+import{G as p}from"./I3Ihqkrd.js";const r={get:t=>p.get("/partners",{params:t}),getById:t=>p.get(`/partners/${t}`),update:(t,e)=>p.put(`/partners/${t}`,e),approve:t=>p.patch(`/partners/${t}/approve`),suspend:(t,e)=>p.patch(`/partners/${t}/suspend`,e),updateKycDocumentStatus:(t,e)=>p.patch(`/partners/${t}/kyc-document-status`,e)};export{r as p};
