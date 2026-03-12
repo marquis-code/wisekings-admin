@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const GATEWAY_ENDPOINT = axios.create({
-  baseURL: "http://localhost:3000/api/v1", // Initial fallback
+  baseURL: "https://wisekings-backend-hq.onrender.com/api/v1", // Initial fallback
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
