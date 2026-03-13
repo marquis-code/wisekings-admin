@@ -1,0 +1,1 @@
+import{G as s}from"./BcHoBlGO.js";const a={get:t=>s.get("/orders",{params:t}),getById:t=>s.get(`/orders/${t}`),updateStatus:(t,e)=>s.patch(`/orders/${t}/status`,e),bulkUpdateStatus:t=>s.patch("/orders/bulk/status",t),getStats:()=>s.get("/orders/stats")};export{a as o};

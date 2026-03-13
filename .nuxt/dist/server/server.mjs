@@ -454,103 +454,103 @@ const _routes = [
     name: "kyc",
     path: "/kyc",
     meta: __nuxt_page_meta$t || {},
-    component: () => import("./_nuxt/kyc-BvlTLesy.js")
+    component: () => import("./_nuxt/kyc-DEwnNwo2.js")
   },
   {
     name: "otp",
     path: "/otp",
     meta: __nuxt_page_meta$s || {},
-    component: () => import("./_nuxt/otp-SY3GGmQJ.js")
+    component: () => import("./_nuxt/otp-DKiy2CJP.js")
   },
   {
     name: "chat",
     path: "/chat",
     meta: __nuxt_page_meta$r || {},
-    component: () => import("./_nuxt/chat-B3tuJvq_.js")
+    component: () => import("./_nuxt/chat-DXVfuR8g.js")
   },
   {
     name: "join",
     path: "/join",
     meta: __nuxt_page_meta$q || {},
-    component: () => import("./_nuxt/join-tuT8ReCw.js")
+    component: () => import("./_nuxt/join-CSJWOf4w.js")
   },
   {
     name: "audit",
     path: "/audit",
     meta: __nuxt_page_meta$p || {},
-    component: () => import("./_nuxt/audit-ClNPhxuT.js")
+    component: () => import("./_nuxt/audit-BKn6Xt5n.js")
   },
   {
     name: "index",
     path: "/",
     meta: __nuxt_page_meta$o || {},
-    component: () => import("./_nuxt/index-Dwkjg-sm.js")
+    component: () => import("./_nuxt/index-DUVfJlA9.js")
   },
   {
     name: "login",
     path: "/login",
     meta: __nuxt_page_meta$n || {},
-    component: () => import("./_nuxt/login-DJTlLmlo.js")
+    component: () => import("./_nuxt/login-Cc2OGq03.js")
   },
   {
     name: "roles",
     path: "/roles",
     meta: __nuxt_page_meta$m || {},
-    component: () => import("./_nuxt/roles-94T_cdk_.js")
+    component: () => import("./_nuxt/roles-DrBadc0-.js")
   },
   {
     name: "users",
     path: "/users",
     meta: __nuxt_page_meta$l || {},
-    component: () => import("./_nuxt/users-Jx0SrjZ2.js")
+    component: () => import("./_nuxt/users-CCEnK0Ee.js")
   },
   {
     name: "signup",
     path: "/signup",
     meta: __nuxt_page_meta$k || {},
-    component: () => import("./_nuxt/signup-ujlAWLkN.js")
+    component: () => import("./_nuxt/signup-DshrqYz2.js")
   },
   {
     name: "settings",
     path: "/settings",
     meta: __nuxt_page_meta$j || {},
-    component: () => import("./_nuxt/settings-Dw578sDj.js")
+    component: () => import("./_nuxt/settings-BNxdnv5c.js")
   },
   {
     name: "marketing",
     path: "/marketing",
     meta: __nuxt_page_meta$i || {},
-    component: () => import("./_nuxt/marketing-DgwTEMyj.js")
+    component: () => import("./_nuxt/marketing-CbGcRe8c.js")
   },
   {
     name: "categories",
     path: "/categories",
     meta: __nuxt_page_meta$h || {},
-    component: () => import("./_nuxt/categories-C-uLD5RD.js")
+    component: () => import("./_nuxt/categories-Bu922TUm.js")
   },
   {
     name: "ai-insights",
     path: "/ai-insights",
     meta: __nuxt_page_meta$g || {},
-    component: () => import("./_nuxt/ai-insights-Ctl5Q_En.js")
+    component: () => import("./_nuxt/ai-insights-CnUFFGto.js")
   },
   {
     name: "commissions",
     path: "/commissions",
     meta: __nuxt_page_meta$f || {},
-    component: () => import("./_nuxt/commissions-Bw5VZw6Y.js")
+    component: () => import("./_nuxt/commissions-X7dc2h1o.js")
   },
   {
     name: "orders-id",
     path: "/orders/:id()",
     meta: __nuxt_page_meta$e || {},
-    component: () => import("./_nuxt/_id_-CbpH-RhN.js")
+    component: () => import("./_nuxt/_id_-BeHYh4I2.js")
   },
   {
     name: "orders",
     path: "/orders",
     meta: __nuxt_page_meta$d || {},
-    component: () => import("./_nuxt/index-BaXFkUAU.js")
+    component: () => import("./_nuxt/index-ZRL-_r8I.js")
   },
   {
     name: "products-new",
@@ -562,67 +562,67 @@ const _routes = [
     name: "support-id",
     path: "/support/:id()",
     meta: __nuxt_page_meta$b || {},
-    component: () => import("./_nuxt/_id_-DncXktoO.js")
+    component: () => import("./_nuxt/_id_-CX1dTDx9.js")
   },
   {
     name: "notifications",
     path: "/notifications",
     meta: __nuxt_page_meta$a || {},
-    component: () => import("./_nuxt/notifications-8KxxjHsu.js")
+    component: () => import("./_nuxt/notifications-0_tLrlWS.js")
   },
   {
     name: "partners-id",
     path: "/partners/:id()",
     meta: __nuxt_page_meta$9 || {},
-    component: () => import("./_nuxt/_id_-9qBRxVrf.js")
+    component: () => import("./_nuxt/_id_-RbOJnAqw.js")
   },
   {
     name: "support",
     path: "/support",
     meta: __nuxt_page_meta$8 || {},
-    component: () => import("./_nuxt/index-DrfbBUDD.js")
+    component: () => import("./_nuxt/index-BREz_2_v.js")
   },
   {
     name: "campaigns-id",
     path: "/campaigns/:id()",
     meta: __nuxt_page_meta$7 || {},
-    component: () => import("./_nuxt/_id_-aPG4AwQg.js")
+    component: () => import("./_nuxt/_id_-CIiaI6Gn.js")
   },
   {
     name: "merchants-id",
     path: "/merchants/:id()",
     meta: __nuxt_page_meta$6 || {},
-    component: () => import("./_nuxt/_id_-BmSklyzY.js")
+    component: () => import("./_nuxt/_id_-DBV276dl.js")
   },
   {
     name: "partners",
     path: "/partners",
     meta: __nuxt_page_meta$5 || {},
-    component: () => import("./_nuxt/index-CW3Ld1lY.js")
+    component: () => import("./_nuxt/index-BNW4-qBz.js")
   },
   {
     name: "products",
     path: "/products",
     meta: __nuxt_page_meta$4 || {},
-    component: () => import("./_nuxt/index-EOyC76Fq.js")
+    component: () => import("./_nuxt/index-BqDHH40G.js")
   },
   {
     name: "forgot-password",
     path: "/forgot-password",
     meta: __nuxt_page_meta$3 || {},
-    component: () => import("./_nuxt/forgot-password-DeMOyXcJ.js")
+    component: () => import("./_nuxt/forgot-password-B0KKITRV.js")
   },
   {
     name: "merchants",
     path: "/merchants",
     meta: __nuxt_page_meta$2 || {},
-    component: () => import("./_nuxt/index-BUePJF71.js")
+    component: () => import("./_nuxt/index-IEyrMMH0.js")
   },
   {
     name: "products-id-edit",
     path: "/products/:id()/edit",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import("./_nuxt/edit-BCIF19eX.js")
+    component: () => import("./_nuxt/edit-B0Y2Hcjy.js")
   },
   {
     name: "investments-records",
@@ -633,7 +633,7 @@ const _routes = [
     name: "wallets-withdrawals",
     path: "/wallets/withdrawals",
     meta: __nuxt_page_meta || {},
-    component: () => import("./_nuxt/withdrawals-Ct6teXw4.js")
+    component: () => import("./_nuxt/withdrawals-CngczCRD.js")
   },
   {
     name: "investments-proposals",
@@ -2075,7 +2075,7 @@ function createNuxtI18nContext(nuxt, vueI18n, defaultLocale) {
       return;
     }
     const headers = getLocaleConfig(locale)?.cacheable ? {} : { "Cache-Control": "no-cache" };
-    const messages = await $fetch(`${"/_i18n/ZgAZ_bwJ"}/${locale}/messages.json`, { headers });
+    const messages = await $fetch(`${"/_i18n/yl567pbK"}/${locale}/messages.json`, { headers });
     for (const k of Object.keys(messages)) {
       i18n.mergeLocaleMessage(k, messages[k]);
     }
@@ -7067,7 +7067,7 @@ const i18n_EI7LsD1KYQADczz5hrChviGQCdVM8yUkvFEZLJpmnvM = /* @__PURE__ */ defineN
     {
       localeConfigs.value = useRequestEvent().context.nuxtI18n?.localeConfigs || {};
     }
-    prerenderRoutes(localeCodes.map((locale) => `${"/_i18n/ZgAZ_bwJ"}/${locale}/messages.json`));
+    prerenderRoutes(localeCodes.map((locale) => `${"/_i18n/yl567pbK"}/${locale}/messages.json`));
     const i18n = createI18n(optionsI18n);
     const detectors = useDetectors(useRequestEvent(nuxt), useI18nDetection(nuxt), nuxt);
     const ctx = createNuxtI18nContext(nuxt, i18n, optionsI18n.defaultLocale);
@@ -7268,7 +7268,7 @@ const plugins = [
 const layouts = {
   auth: defineAsyncComponent(() => import("./_nuxt/auth-D0Mv5vkG.js").then((m) => m.default || m)),
   chat: defineAsyncComponent(() => import("./_nuxt/chat-2yg47CmH.js").then((m) => m.default || m)),
-  dashboard: defineAsyncComponent(() => import("./_nuxt/dashboard-BbnUSE7x.js").then((m) => m.default || m)),
+  dashboard: defineAsyncComponent(() => import("./_nuxt/dashboard-CiSd1ufE.js").then((m) => m.default || m)),
   default: defineAsyncComponent(() => import("./_nuxt/default-igIi2HkN.js").then((m) => m.default || m))
 };
 const routeRulesMatcher = _routeRulesMatcher;

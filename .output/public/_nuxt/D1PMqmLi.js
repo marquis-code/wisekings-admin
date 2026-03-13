@@ -1,0 +1,1 @@
+import{G as e}from"./BcHoBlGO.js";const r={uploadImage:(t,o)=>{const a=new FormData;return a.append("file",t),e.post(`/uploads/image/${o}`,a,{headers:{"Content-Type":"multipart/form-data"}})},uploadDocument:(t,o)=>{const a=new FormData;return a.append("file",t),e.post(`/uploads/document/${o}`,a,{headers:{"Content-Type":"multipart/form-data"}})}};export{r as u};
