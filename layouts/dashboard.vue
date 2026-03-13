@@ -210,6 +210,7 @@ const navItems = [
   { separator: true, label: 'Intelligence' },
   { label: 'AI Scaling Insights', icon: 'lucide:brain-circuit', path: '/ai-insights' },
   { label: 'Support Center', icon: 'lucide:headphones', path: '/support' },
+  { label: 'Guest Inquiries', icon: 'lucide:mail-open', path: '/support/inquiries' },
   { separator: true, label: 'System' },
   { label: 'KYC Review', icon: 'lucide:shield-check', path: '/kyc' },
   { label: 'Message Center', icon: 'lucide:message-square', path: '/chat' },

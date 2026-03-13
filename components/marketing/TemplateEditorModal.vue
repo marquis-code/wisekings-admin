@@ -73,7 +73,7 @@
             </div>
             
             <div class="flex items-center gap-3 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm w-fit">
-              <input v-model="form.isActive" type="checkbox" id="tplActive" class="w-5 h-5 rounded border-gray-200 text-[#033958] focus:ring-[#033958]" />
+              <input v-model="form.isActive" type="checkbox" id="tplActive" class="custom-checkbox" />
               <label for="tplActive" class="text-sm font-black text-gray-700 uppercase tracking-widest cursor-pointer">Template Active</label>
             </div>
           </div>

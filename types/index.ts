@@ -78,6 +78,7 @@ export interface User {
     role: string
     isActive: boolean
     isEmailVerified: boolean
+    isInvited: boolean
     avatar?: string
     lastLogin?: string
     createdAt: string

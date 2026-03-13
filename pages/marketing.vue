@@ -265,7 +265,7 @@
                   </div>
                 </div>
                 <div class="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-2xl border border-gray-100">
-                  <input v-model="bannerForm.isActive" type="checkbox" id="bannerActive" class="w-5 h-5 rounded border-gray-300 text-[#033958] focus:ring-[#033958]" />
+                  <input v-model="bannerForm.isActive" type="checkbox" id="bannerActive" class="custom-checkbox" />
                   <label for="bannerActive" class="text-sm font-bold text-gray-700 cursor-pointer">Active</label>
                 </div>
                 <button type="submit" class="w-full btn-primary !rounded-2xl !py-4 shadow-xl shadow-[#033958]/20" :disabled="savingBanner">
@@ -316,7 +316,7 @@
                   <div><label class="text-sm font-bold text-gray-700 mb-1 block">Badge Text</label><input v-model="promoForm.badgeText" class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 font-medium focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all" placeholder="e.g. 🔥 Hot Deal" /></div>
                   <div class="flex items-end">
                     <div class="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-2xl border border-gray-100 w-full">
-                      <input v-model="promoForm.isActive" type="checkbox" id="promoActive" class="w-5 h-5 rounded border-gray-300 text-[#033958] focus:ring-[#033958]" />
+                      <input v-model="promoForm.isActive" type="checkbox" id="promoActive" class="custom-checkbox" />
                       <label for="promoActive" class="text-sm font-bold text-gray-700 cursor-pointer">Active</label>
                     </div>
                   </div>

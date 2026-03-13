@@ -2,8 +2,8 @@
   <div class="space-y-10">
     <div class="space-y-3">
       <div class="w-16 h-1 bg-[#033958] rounded-full"></div>
-      <h2 class="text-4xl font-black text-gray-900 tracking-tight">Email Verification</h2>
-      <p class="text-gray-500 font-medium">We've sent a 6-digit verification code to <span class="text-[#033958] font-bold">{{ email }}</span>. Please enter it below to continue.</p>
+      <h2 class="text-4xl font-black text-gray-900 tracking-tight">Verify Email</h2>
+      <p class="text-gray-500 font-medium">Enter the 6-digit code we sent to <span class="text-[#033958] font-bold">{{ email }}</span>.</p>
     </div>
 
     <form @submit.prevent="handleVerify" class="space-y-6">
@@ -13,7 +13,7 @@
         </div>
         
         <div class="space-y-6">
-          <label class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">Secure Access Code</label>
+          <label class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">Verification Code</label>
           <div class="flex justify-center items-center gap-2 max-w-sm mx-auto">
             <input
               v-for="(digit, index) in 6"
@@ -47,12 +47,12 @@
 
       <button
         type="submit"
-        class="w-full py-6 rounded-[2rem] bg-[#033958] text-white font-black text-sm uppercase tracking-widest shadow-2xl shadow-[#033958]/30 hover:shadow-[#033958]/50 hover:-translate-y-1 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3"
+        class="w-full py-5 rounded-2xl bg-[#033958] text-white font-bold text-sm shadow-xl shadow-[#033958]/30 hover:shadow-[#033958]/50 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3"
         :disabled="loading"
       >
-        <Icon v-if="loading" name="lucide:loader-2" class="w-6 h-6 animate-spin" />
-        <span v-else>Verify Code</span>
-        <Icon v-if="!loading" name="lucide:check-circle-2" class="w-6 h-6" />
+        <Icon v-if="loading" name="lucide:loader-2" class="w-5 h-5 animate-spin" />
+        <span v-else>Verify</span>
+        <Icon v-if="!loading" name="lucide:check-circle-2" class="w-5 h-5" />
       </button>
 
       <p v-if="errorMessage" class="p-5 rounded-2xl bg-red-50 text-red-600 text-[10px] font-black uppercase tracking-widest text-center border border-red-100 animate-shake">

@@ -17,7 +17,7 @@
         <div class="space-y-1">
           <CoreAnimatedInput
             v-model="email"
-            label="Admin Email"
+            label="Email Address"
             type="email"
             required
             autocomplete="email"
@@ -27,7 +27,7 @@
         <div class="pt-4">
           <button
             type="submit"
-            class="btn-primary w-full py-3 rounded-xl text-base font-bold shadow-lg shadow-[#033958]/10 hover:shadow-xl hover:shadow-[#033958]/20 transition-all active:scale-[0.98] disabled:opacity-50"
+            class="btn-primary w-full py-4 rounded-2xl text-base font-bold shadow-[#033958]/10 hover:shadow-xl hover:shadow-[#033958]/20 transition-all active:scale-[0.98] disabled:opacity-50"
             :disabled="loading"
           >
             <Icon v-if="loading" name="lucide:loader-2" class="w-5 h-5 animate-spin mr-2" />

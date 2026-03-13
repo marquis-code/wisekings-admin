@@ -67,16 +67,17 @@
               </div>
             </div>
 
-            <div class="flex-1 min-w-0 py-1 border-b border-[#f5f6f6]">
+            <div class="flex-1 min-w-0 py-1">
               <div class="flex justify-between items-center mb-0.5">
-                <span class="font-normal text-[17px] text-[#111b21] truncate">
+                <span class="font-bold text-[16px] text-gray-900 truncate flex items-center gap-2">
                   {{ getParticipantName(conv) }}
+                  <span v-if="getParticipantRole(conv)" class="text-[9px] px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded uppercase tracking-tighter">{{ getParticipantRole(conv) }}</span>
                 </span>
-                <span class="text-[12px] text-[#667781] shrink-0 ml-2">
+                <span class="text-[11px] text-[#667781] shrink-0 ml-2">
                   {{ conv.lastMessageAt ? formatRelativeTime(conv.lastMessageAt) : '' }}
                 </span>
               </div>
-              <p class="text-[14px] text-[#667781] truncate flex items-center gap-1">
+              <p class="text-[14px] text-[#667781] truncate flex items-center gap-1 font-medium">
                 <Icon v-if="conv.lastMessageBy === user?._id" name="lucide:check-check" class="w-4 h-4 text-[#53bdeb]" />
                 {{ conv.lastMessage || 'Tap to chat' }}
               </p>
@@ -89,20 +90,28 @@
     <!-- Right Area -->
     <div class="flex-1 flex flex-col bg-[#efeae2] relative overflow-hidden">
       <!-- Wallpaper -->
-      <div class="absolute inset-0 opacity-[0.4] pointer-events-none bg-[url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')] bg-repeat"></div>
+      <div class="absolute inset-0 opacity-[0.4] pointer-events-none bg-[url('https://as2.ftcdn.net/v2/jpg/04/40/25/11/1000_F_440251147_iM1JtDoz7vA63jK278XlH6gZkP6q3c9S.jpg')] bg-repeat"></div>
 
       <template v-if="activeConversation">
         <!-- Header -->
         <div class="h-[64px] px-4 flex items-center justify-between bg-[#f0f2f5] shrink-0 relative z-10 border-l border-[#d1d7db]">
           <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-[#00a884] text-white font-bold text-lg">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-[#00a884] text-white font-bold text-lg shadow-sm">
               {{ getParticipantInitials(activeConversation) }}
             </div>
             <div class="min-w-0">
-              <h2 class="font-medium text-[16px] text-[#111b21] truncate tracking-tight">{{ getParticipantName(activeConversation) }}</h2>
-              <p class="text-[11px] text-[#667781] flex items-center gap-1">
+              <h2 class="font-bold text-[15px] text-gray-900 truncate tracking-tight flex items-center gap-1">
+                {{ getParticipantName(activeConversation) }}
+                <span v-if="getParticipantRole(activeConversation)" class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">({{ getParticipantRole(activeConversation) }})</span>
+              </h2>
+              <p class="text-[11px] text-[#667781] flex items-center gap-1 font-bold">
                 <span v-if="isTyping" class="text-[#00a884] animate-pulse">typing...</span>
-                <span v-else-if="isConnected" class="text-[#667781]">online</span>
+                <span v-else-if="isConnected" class="text-green-600 flex items-center gap-2">
+                   online
+                   <template v-for="admin in joinedAdmins" :key="admin.userId">
+                     <span v-if="admin.userId !== user?._id" class="px-1.5 py-0.5 bg-indigo-100 text-indigo-600 rounded text-[9px] font-bold">{{ admin.userName }} (joined)</span>
+                   </template>
+                </span>
                 <span v-else class="text-[#111b21] bg-[#d1d7db] px-1.5 py-0.5 rounded text-[9px] uppercase font-bold tracking-tighter">Connecting...</span>
               </p>
             </div>
@@ -127,26 +136,49 @@
             <template v-for="(msg, i) in messages" :key="msg._id || i">
                <!-- Date Separator -->
                <div v-if="showDateSeparator(i)" class="flex justify-center my-6">
-                <span class="px-3 py-1.5 bg-white rounded-lg text-[12px] text-[#54656f] uppercase tracking-widest shadow-sm">
+                <span class="px-3 py-1.5 bg-white rounded-lg text-[12px] text-[#54656f] uppercase tracking-widest shadow-sm font-black">
                   {{ formatDateSeparator(msg.createdAt) }}
                 </span>
                </div>
 
                <div :class="['flex mb-1', isSentByMe(msg) ? 'justify-end' : 'justify-start']">
                 <div :class="['max-w-[85%] md:max-w-[65%] flex flex-col', isSentByMe(msg) ? 'items-end' : 'items-start']">
+                  <!-- Sender Name for received messages -->
+                  <span v-if="!isSentByMe(msg) && activeConversation.type === 'group'" class="text-[10px] font-bold text-[#06cf9c] mb-0.5 ml-1 uppercase tracking-wider">
+                    {{ msg.senderId?.fullName || msg.senderId?.email || 'User' }}
+                  </span>
                   <!-- Message Bubble -->
-                  <div :class="['relative p-2 px-3 shadow-sm min-w-[80px] group transition-all', 
+                  <div :class="['relative p-2.5 shadow-sm min-w-[100px] group transition-all', 
                     isSentByMe(msg) 
                       ? 'bg-[#dcf8c6] text-[#111b21] rounded-lg rounded-tr-none' 
                       : 'bg-[#ffffff] text-[#111b21] rounded-lg rounded-tl-none']">
                     
-                    <p class="text-[14.2px] leading-relaxed break-words pr-10">{{ msg.content }}</p>
+                    
+                    <!-- Media Support -->
+                    <div v-if="msg.attachments?.length > 0" class="mb-2 max-w-[280px] overflow-hidden rounded">
+                        <template v-for="(att, aIdx) in msg.attachments" :key="aIdx">
+                           <img v-if="msg.type === 'image'" :src="att" class="w-full object-cover cursor-pointer hover:opacity-90 transition-opacity max-h-[300px]" @click="previewMedia = att" />
+                           <video v-else-if="msg.type === 'video'" :src="att" controls class="w-full"></video>
+                           <audio v-else-if="msg.type === 'audio'" :src="att" controls class="w-full"></audio>
+                           <a v-else :href="att" target="_blank" class="flex flex-col gap-2 p-3 bg-black/5 rounded-lg text-[#033958] hover:bg-black/10 transition-colors border border-[#033958]/10">
+                              <div class="flex items-center gap-3">
+                                <Icon name="lucide:file-text" size="24" class="text-[#033958] shrink-0" />
+                                <div class="min-w-0">
+                                  <p class="text-[12px] font-bold truncate text-[#033958]">Document Attachment</p>
+                                  <p class="text-[10px] text-gray-500 font-black uppercase tracking-tight">Click to view/download</p>
+                                </div>
+                              </div>
+                           </a>
+                        </template>
+                    </div>
+
+                    <p class="text-sm font-medium leading-relaxed break-words pr-12 whitespace-pre-wrap">{{ msg.content }}</p>
                     
                     <span class="absolute bottom-1 right-1.5 flex items-center gap-1">
-                      <span class="text-[11px] text-[#667781]">{{ formatTime(msg.createdAt) }}</span>
+                      <span class="text-[9px] font-bold text-gray-400">{{ formatTime(msg.createdAt) }}</span>
                       <Icon v-if="isSentByMe(msg)" 
                         :name="msg.isRead ? 'lucide:check-check' : 'lucide:check'" 
-                        :class="['w-3.5 h-3.5', msg.isRead ? 'text-[#53bdeb]' : 'text-[#8696af]']" />
+                        :class="['w-3.5 h-3.5', msg.isRead ? 'text-[#53bdeb]' : 'text-gray-300']" />
                     </span>
                   </div>
                 </div>
@@ -156,14 +188,28 @@
         </div>
 
         <!-- Input -->
-        <div class="px-4 py-2.5 bg-[#f0f2f5] flex items-center gap-4 relative z-10 shrink-0 border-l border-[#d1d7db]">
+        <div class="px-4 py-3 bg-[#f0f2f5] flex items-center gap-4 relative z-10 shrink-0 border-l border-[#d1d7db]">
           <div class="flex items-center gap-1">
             <button class="p-2 text-[#54656f] hover:text-[#00a884] transition-colors">
               <Icon name="lucide:smile" class="w-6 h-6" />
             </button>
-            <button class="p-2 text-[#54656f] hover:text-[#00a884] transition-colors">
-              <Icon name="lucide:plus" class="w-6 h-6" />
-            </button>
+            <div class="relative">
+              <button @click="showAttachMenu = !showAttachMenu" class="p-2 text-[#54656f] hover:text-[#00a884] transition-colors">
+                <Icon name="lucide:plus" class="w-6 h-6" />
+              </button>
+              <div v-if="showAttachMenu" class="absolute bottom-12 left-0 bg-white border border-[#e9edef] p-2 rounded-xl shadow-xl flex flex-col gap-1 w-[200px] z-50">
+                <button @click="triggerFileInput('image/*,video/*')" class="flex items-center gap-3 p-2.5 hover:bg-gray-100 rounded-lg text-sm font-bold text-gray-700">
+                  <Icon name="lucide:image" class="text-indigo-500" /> Photo & Video
+                </button>
+                <button @click="triggerFileInput('.pdf,.doc,.docx')" class="flex items-center gap-3 p-2.5 hover:bg-gray-100 rounded-lg text-sm font-bold text-gray-700">
+                  <Icon name="lucide:file-text" class="text-purple-500" /> Document
+                </button>
+                <button class="flex items-center gap-3 p-2.5 hover:bg-gray-100 rounded-lg text-sm font-bold text-gray-700">
+                  <Icon name="lucide:sticker" class="text-amber-500" /> Sticker
+                </button>
+              </div>
+              <input type="file" ref="fileInput" class="hidden" @change="handleFileUpload" />
+            </div>
           </div>
           <div class="flex-1">
             <input 
@@ -171,12 +217,12 @@
               @input="handleTyping"
               @keydown.enter.prevent="handleSend"
               placeholder="Type a message..." 
-              class="w-full bg-white border-none rounded-xl py-2.5 px-4 text-[15px] text-[#3b4a54] focus:ring-0 placeholder:text-[#8696a0]"
+              class="w-full bg-white border-none rounded-xl py-2.5 px-4 text-[15px] text-gray-700 focus:ring-0 shadow-sm placeholder:text-[#8696a0]"
             />
           </div>
           <button @click="handleSend" :disabled="!text.trim()" 
-            class="w-10 h-10 flex items-center justify-center text-[#54656f] hover:text-[#00a884] transition-all disabled:opacity-30">
-            <Icon :name="text.trim() ? 'lucide:send' : 'lucide:mic'" class="w-6 h-6" />
+            class="w-11 h-11 bg-[#00a884] text-white rounded-full flex items-center justify-center hover:bg-[#06cf9c] transition-all transform active:scale-95 disabled:opacity-30 shadow-lg shadow-[#00a884]/20">
+            <Icon :name="text.trim() ? 'lucide:send' : 'lucide:mic'" class="w-5 h-5" />
           </button>
         </div>
       </template>
@@ -279,11 +325,58 @@ const {
   createConversation,
   sendMessage,
   sendTyping,
+  joinedAdmins,
 } = useChat()
 
 const text = ref('')
 const searchQuery = ref('')
 const messagesContainer = ref<HTMLElement | null>(null)
+const showAttachMenu = ref(false)
+const previewMedia = ref<string | null>(null)
+const fileInput = ref<HTMLInputElement | null>(null)
+
+function triggerFileInput(accept: string) {
+  if (fileInput.value) {
+    fileInput.value.accept = accept
+    fileInput.value.click()
+  }
+}
+
+async function handleFileUpload(event: Event) {
+  const target = event.target as HTMLInputElement
+  if (!target.files?.length) return
+  const file = target.files[0]
+  
+  // Reuse upload logic from merchant or implement here
+  // For now we'll simulate or use a shared helper if found
+  try {
+    const formData = new FormData()
+    formData.append('file', file)
+    const folder = 'chat'
+    const endpoint = file.type.startsWith('image/') || file.type.startsWith('video/') || file.type.startsWith('audio/') 
+                ? `/uploads/image/${folder}`
+                : `/uploads/document/${folder}`;
+    
+    const config = useRuntimeConfig()
+    const { accessToken } = useAuthState()
+    const res: any = await $fetch(`${config.public.apiBase}${endpoint}`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${accessToken.value}` },
+      body: formData
+    })
+    
+    let type = 'file'
+    if (file.type.startsWith('image/')) type = 'image'
+    else if (file.type.startsWith('video/')) type = 'video'
+    else if (file.type.startsWith('audio/')) type = 'audio'
+    else type = 'document'
+    
+    sendMessage(file.name, type, [res.url])
+    showAttachMenu.value = false
+  } catch (err) {
+    console.error('Upload failed', err)
+  }
+}
 
 // New Chat Modal State
 const showNewChatModal = ref(false)
@@ -313,15 +406,34 @@ function handleTyping() {
   typingTimeout = setTimeout(() => sendTyping(false), 2000)
 }
 
+function getUserId(u: any) {
+  if (!u) return null
+  return typeof u === 'string' ? u : u._id || u.id
+}
+
 function getOtherParticipant(conv: any) {
   if (!conv?.participants) return null
-  return conv.participants.find((p: any) => p._id !== user.value?._id) || conv.participants[0]
+  const myId = getUserId(user.value)
+  return conv.participants.find((p: any) => getUserId(p) !== myId) || conv.participants[0]
+}
+
+function getParticipantRole(conv: any) {
+  if (conv?.type === 'support') return 'customer'
+  if (conv?.type === 'group') return 'group'
+  const other = getOtherParticipant(conv)
+  return (other?.role || other?.userType || '').toLowerCase()
 }
 
 function getParticipantName(conv: any) {
+  if (conv?.type === 'support') {
+    const customer = conv.participants?.find((p: any) => p.userType === 'customer')
+    return `Support: ${customer?.fullName || customer?.email || 'Customer'}`
+  }
   if (conv?.groupName) return conv.groupName
   const other = getOtherParticipant(conv)
-  return other?.fullName || other?.email || 'User'
+  if (!other) return 'User'
+  if (typeof other === 'string') return 'User'
+  return other.fullName || other.email || 'User'
 }
 
 function getParticipantInitials(conv: any) {
@@ -330,8 +442,9 @@ function getParticipantInitials(conv: any) {
 }
 
 function isSentByMe(msg: any) {
-  const senderId = msg.senderId?._id || msg.senderId
-  return senderId === user.value?._id
+  const senderId = String(msg.senderId?._id || msg.senderId || '')
+  const myId = String(user.value?._id || user.value?.id || '')
+  return !!senderId && senderId === myId
 }
 
 function formatTime(date: any) {

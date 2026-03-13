@@ -60,7 +60,7 @@
                   type="checkbox" 
                   :checked="selectedIds.length === orders.length && orders.length > 0" 
                   @change="toggleAll"
-                  class="rounded border-gray-300 text-[#033958] focus:ring-[#033958]"
+                  class="custom-checkbox"
                 />
               </th>
               <th class="!py-5">Order ID</th>
@@ -93,7 +93,7 @@
                   type="checkbox" 
                   v-model="selectedIds" 
                   :value="o._id"
-                  class="rounded border-gray-300 text-[#033958] focus:ring-[#033958]"
+                  class="custom-checkbox"
                 />
               </td>
               <td class="!py-4">

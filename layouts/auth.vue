@@ -1,11 +1,11 @@
 <template>
   <div class="min-h-screen flex bg-white font-inter selection:bg-[#033958] selection:text-white">
     <!-- Left Side: Immersive Branding & Image -->
-    <div class="hidden lg:flex lg:w-3/5 relative overflow-hidden bg-[#0a0a0a]">
+    <div class="hidden lg:flex lg:w-3/5 relative overflow-hidden bg-[#0a0a0a] sticky top-0 h-screen">
       <!-- Background Image with Overlay -->
       <div class="absolute inset-0 z-0">
         <img 
-          src="file:///Users/mac/.gemini/antigravity/brain/95fa0ca6-d9e8-4318-93bb-da21982563a5/admin_login_bg_1773329292637.png" 
+          src="@/assets/images/auth-bg.png" 
           alt="Admin Command Center" 
           class="w-full h-full object-cover opacity-60 scale-100 group-hover:scale-105 transition-transform duration-[10s]"
         >

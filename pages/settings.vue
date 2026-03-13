@@ -308,6 +308,38 @@
               <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Pickup Store Address</label>
               <textarea v-model="shippingConfig.pickupAddress" rows="2" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all resize-none"></textarea>
             </div>
+
+            <!-- Pricing Tiers -->
+            <div class="pt-6 border-t border-gray-100 space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs font-black uppercase tracking-widest text-[#033958]">Distance Pricing Tiers</h3>
+                <button @click="addPricingTier" class="text-[10px] font-black uppercase tracking-widest text-amber-600 hover:text-amber-700 flex items-center gap-1">
+                  <Icon name="lucide:plus" size="14" />
+                  Add Tier
+                </button>
+              </div>
+              
+              <div v-if="shippingConfig.pricingTiers?.length" class="space-y-3">
+                <div v-for="(tier, idx) in shippingConfig.pricingTiers" :key="idx" class="p-4 bg-gray-50 rounded-2xl border border-gray-100 grid grid-cols-12 gap-3 items-center group relative">
+                  <div class="col-span-4 space-y-1">
+                    <label class="text-[8px] font-black uppercase text-gray-400 tracking-tighter">From (Meters)</label>
+                    <input v-model.number="tier.from" type="number" class="w-full px-3 py-2 text-xs font-bold bg-white border border-gray-200 rounded-xl outline-none" />
+                  </div>
+                  <div class="col-span-4 space-y-1">
+                    <label class="text-[8px] font-black uppercase text-gray-400 tracking-tighter">To (Meters)</label>
+                    <input v-model.number="tier.to" type="number" class="w-full px-3 py-2 text-xs font-bold bg-white border border-gray-200 rounded-xl outline-none" />
+                  </div>
+                  <div class="col-span-4 space-y-1">
+                    <label class="text-[8px] font-black uppercase text-gray-400 tracking-tighter">Price (₦)</label>
+                    <input v-model.number="tier.price" type="number" class="w-full px-3 py-2 text-xs font-bold bg-white border border-gray-200 rounded-xl outline-none" />
+                  </div>
+                  <button @click="shippingConfig.pricingTiers.splice(idx, 1)" class="absolute -right-2 -top-2 w-6 h-6 rounded-full bg-red-100 text-red-600 flex items-center justify-center opacity-0 group-hover:opacity-100 shadow-sm transition-all">
+                    <Icon name="lucide:x" size="12" />
+                  </button>
+                </div>
+              </div>
+              <p v-else class="text-[10px] text-gray-400 italic text-center py-4 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100">No custom tiers defined. Using base/km rates.</p>
+            </div>
           </div>
         </div>
 
@@ -371,7 +403,8 @@ const shippingConfig = ref({
   warehouseAddress: '',
   warehouseLat: 0,
   warehouseLng: 0,
-  pickupAddress: ''
+  pickupAddress: '',
+  pricingTiers: [] as { from: number; to: number; price: number }[]
 })
 const savingShipping = ref(false)
 const loadingShipping = ref(false)
@@ -404,6 +437,11 @@ async function saveShippingConfig() {
   } finally {
     savingShipping.value = false
   }
+}
+
+function addPricingTier() {
+  if (!shippingConfig.value.pricingTiers) shippingConfig.value.pricingTiers = []
+  shippingConfig.value.pricingTiers.push({ from: 0, to: 1000, price: 0 })
 }
 
 async function fetchGlobalSettings() {

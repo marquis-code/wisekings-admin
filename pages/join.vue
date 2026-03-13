@@ -5,8 +5,8 @@
         <div class="w-16 h-16 rounded-2xl bg-[#033958] flex items-center justify-center font-bold text-white text-2xl shadow-xl shadow-[#033958]/20 mx-auto mb-6">
           WK
         </div>
-        <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Activate Account</h1>
-        <p class="text-gray-500 mt-2 font-medium italic">Complete your registration to join the WiseKings team</p>
+        <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Set Password</h1>
+        <p class="text-gray-500 mt-2 font-medium">Choose a password for your new administrator account.</p>
       </div>
 
       <div class="bg-white rounded-[2.5rem] p-8 shadow-2xl shadow-[#033958]/5 border border-gray-100">
@@ -17,65 +17,42 @@
                 <p class="text-sm font-black text-gray-900">{{ email }}</p>
             </div>
 
-            <div class="space-y-2">
-              <label class="text-sm font-bold text-gray-700 ml-1">Verification Code (OTP)</label>
-              <div class="relative group">
-                <Icon name="lucide:key-round" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#033958] transition-colors w-5 h-5" />
-                <input 
-                  v-model="form.otpCode" 
-                  type="text" 
-                  placeholder="Enter 6-digit code" 
-                  maxlength="6"
-                  required
-                  class="w-full pl-12 pr-4 py-3.5 bg-gray-50 border-none rounded-2xl text-center text-xl tracking-[0.3em] font-black focus:ring-2 focus:ring-[#033958]/10 transition-all text-gray-900" 
-                />
-              </div>
-            </div>
+            <div class="space-y-4">
+              <CoreAnimatedInput 
+                v-model="form.otpCode"
+                label="Verification Code"
+                type="text"
+                placeholder="Enter 6-digit code"
+                required
+              />
 
-            <div class="space-y-2">
-              <label class="text-sm font-bold text-gray-700 ml-1">Create Password</label>
-              <div class="relative group">
-                <Icon name="lucide:lock" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#033958] transition-colors w-5 h-5" />
-                <input 
-                  v-model="form.password" 
-                  :type="showPassword ? 'text' : 'password'" 
-                  placeholder="At least 8 characters" 
-                  required
-                  class="w-full pl-12 pr-12 py-3.5 bg-gray-50 border-none rounded-2xl text-sm focus:ring-2 focus:ring-[#033958]/10 transition-all font-medium text-gray-900" 
-                />
-                <button type="button" @click="showPassword = !showPassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
-                  <Icon :name="showPassword ? 'lucide:eye-off' : 'lucide:eye'" class="w-4 h-4" />
-                </button>
-              </div>
-            </div>
+              <CoreAnimatedInput 
+                v-model="form.password"
+                label="New Password"
+                type="password"
+                placeholder="At least 8 characters"
+                required
+              />
 
-            <div class="space-y-2">
-              <label class="text-sm font-bold text-gray-700 ml-1">Confirm Password</label>
-              <div class="relative group">
-                <Icon name="lucide:shield-check" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#033958] transition-colors w-5 h-5" />
-                <input 
-                  v-model="form.confirmPassword" 
-                  :type="showPassword ? 'text' : 'password'" 
-                  placeholder="Repeat your password" 
-                  required
-                  class="w-full pl-12 pr-4 py-3.5 bg-gray-50 border-none rounded-2xl text-sm focus:ring-2 focus:ring-[#033958]/10 transition-all font-medium text-gray-900" 
-                />
-              </div>
+              <CoreAnimatedInput 
+                v-model="form.confirmPassword"
+                label="Confirm Password"
+                type="password"
+                placeholder="Repeat your password"
+                required
+              />
             </div>
           </div>
 
           <div class="pt-2">
-            <button 
-              type="submit" 
-              :disabled="loading || form.password !== form.confirmPassword || form.otpCode.length < 6"
-              class="w-full bg-[#033958] hover:bg-[#022f42] text-white font-bold py-4 rounded-2xl shadow-xl shadow-[#033958]/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 group disabled:opacity-50"
-            >
-              <span v-if="loading">Processing...</span>
-              <template v-else>
-                Complete Activation
-                <Icon name="lucide:check-circle" class="w-5 h-5 group-hover:scale-110 duration-300" />
-              </template>
-            </button>
+              <button 
+                type="submit" 
+                :disabled="loading || form.password !== form.confirmPassword || form.otpCode.length < 6"
+                class="w-full bg-[#033958] hover:bg-[#022f42] text-white font-bold py-4 rounded-2xl shadow-xl shadow-[#033958]/20 transition-all flex items-center justify-center gap-2 group disabled:opacity-50"
+              >
+                <span>{{ loading ? 'Saving...' : 'Set Password' }}</span>
+                <Icon v-if="!loading" name="lucide:check-circle" class="w-5 h-5 group-hover:scale-110 duration-300" />
+              </button>
             <p v-if="form.password && form.confirmPassword && form.password !== form.confirmPassword" class="text-xs text-red-500 font-bold text-center mt-3">
               Passwords do not match
             </p>

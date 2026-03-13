@@ -97,7 +97,8 @@
               </div>
             </td>
             <td class="!py-4">
-              <span :class="u.isActive ? 'badge-success' : 'badge-danger'">{{ u.isActive ? 'Active' : 'Inactive' }}</span>
+              <span v-if="u.isInvited" class="badge-warning">Pending</span>
+              <span v-else :class="u.isActive ? 'badge-success' : 'badge-danger'">{{ u.isActive ? 'Active' : 'Inactive' }}</span>
             </td>
             <td class="!py-4">
               <p class="text-xs font-bold text-gray-500">{{ u.lastLogin ? new Date(u.lastLogin).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'Never' }}</p>
@@ -229,5 +230,9 @@ onMounted(handleFetch)
 
 .badge-danger {
   @apply inline-flex items-center px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest bg-red-50 text-red-600 border border-red-100;
+}
+
+.badge-warning {
+  @apply inline-flex items-center px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest bg-amber-50 text-amber-600 border border-amber-100;
 }
 </style>

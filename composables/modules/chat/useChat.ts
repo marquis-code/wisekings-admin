@@ -36,14 +36,19 @@ export const useChat = () => {
         socket.value.on('disconnect', (reason) => {
             isConnected.value = false
             console.log('Admin Chat Socket Disconnected:', reason)
-            if (reason === 'io server disconnect') {
-                socket.value?.connect()
-            }
+            // Do not auto-reconnect if the server forced the disconnect (likely auth error)
         })
 
         socket.value.on('connect_error', (error) => {
             console.error('Admin Chat Connection Error:', error)
             isConnected.value = false
+            
+            // If it's a JWT expiry or auth error, we should logout to prevent loop
+            if (error.message.includes('expired') || error.message.includes('Unauthorized')) {
+                const auth = useAuthState()
+                auth.logout()
+                navigateTo('/login')
+            }
         })
 
         socket.value.on('chat:message:new', (msg) => {
@@ -69,7 +74,20 @@ export const useChat = () => {
                 typingUser.value = state.isTyping ? state.userId : null
             }
         })
+
+        socket.value.on('chat:admin:joined', (data) => {
+            console.log('Admin joined:', data)
+            // Add to joinedAdmins if we're in the same conversation
+            const activeConvId = activeConversation.value?._id || activeConversation.value
+            if (activeConvId === data.conversationId) {
+                if (!joinedAdmins.value.find(a => a.userId === data.userId)) {
+                    joinedAdmins.value.push(data)
+                }
+            }
+        })
     }
+
+    const joinedAdmins = ref<any[]>([])
 
     const updateConversationPreview = (msg: any) => {
         const convId = msg.conversationId?._id || msg.conversationId
@@ -92,7 +110,8 @@ export const useChat = () => {
         loadingConversations.value = true
         try {
             const res = await chatApiFactory.getConversations({ limit: 50 })
-            conversations.value = (res as any)?.data || []
+            const data = (res as any)?.data || []
+            conversations.value = data.sort((a: any, b: any) => new Date(b.lastMessageAt).getTime() - new Date(a.lastMessageAt).getTime())
         } catch (error) {
             console.error('Failed to fetch conversations:', error)
         } finally {
@@ -107,7 +126,7 @@ export const useChat = () => {
                 params: { search: query, limit: 100 }
             })
             // Filter out self and only show Merchants/Partners
-            return (res.data || []).filter((u: any) => u._id !== user.value?._id && ['merchant', 'partner'].includes(u.userType))
+            return (res.data || []).filter((u: any) => u._id !== user.value?._id && ['merchant', 'partner', 'customer'].includes(u.userType))
         } catch (error) {
             console.error('Failed to fetch participants:', error)
             return []
@@ -128,7 +147,8 @@ export const useChat = () => {
 
         try {
             const res = await chatApiFactory.getMessages(idToJoin, { limit: 100 })
-            messages.value = (res as any)?.data || []
+            const data = (res as any)?.data || []
+            messages.value = data.sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
         } catch (error) {
             console.error('Failed to fetch chat history:', error)
             messages.value = []
@@ -147,10 +167,8 @@ export const useChat = () => {
             const res = await chatApiFactory.createConversation({ participants, type })
             const newConv = (res as any)?.data
             if (newConv) {
-                const exists = conversations.value.find((c: any) => c._id === newConv._id)
-                if (!exists) {
-                    conversations.value.unshift(newConv)
-                }
+                // Refetch all conversations to get fully populated participant data
+                await getConversations()
                 return newConv
             }
         } catch (error) {
@@ -158,12 +176,15 @@ export const useChat = () => {
         }
     }
 
-    const sendMessage = (content: string) => {
+    const sendMessage = (content: string, type: string = 'text', attachments: string[] = [], replyTo?: string) => {
         const activeConvId = activeConversation.value?._id || activeConversation.value
         if (!socket.value || !activeConvId) return
         socket.value.emit('chat:message', {
             conversationId: activeConvId,
             content,
+            type,
+            attachments,
+            replyTo,
         })
     }
 
@@ -173,6 +194,7 @@ export const useChat = () => {
         socket.value.emit('chat:typing', {
             conversationId: activeConvId,
             isTyping: state,
+            userName: user.value?.fullName || 'Admin'
         })
     }
 
@@ -196,5 +218,6 @@ export const useChat = () => {
         createConversation,
         sendMessage,
         sendTyping,
+        joinedAdmins,
     }
 }

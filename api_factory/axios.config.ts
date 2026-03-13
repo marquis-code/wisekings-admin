@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const baseURL = import.meta.env.VITE_BASE_URL || "https://wisekings-backend-hq.onrender.com/api/v1";
+
 const GATEWAY_ENDPOINT = axios.create({
-  baseURL: "https://wisekings-backend-hq.onrender.com/api/v1", // Initial fallback
+  baseURL,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
