@@ -5,4 +5,6 @@ export const wallets_api = {
     approveWithdrawal: (id: string) => GATEWAY_ENDPOINT.patch(`/wallets/withdrawals/${id}/approve`),
     rejectWithdrawal: (id: string, payload: { reason: string }) => GATEWAY_ENDPOINT.patch(`/wallets/withdrawals/${id}/reject`, payload),
     markAsPaid: (id: string, payload: { reference: string }) => GATEWAY_ENDPOINT.patch(`/wallets/withdrawals/${id}/pay`, payload),
+    getTransactions: (params?: any) => GATEWAY_ENDPOINT.get("/wallets/transactions", { params }),
+    verifyFunding: (id: string, payload: { status: 'completed' | 'failed' }) => GATEWAY_ENDPOINT.patch(`/wallets/transactions/${id}/verify`, payload),
 }

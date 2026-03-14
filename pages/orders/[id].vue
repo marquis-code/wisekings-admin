@@ -152,6 +152,46 @@
             </div>
           </div>
         </div>
+
+        <!-- Payment Proof Verification (for Direct Transfer) -->
+        <div v-if="order.paymentProvider === 'direct_transfer' && order.paymentProof" class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600">
+              <Icon name="lucide:file-text" class="w-5 h-5" />
+            </div>
+            <h3 class="text-lg font-black text-gray-900 tracking-tight">Payment Proof</h3>
+          </div>
+          
+          <div class="space-y-6">
+            <div class="aspect-video rounded-3xl overflow-hidden border border-gray-100 bg-gray-50 group relative cursor-pointer" @click="openProof(order.paymentProof)">
+              <img :src="order.paymentProof" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+              <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                 <Icon name="lucide:maximize" class="w-8 h-8 text-white" />
+              </div>
+            </div>
+
+            <div v-if="order.paymentProofStatus === 'pending'" class="grid grid-cols-2 gap-4">
+              <button 
+                @click="verifyOrderProof('rejected')" 
+                class="py-4 rounded-2xl bg-rose-50 text-rose-600 font-black text-xs uppercase tracking-widest hover:bg-rose-100 transition-all border border-rose-100"
+                :disabled="verifying"
+              >
+                Reject Proof
+              </button>
+              <button 
+                @click="verifyOrderProof('verified')" 
+                class="py-4 rounded-2xl bg-emerald-500 text-white font-black text-xs uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20"
+                :disabled="verifying"
+              >
+                Verify Payment
+              </button>
+            </div>
+            <div v-else class="flex items-center justify-center p-4 rounded-2xl border" :class="order.paymentProofStatus === 'verified' ? 'bg-emerald-50 border-emerald-100 text-emerald-600' : 'bg-rose-50 border-rose-100 text-rose-600'">
+               <Icon :name="order.paymentProofStatus === 'verified' ? 'lucide:check-circle' : 'lucide:x-circle'" class="w-5 h-5 mr-2" />
+               <span class="text-xs font-black uppercase tracking-widest">Payment {{ order.paymentProofStatus }}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -164,8 +204,23 @@ import { useCustomToast } from '@/composables/core/useCustomToast'
 
 definePageMeta({ layout: 'dashboard' })
 const route = useRoute(); const { showToast } = useCustomToast()
-const order = ref<Order | null>(null); const loading = ref(true); const updating = ref(false)
+const order = ref<any | null>(null); const loading = ref(true); const updating = ref(false); const verifying = ref(false)
 const selectedStatus = ref('')
+
+function openProof(url: string) { window.open(url, '_blank') }
+
+async function verifyOrderProof(status: 'verified' | 'rejected') {
+  verifying.value = true
+  try {
+    await orders_api.verifyProof(order.value!._id, status)
+    showToast({ title: 'Success', message: `Payment proof ${status}`, toastType: 'success' })
+    fetchOrder()
+  } catch {
+    showToast({ title: 'Error', message: 'Failed to update proof status', toastType: 'error' })
+  } finally {
+    verifying.value = false
+  }
+}
 
 async function fetchOrder() { 
   loading.value = true; 

@@ -111,6 +111,57 @@
       </div>
     </div>
 
+    <!-- Currency Rates Tab -->
+    <div v-if="activeTab === 'currencies'" class="max-w-5xl space-y-8">
+      <div class="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-10">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+              <Icon name="lucide:refresh-cw" class="w-6 h-6" />
+            </div>
+            <div>
+              <h2 class="text-xl font-black text-gray-900 tracking-tight">Exchange Rates</h2>
+              <p class="text-sm text-gray-400 font-medium">Real-time currency rates relative to NGN (System Base)</p>
+            </div>
+          </div>
+          <button 
+            @click="fetchRates" 
+            :disabled="loadingRates"
+            class="px-8 py-3 bg-[#033958] text-white text-xs font-black uppercase tracking-widest rounded-2xl hover:opacity-90 transition-all disabled:opacity-50 shadow-lg shadow-[#033958]/20 flex items-center gap-2"
+          >
+            <Icon name="lucide:refresh-cw" :class="['w-4 h-4', loadingRates ? 'animate-spin' : '']" />
+            {{ loadingRates ? 'Fetching...' : 'Refresh Rates' }}
+          </button>
+        </div>
+
+        <div v-if="loadingRates" class="flex flex-col items-center justify-center py-20">
+          <div class="w-10 h-10 border-4 border-gray-100 border-t-emerald-500 rounded-full animate-spin"></div>
+          <p class="mt-4 text-xs font-black text-gray-400 uppercase tracking-widest">Updating from ExchangeRate API...</p>
+        </div>
+
+        <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div v-for="(rate, code) in exchangeRates" :key="code" class="p-6 rounded-3xl bg-gray-50 border border-gray-100 group hover:border-[#033958] transition-all">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-black text-gray-400 uppercase tracking-widest">{{ code }}</span>
+              <span class="w-8 h-8 rounded-xl bg-white flex items-center justify-center text-lg shadow-sm">{{ getCurrencySymbol(code) }}</span>
+            </div>
+            <p class="text-2xl font-black text-gray-900">{{ formatSignificant(rate) }}</p>
+            <p class="text-[9px] text-gray-400 font-bold uppercase tracking-tight mt-1">1 NGN = {{ formatSignificant(rate) }} {{ code }}</p>
+          </div>
+        </div>
+
+        <div class="mt-10 p-6 bg-blue-50 rounded-3xl border border-blue-100">
+          <div class="flex gap-4">
+            <Icon name="lucide:info" class="w-5 h-5 text-blue-600 shrink-0" />
+            <div class="space-y-1">
+              <p class="text-xs font-black text-blue-900 uppercase tracking-widest">Technical Note</p>
+              <p class="text-xs text-blue-700 font-medium leading-relaxed">Exchange rates are fetched from the ExchangeRate API and cached in Redis for 24 hours to stay within API limits. Values shown are used globally for front-end price conversions.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- KYC Configuration Tab -->
     <div v-if="activeTab === 'kyc'" class="max-w-5xl space-y-8">
       <div class="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100">
@@ -376,6 +427,98 @@
         </div>
       </div>
     </div>
+
+    <!-- Bank Accounts Tab -->
+    <div v-if="activeTab === 'bank'" class="max-w-5xl space-y-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Customer Bank Details -->
+        <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
+              <Icon name="lucide:user" class="w-6 h-6" />
+            </div>
+            <h2 class="text-xl font-black text-gray-900 tracking-tight">Storefront</h2>
+          </div>
+          <div class="space-y-4">
+            <div class="space-y-2">
+              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Account Name</label>
+              <input v-model="globalSettings.customerBankDetails.accountName" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
+            </div>
+            <div class="space-y-2">
+              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Account Number</label>
+              <input v-model="globalSettings.customerBankDetails.accountNumber" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
+            </div>
+            <div class="space-y-2">
+              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Bank Name</label>
+              <input v-model="globalSettings.customerBankDetails.bankName" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Merchant Bank Details -->
+        <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600">
+              <Icon name="lucide:shopping-bag" class="w-6 h-6" />
+            </div>
+            <h2 class="text-xl font-black text-gray-900 tracking-tight">Merchants</h2>
+          </div>
+          <div class="space-y-4">
+            <div class="space-y-2">
+              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Account Name</label>
+              <input v-model="globalSettings.merchantBankDetails.accountName" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
+            </div>
+            <div class="space-y-2">
+              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Account Number</label>
+              <input v-model="globalSettings.merchantBankDetails.accountNumber" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
+            </div>
+            <div class="space-y-2">
+              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Bank Name</label>
+              <input v-model="globalSettings.merchantBankDetails.bankName" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Partner Bank Details -->
+        <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600">
+              <Icon name="lucide:briefcase" class="w-6 h-6" />
+            </div>
+            <h2 class="text-xl font-black text-gray-900 tracking-tight">Partners</h2>
+          </div>
+          <div class="space-y-4">
+            <div class="space-y-2">
+              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Account Name</label>
+              <input v-model="globalSettings.partnerBankDetails.accountName" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
+            </div>
+            <div class="space-y-2">
+              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Account Number</label>
+              <input v-model="globalSettings.partnerBankDetails.accountNumber" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
+            </div>
+            <div class="space-y-2">
+              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Bank Name</label>
+              <input v-model="globalSettings.partnerBankDetails.bankName" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="bg-white rounded-3xl p-6 border border-gray-100 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <Icon name="lucide:info" class="w-5 h-5 text-gray-400" />
+          <p class="text-xs text-gray-500 font-medium">Configure account details for direct bank transfers across all applications.</p>
+        </div>
+        <button 
+          @click="saveGlobalSettings" 
+          :disabled="savingGlobalSettings"
+          class="px-10 py-3 bg-[#033958] text-white text-xs font-black uppercase tracking-widest rounded-2xl hover:opacity-90 transition-all disabled:opacity-50 shadow-lg shadow-[#033958]/20"
+        >
+          {{ savingGlobalSettings ? 'Saving...' : 'Apply Bank Settings' }}
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -383,6 +526,7 @@
 import { ref, onMounted } from 'vue'
 import { settings_api } from '@/api_factory/modules/settings'
 import { shipping_api } from '@/api_factory/modules/shipping'
+import { currencies_api } from '@/api_factory/modules/currencies'
 import { useCustomToast } from '@/composables/core/useCustomToast'
 
 definePageMeta({ layout: 'dashboard' })
@@ -390,8 +534,10 @@ const { showToast } = useCustomToast()
 
 const tabs = [
   { id: 'general', name: 'General Platform' },
+  { id: 'currencies', name: 'Currency Rates' },
   { id: 'kyc', name: 'KYC Configuration' },
-  { id: 'shipping', name: 'Shipping & Comms' }
+  { id: 'shipping', name: 'Shipping & Comms' },
+  { id: 'bank', name: 'Bank Accounts' }
 ]
 const activeTab = ref('general')
 
@@ -411,7 +557,10 @@ const loadingShipping = ref(false)
 
 // System Settings
 const globalSettings = ref({
-    whatsappNumber: ''
+    whatsappNumber: '',
+    customerBankDetails: { accountName: '', accountNumber: '', bankName: '' },
+    merchantBankDetails: { accountName: '', accountNumber: '', bankName: '' },
+    partnerBankDetails: { accountName: '', accountNumber: '', bankName: '' }
 })
 const savingGlobalSettings = ref(false)
 
@@ -447,7 +596,13 @@ function addPricingTier() {
 async function fetchGlobalSettings() {
     try {
         const res = await settings_api.getSettings()
-        globalSettings.value = res.data || res.data?.data || {}
+        const data = res.data || res.data?.data || {}
+        globalSettings.value = {
+            whatsappNumber: data.whatsappNumber || '',
+            customerBankDetails: data.customerBankDetails || { accountName: '', accountNumber: '', bankName: '' },
+            merchantBankDetails: data.merchantBankDetails || { accountName: '', accountNumber: '', bankName: '' },
+            partnerBankDetails: data.partnerBankDetails || { accountName: '', accountNumber: '', bankName: '' }
+        }
     } catch (e) {
         console.error('Failed to load global settings', e)
     }
@@ -543,9 +698,41 @@ async function saveKycDocuments() {
   }
 }
 
+// Currency Rates
+const exchangeRates = ref<Record<string, number>>({})
+const loadingRates = ref(false)
+
+async function fetchRates() {
+  loadingRates.value = true
+  try {
+    const res = await currencies_api.getRates()
+    exchangeRates.value = res.data || res.data?.data || {}
+  } catch (e) {
+    console.error('Failed to load exchange rates', e)
+  } finally {
+    loadingRates.value = false
+  }
+}
+
+function getCurrencySymbol(code: string | any) {
+  const symbols: Record<string, string> = {
+    NGN: '₦',
+    USD: '$',
+    EUR: '€',
+    GBP: '£'
+  }
+  return symbols[code] || '¤'
+}
+
+function formatSignificant(num: number) {
+  if (!num) return '0.00'
+  return num < 0.01 ? num.toFixed(6) : num.toFixed(4)
+}
+
 onMounted(() => {
   fetchKycDocuments()
   fetchShippingConfig()
   fetchGlobalSettings()
+  fetchRates()
 })
 </script>

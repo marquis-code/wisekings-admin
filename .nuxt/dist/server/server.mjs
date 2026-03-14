@@ -486,7 +486,7 @@ const _routes = [
     name: "index",
     path: "/",
     meta: __nuxt_page_meta$p || {},
-    component: () => import("./_nuxt/index-Bp-zLUXf.js")
+    component: () => import("./_nuxt/index-BXWEf1SD.js")
   },
   {
     name: "login",
@@ -516,7 +516,7 @@ const _routes = [
     name: "settings",
     path: "/settings",
     meta: __nuxt_page_meta$k || {},
-    component: () => import("./_nuxt/settings-DfJZ_FDd.js"),
+    component: () => import("./_nuxt/settings-NdLRCLhA.js"),
     children: [
       {
         name: "settings-chat",
@@ -553,13 +553,13 @@ const _routes = [
     name: "orders-id",
     path: "/orders/:id()",
     meta: __nuxt_page_meta$f || {},
-    component: () => import("./_nuxt/_id_-C7YzWRli.js")
+    component: () => import("./_nuxt/_id_-CZ7BZsBm.js")
   },
   {
     name: "orders",
     path: "/orders",
     meta: __nuxt_page_meta$e || {},
-    component: () => import("./_nuxt/index-Bfqs3058.js")
+    component: () => import("./_nuxt/index-BISABHmA.js")
   },
   {
     name: "products-new",
@@ -628,6 +628,11 @@ const _routes = [
     component: () => import("./_nuxt/index-Dir2kO_H.js")
   },
   {
+    name: "wallets-funding",
+    path: "/wallets/funding",
+    component: () => import("./_nuxt/funding-DRSVTwRh.js")
+  },
+  {
     name: "products-id-edit",
     path: "/products/:id()/edit",
     meta: __nuxt_page_meta$2 || {},
@@ -642,7 +647,7 @@ const _routes = [
     name: "wallets-withdrawals",
     path: "/wallets/withdrawals",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import("./_nuxt/withdrawals-4kjKEPo7.js")
+    component: () => import("./_nuxt/withdrawals-D-y44Kom.js")
   },
   {
     name: "support-inquiries",
@@ -2093,7 +2098,7 @@ function createNuxtI18nContext(nuxt, vueI18n, defaultLocale) {
       return;
     }
     const headers = getLocaleConfig(locale)?.cacheable ? {} : { "Cache-Control": "no-cache" };
-    const messages = await $fetch(`${"/_i18n/6GgZdEET"}/${locale}/messages.json`, { headers });
+    const messages = await $fetch(`${"/_i18n/-L6zcETi"}/${locale}/messages.json`, { headers });
     for (const k of Object.keys(messages)) {
       i18n.mergeLocaleMessage(k, messages[k]);
     }
@@ -7085,7 +7090,7 @@ const i18n_EI7LsD1KYQADczz5hrChviGQCdVM8yUkvFEZLJpmnvM = /* @__PURE__ */ defineN
     {
       localeConfigs.value = useRequestEvent().context.nuxtI18n?.localeConfigs || {};
     }
-    prerenderRoutes(localeCodes.map((locale) => `${"/_i18n/6GgZdEET"}/${locale}/messages.json`));
+    prerenderRoutes(localeCodes.map((locale) => `${"/_i18n/-L6zcETi"}/${locale}/messages.json`));
     const i18n = createI18n(optionsI18n);
     const detectors = useDetectors(useRequestEvent(nuxt), useI18nDetection(nuxt), nuxt);
     const ctx = createNuxtI18nContext(nuxt, i18n, optionsI18n.defaultLocale);
