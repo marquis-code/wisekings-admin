@@ -22,6 +22,7 @@
         <SelectInput 
           v-model="statusFilter" 
           label="Filter by Status"
+          width="240px"
           :options="[
             { label: 'All Request Statuses', value: '' },
             { label: 'Pending', value: 'pending' },

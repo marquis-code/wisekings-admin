@@ -32,6 +32,7 @@
         <SelectInput 
           v-model="statusFilter" 
           label="Filter by Status"
+          width="200px"
           :options="[
             { label: 'All Statuses', value: '' },
             { label: 'Active', value: 'active' },

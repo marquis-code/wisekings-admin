@@ -32,6 +32,7 @@
         <SelectInput 
           v-model="statusFilter" 
           label="Filter by Status"
+          width="200px"
           :options="[
             { label: 'All Statuses', value: '' },
             { label: 'Pending', value: 'pending' },
@@ -189,6 +190,7 @@ const { updateStatus } = useUpdateInquiryStatus()
 const { openConfirm } = useConfirm()
 
 const statusFilter = ref('')
+const search = ref('')
 const selectedInquiry = ref<any>(null)
 
 interface Inquiry {

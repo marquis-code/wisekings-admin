@@ -22,16 +22,21 @@ interface _GlobalComponents {
   CoreImageUpload: typeof import("../../components/core/ImageUpload.vue")['default']
   CoreImageUploader: typeof import("../../components/core/ImageUploader.vue")['default']
   CoreKycDocumentModal: typeof import("../../components/core/KycDocumentModal.vue")['default']
+  CoreLanguageSwitcher: typeof import("../../components/core/LanguageSwitcher.vue")['default']
   CorePasswordInput: typeof import("../../components/core/PasswordInput.vue")['default']
   CorePhoneInput: typeof import("../../components/core/PhoneInput.vue")['default']
   CoreRichTextEditor: typeof import("../../components/core/RichTextEditor.vue")['default']
   CoreSelectInput: typeof import("../../components/core/SelectInput.vue")['default']
   CoreSkeletonLoader: typeof import("../../components/core/SkeletonLoader.vue")['default']
   CoreToast: typeof import("../../components/core/Toast.vue")['default']
+  InvestmentsInvestmentProductModal: typeof import("../../components/investments/InvestmentProductModal.vue")['default']
   MarketingCampaignModal: typeof import("../../components/marketing/CampaignModal.vue")['default']
   MarketingBannerModal: typeof import("../../components/marketing/MarketingBannerModal.vue")['default']
   MarketingPromoModal: typeof import("../../components/marketing/MarketingPromoModal.vue")['default']
   MarketingTemplateEditorModal: typeof import("../../components/marketing/TemplateEditorModal.vue")['default']
+  ProductionBatchModal: typeof import("../../components/production/BatchModal.vue")['default']
+  ProductionMaterialModal: typeof import("../../components/production/MaterialModal.vue")['default']
+  ProductionPurchaseOrderModal: typeof import("../../components/production/PurchaseOrderModal.vue")['default']
   UsersUserInviteModal: typeof import("../../components/users/UserInviteModal.vue")['default']
   NuxtWelcome: typeof import("../../node_modules/nuxt/dist/app/components/welcome.vue")['default']
   NuxtLayout: typeof import("../../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
@@ -67,16 +72,21 @@ interface _GlobalComponents {
   LazyCoreImageUpload: LazyComponent<typeof import("../../components/core/ImageUpload.vue")['default']>
   LazyCoreImageUploader: LazyComponent<typeof import("../../components/core/ImageUploader.vue")['default']>
   LazyCoreKycDocumentModal: LazyComponent<typeof import("../../components/core/KycDocumentModal.vue")['default']>
+  LazyCoreLanguageSwitcher: LazyComponent<typeof import("../../components/core/LanguageSwitcher.vue")['default']>
   LazyCorePasswordInput: LazyComponent<typeof import("../../components/core/PasswordInput.vue")['default']>
   LazyCorePhoneInput: LazyComponent<typeof import("../../components/core/PhoneInput.vue")['default']>
   LazyCoreRichTextEditor: LazyComponent<typeof import("../../components/core/RichTextEditor.vue")['default']>
   LazyCoreSelectInput: LazyComponent<typeof import("../../components/core/SelectInput.vue")['default']>
   LazyCoreSkeletonLoader: LazyComponent<typeof import("../../components/core/SkeletonLoader.vue")['default']>
   LazyCoreToast: LazyComponent<typeof import("../../components/core/Toast.vue")['default']>
+  LazyInvestmentsInvestmentProductModal: LazyComponent<typeof import("../../components/investments/InvestmentProductModal.vue")['default']>
   LazyMarketingCampaignModal: LazyComponent<typeof import("../../components/marketing/CampaignModal.vue")['default']>
   LazyMarketingBannerModal: LazyComponent<typeof import("../../components/marketing/MarketingBannerModal.vue")['default']>
   LazyMarketingPromoModal: LazyComponent<typeof import("../../components/marketing/MarketingPromoModal.vue")['default']>
   LazyMarketingTemplateEditorModal: LazyComponent<typeof import("../../components/marketing/TemplateEditorModal.vue")['default']>
+  LazyProductionBatchModal: LazyComponent<typeof import("../../components/production/BatchModal.vue")['default']>
+  LazyProductionMaterialModal: LazyComponent<typeof import("../../components/production/MaterialModal.vue")['default']>
+  LazyProductionPurchaseOrderModal: LazyComponent<typeof import("../../components/production/PurchaseOrderModal.vue")['default']>
   LazyUsersUserInviteModal: LazyComponent<typeof import("../../components/users/UserInviteModal.vue")['default']>
   LazyNuxtWelcome: LazyComponent<typeof import("../../node_modules/nuxt/dist/app/components/welcome.vue")['default']>
   LazyNuxtLayout: LazyComponent<typeof import("../../node_modules/nuxt/dist/app/components/nuxt-layout")['default']>

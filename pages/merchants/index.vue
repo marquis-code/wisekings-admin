@@ -32,6 +32,7 @@
         <SelectInput 
           v-model="statusFilter" 
           label="Filter by Status"
+          width="200px"
           :options="[
             { label: 'All Statuses', value: '' },
             { label: 'Active', value: 'active' },
@@ -43,6 +44,7 @@
         <SelectInput 
           v-model="categoryFilter" 
           label="Filter by Category"
+          width="200px"
           :options="[
             { label: 'All Categories', value: '' },
             { label: 'Standard', value: 'standard' },

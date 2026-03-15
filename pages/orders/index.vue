@@ -30,6 +30,7 @@
         <SelectInput 
           v-model="statusFilter" 
           label="Filter by Status"
+          width="200px"
           :options="[
             { label: 'All Statuses', value: '' },
             { label: 'Pending', value: 'pending' },
@@ -45,6 +46,7 @@
         <SelectInput 
           v-model="paymentFilter" 
           label="Filter by Payment"
+          width="200px"
           :options="[
             { label: 'All Payments', value: '' },
             { label: 'Pending', value: 'pending' },

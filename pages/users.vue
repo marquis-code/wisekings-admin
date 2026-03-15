@@ -34,6 +34,7 @@
         <SelectInput 
           v-model="roleFilter" 
           label="Filter by Role"
+          width="200px"
           :options="[
             { label: 'All Roles', value: '' },
             { label: 'Super Admin', value: 'superadmin' },

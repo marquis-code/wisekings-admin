@@ -22,6 +22,7 @@
             disabled ? 'opacity-50 cursor-not-allowed' : '',
             (hasError || (errorMessage && showError)) ? 'ring-1 ring-red-500 border-red-500' : ''
           ]"
+          :style="{ minWidth: width === '100%' ? '200px' : width, width: width }"
         >
           <span class="text-gray-900">
             <!-- Custom selected label slot -->
@@ -129,6 +130,7 @@
     showError?: boolean
     hasError?: boolean
     position?: 'top' | 'middle' | 'bottom' | 'standalone'
+    width?: string
   }
   const props = withDefaults(defineProps<Props>(), {
     modelValue: '',
@@ -138,7 +140,8 @@
     errorMessage: '',
     showError: true,
     hasError: false,
-    position: 'standalone'
+    position: 'standalone',
+    width: '100%'
   })
   
   // Slots

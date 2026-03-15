@@ -42,6 +42,7 @@
         <SelectInput 
           v-model="categoryFilter" 
           label="Filter by Category"
+          width="240px"
           :options="[{ label: 'All Categories', value: '' }, ...categories.map(c => ({ label: c.name, value: c._id }))]"
           @update:modelValue="handleFetch"
         />

@@ -46,18 +46,21 @@
 
         <!-- System Footer -->
         <div v-if="sidebarOpen" class="p-8 pt-4 border-t border-gray-50 bg-gray-50/30">
-           <div class="flex items-center gap-3 mb-6">
-              <div class="w-10 h-10 rounded-full bg-[#033958] flex items-center justify-center text-white text-xs font-bold ring-2 ring-white shadow-xl shadow-[#033958]/20">
-                {{ initials }}
-              </div>
-              <div class="min-w-0">
-                <p class="text-xs font-black text-gray-900 truncate uppercase tracking-tight">{{ user?.fullName }}</p>
-                <div class="flex items-center gap-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                  <p class="text-[9px] font-black text-emerald-500 uppercase tracking-widest">Connected</p>
-                </div>
-              </div>
-           </div>
+            <div class="flex items-center justify-between mb-4">
+               <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-full bg-[#033958] flex items-center justify-center text-white text-xs font-bold ring-2 ring-white shadow-xl shadow-[#033958]/20">
+                    {{ initials }}
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-xs font-black text-gray-900 truncate uppercase tracking-tight">{{ user?.fullName }}</p>
+                    <div class="flex items-center gap-1">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      <p class="text-[9px] font-black text-emerald-500 uppercase tracking-widest">Connected</p>
+                    </div>
+                  </div>
+               </div>
+               <CoreLanguageSwitcher />
+            </div>
            <button @click="sidebarOpen = !sidebarOpen" class="w-full py-3 rounded-xl bg-white border border-gray-100 flex items-center justify-center gap-2 hover:bg-gray-50 transition-all shadow-sm">
               <Icon name="lucide:panel-left-close" class="w-4 h-4 text-gray-400" />
               <span class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Minimize</span>
@@ -272,6 +275,18 @@ const navGroups = [
       { label: 'Categories', icon: 'lucide:tags', path: '/categories', roles: ['superadmin', 'admin'] },
       { label: 'Order Pipeline', icon: 'lucide:shopping-cart', path: '/orders', roles: ['superadmin', 'admin', 'manager', 'staff', 'finance'] },
       { label: 'Marketing Engine', icon: 'lucide:megaphone', path: '/marketing', roles: ['superadmin', 'admin'] },
+      { label: 'Investment Products', icon: 'lucide:piggy-bank', path: '/investments/products', roles: ['superadmin', 'admin', 'finance'] },
+    ]
+  },
+  {
+    id: 'production',
+    label: 'Production ERP',
+    icon: 'lucide:factory',
+    roles: ['superadmin', 'admin', 'finance'],
+    children: [
+      { label: 'Batch Tracking', icon: 'lucide:clipboard-list', path: '/production', roles: ['superadmin', 'admin', 'finance'] },
+      { label: 'Raw Materials', icon: 'lucide:milk', path: '/production/materials', roles: ['superadmin', 'admin', 'finance'] },
+      { label: 'Vendor Orders', icon: 'lucide:file-signature', path: '/production/orders', roles: ['superadmin', 'admin', 'finance'] },
     ]
   },
   {
@@ -401,6 +416,10 @@ const pageTitle = computed(() => {
     '/kyc': 'Compliance Review',
     '/ai-insights': 'Predictive Growth',
     '/support': 'Help Center',
+    '/production': 'Production Metrics',
+    '/production/materials': 'Inventory Matrix',
+    '/production/orders': 'Procurement Ledger',
+    '/investments/products': 'Wealth Portfolio',
   }
   return titles[path] || 'WiseKings Control'
 })

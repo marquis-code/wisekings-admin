@@ -58,6 +58,7 @@
               <SelectInput 
                 v-model="form.category" 
                 label="Category"
+                width="100%"
                 :options="[
                   { label: 'Gold (Credit)', value: 'gold' },
                   { label: 'Diamond (Equity)', value: 'diamond' }
