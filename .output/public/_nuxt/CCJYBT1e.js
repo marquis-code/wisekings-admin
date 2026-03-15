@@ -1,0 +1,1 @@
+import{G as r}from"./DzP-nKMj.js";const o={get:t=>r.get("/orders",{params:t}),getById:t=>r.get(`/orders/${t}`),updateStatus:(t,s)=>r.patch(`/orders/${t}/status`,s),bulkUpdateStatus:t=>r.patch("/orders/bulk/status",t),verifyProof:(t,s)=>r.patch(`/orders/${t}/verify-proof`,{status:s}),getStats:()=>r.get("/orders/stats")};export{o};
