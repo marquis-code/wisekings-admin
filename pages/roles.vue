@@ -21,80 +21,138 @@
     <Teleport to="body">
       <Transition name="modal-fade">
         <div v-if="showForm" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          <div class="absolute inset-0 bg-black/20 backdrop-blur-sm" @click="showForm = false"></div>
+          <div class="absolute inset-0 bg-[#033958]/20 backdrop-blur-md" @click="showForm = false"></div>
           
-          <div class="relative bg-white rounded-[2.5rem] p-8 w-full max-w-2xl shadow-2xl animate-modal-in overflow-hidden border border-white max-h-[90vh] flex flex-col">
-            <div class="flex items-center justify-between mb-8 flex-shrink-0">
-              <div>
-                <h2 class="text-2xl font-black text-gray-900 tracking-tight">{{ editingId ? 'Update' : 'Create' }} Role</h2>
-                <p class="text-gray-500 text-sm font-medium mt-1">Define access levels and permissions</p>
+          <div class="relative bg-white rounded-[3rem] w-full max-w-4xl shadow-2xl animate-modal-in overflow-hidden border border-white max-h-[90vh] flex flex-col">
+            <!-- Modal Header -->
+            <div class="p-8 pb-4 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
+              <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl bg-[#033958]/5 flex items-center justify-center text-[#033958]">
+                  <Icon :name="editingId ? 'lucide:edit-3' : 'lucide:shield-plus'" class="w-7 h-7" />
+                </div>
+                <div>
+                  <h2 class="text-3xl font-black text-gray-900 tracking-tight">{{ editingId ? 'Update' : 'Establish' }} Role</h2>
+                  <p class="text-gray-500 text-sm font-medium">Configure security scope and staff limitations</p>
+                </div>
               </div>
               <button 
                 @click="showForm = false" 
-                class="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center text-gray-400 hover:bg-gray-200 hover:text-gray-900 transition-all duration-300"
+                class="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all duration-300"
               >
                 <Icon name="lucide:x" class="w-6 h-6" />
               </button>
             </div>
 
-            <form @submit.prevent="handleSave" class="space-y-6 overflow-y-auto pr-2 custom-scrollbar flex-1">
-              <AnimatedInput 
-                v-model="form.name" 
-                label="Role Name" 
-                required 
-                :disabled="!!editingId"
-                placeholder="e.g. Manager"
-              />
-              
-              <AnimatedInput 
-                v-model="form.description" 
-                label="Role Description" 
-                type="textarea" 
-                :rows="2"
-                placeholder="Briefly describe what this role can do..."
-              />
-
-              <div class="space-y-4">
-                <label class="text-sm font-bold text-gray-900 ml-1 flex items-center gap-2">
-                  <Icon name="lucide:shield-check" class="w-4 h-4 text-[#033958]" />
-                  Permissions
-                </label>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-gray-50/50 rounded-3xl p-6 border border-gray-100">
-                  <label 
-                    v-for="p in availablePermissions" 
-                    :key="p" 
-                    class="group flex items-center gap-3 p-3 rounded-2xl bg-white border border-gray-100 cursor-pointer hover:border-[#033958] hover:shadow-sm transition-all duration-300"
-                  >
-                    <div class="relative flex items-center">
-                      <input 
-                        type="checkbox" 
-                        :value="p" 
-                        v-model="form.permissions" 
-                        class="custom-checkbox !w-5 !h-5" 
-                      />
+            <form @submit.prevent="handleSave" class="flex-1 overflow-hidden flex flex-col">
+              <div class="p-8 pt-6 overflow-y-auto custom-scrollbar flex-1 space-y-10">
+                <!-- Basic Info Segment -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div class="space-y-6">
+                    <AnimatedInput 
+                      v-model="form.name" 
+                      label="Public Title" 
+                      required 
+                      :disabled="!!editingId"
+                      placeholder="e.g. Operations Director"
+                    />
+                    <div class="space-y-2">
+                       <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1 block">Contextual Details</label>
+                       <textarea 
+                        v-model="form.description" 
+                        class="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-medium focus:bg-white focus:border-[#033958] outline-none transition-all resize-none"
+                        rows="3"
+                        placeholder="Define the purpose of this security profile..."
+                      ></textarea>
                     </div>
-                    <span class="text-sm font-bold text-gray-700 group-hover:text-gray-900 transition-colors capitalize">
-                      {{ p.replace(/_/g, ' ') }}
-                    </span>
-                  </label>
+                  </div>
+
+                  <!-- Statistics/Summary Card -->
+                  <div class="bg-gray-50 rounded-3xl p-6 border border-gray-100 flex flex-col justify-center items-center text-center space-y-4">
+                    <div class="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-sm text-2xl font-black text-[#033958]">
+                      {{ form.permissions.length }}
+                    </div>
+                    <div>
+                      <p class="text-xs font-black uppercase tracking-widest text-[#033958]">Active Privileges</p>
+                      <p class="text-xs text-gray-400 font-medium mt-1">Select specific modules this role can access from the distribution list below.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Permissions Matrix -->
+                <div class="space-y-8 pb-4">
+                  <div class="flex items-center justify-between border-b border-gray-100 pb-4">
+                    <label class="text-sm font-black text-gray-900 ml-1 flex items-center gap-2">
+                      <Icon name="lucide:lock" class="w-4 h-4 text-amber-500" />
+                      Access Distribution Matrix
+                    </label>
+                    <div class="flex items-center gap-4">
+                      <button 
+                        type="button" 
+                        @click="selectAllPermissions"
+                        class="text-[9px] font-black uppercase tracking-widest text-emerald-600 hover:text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg transition-colors"
+                      >
+                        Grant All Access
+                      </button>
+                      <button 
+                        type="button" 
+                        @click="form.permissions = []"
+                        class="text-[9px] font-black uppercase tracking-widest text-red-600 hover:text-red-700 bg-red-50 px-3 py-1.5 rounded-lg transition-colors"
+                      >
+                        Revoke All
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div class="space-y-10">
+                    <div v-for="group in availablePermissions" :key="group.resource" class="space-y-4">
+                      <div class="flex items-center gap-3">
+                        <div class="h-px flex-1 bg-gray-100"></div>
+                        <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest bg-white px-3">{{ group.resource }}</span>
+                        <div class="h-px flex-1 bg-gray-100"></div>
+                      </div>
+                      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <label 
+                          v-for="action in group.actions" 
+                          :key="action.permission" 
+                          class="relative group cursor-pointer"
+                        >
+                          <input 
+                            type="checkbox" 
+                            :value="action.permission" 
+                            v-model="form.permissions" 
+                            class="peer sr-only" 
+                          />
+                          <div class="flex items-center gap-3 p-4 rounded-2xl bg-gray-50 border border-transparent peer-checked:bg-amber-500 peer-checked:text-white transition-all duration-300 hover:bg-gray-100 shadow-sm peer-checked:shadow-amber-500/20">
+                            <div class="w-5 h-5 rounded-md border-2 border-gray-300 flex items-center justify-center peer-checked:border-white transition-colors">
+                              <Icon v-if="form.permissions.includes(action.permission)" name="lucide:check" class="w-3.5 h-3.5" />
+                            </div>
+                            <span class="text-[11px] font-bold capitalize truncate">
+                              {{ action.label }}
+                            </span>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div class="flex gap-4 pt-4 sticky bottom-0 bg-white pb-2 mt-auto">
-                <button 
-                  type="submit" 
-                  class="flex-[2] btn-primary !rounded-[1.5rem] !py-4 shadow-xl shadow-[#033958]/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
-                  :disabled="saving"
-                >
-                  <Icon v-if="saving" name="lucide:loader-2" class="w-5 h-5 animate-spin mr-2" />
-                  {{ saving ? 'Saving...' : (editingId ? 'Save Changes' : 'Create Role') }}
-                </button>
+              <!-- Action Toolbar -->
+              <div class="p-8 border-t border-gray-100 bg-white flex gap-4 shrink-0 relative z-20">
                 <button 
                   type="button" 
                   @click="showForm = false" 
-                  class="flex-1 btn-secondary !rounded-[1.5rem] !py-4 hover:bg-gray-200 transition-all duration-300"
+                  class="flex-1 py-4 px-6 rounded-2xl bg-gray-50 text-gray-700 text-xs font-black uppercase tracking-widest hover:bg-gray-100 transition-all border border-gray-100"
                 >
-                  Discard
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  class="flex-[2] py-4 px-6 rounded-2xl bg-gray-900 text-white text-xs font-black uppercase tracking-widest shadow-2xl shadow-black/10 hover:bg-black active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+                  :disabled="saving"
+                >
+                  <Icon v-if="saving" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
+                  {{ saving ? 'Syncing...' : (editingId ? 'Push Updates' : 'Establish Role') }}
                 </button>
               </div>
             </form>
@@ -104,72 +162,80 @@
     </Teleport>
 
     <!-- Roles List -->
-    <div class="table-container bg-white shadow-sm border-gray-100 overflow-hidden !rounded-3xl">
-      <table class="data-table">
-        <thead>
-          <tr class="!bg-gray-50/50">
-            <th class="!py-5 !pl-6 w-1/3">Role Details</th>
-            <th class="!py-5 w-1/2">Permissions</th>
-            <th class="!py-5 !pr-6 text-right w-[150px]">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="loading">
-            <td colspan="3" class="!p-0">
-              <CoreSkeletonLoader :rows="3" />
-            </td>
-          </tr>
-          <tr v-else-if="roles.length === 0">
-            <td colspan="3" class="!py-10">
-              <CoreEmptyState 
-                icon="lucide:shield-off" 
-                title="No roles defined" 
-                description="Establish security profiles and permissions to manage team access levels."
-              />
-            </td>
-          </tr>
-          <tr v-for="r in roles" :key="r._id" v-else class="group">
-            <td class="!py-4 !pl-6 align-top">
-              <div class="flex flex-col gap-1.5">
-                <div class="flex items-center gap-2">
-                  <h3 class="font-bold text-gray-900 text-sm capitalize">{{ r.name }}</h3>
-                  <span v-if="r.isSystem" class="px-2 py-0.5 rounded-lg bg-[#033958]/5 text-[#033958] text-[10px] font-black uppercase tracking-widest border border-[#033958]/10">System</span>
+    <div class="bg-white shadow-2xl shadow-gray-200/50 border border-gray-100 !rounded-[3rem] overflow-hidden">
+      <div class="table-container !border-none !shadow-none !rounded-none">
+        <table class="data-table">
+          <thead>
+            <tr class="!bg-gray-50/20">
+              <th class="!py-8 !pl-10">Security Profile</th>
+              <th class="!py-8">Permissions Scope</th>
+              <th class="!py-8 !pr-10 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-50">
+            <tr v-if="loading">
+              <td colspan="3" class="!p-12">
+                <div class="flex flex-col items-center justify-center animate-pulse">
+                  <div class="w-16 h-16 bg-gray-50 rounded-2xl mb-4"></div>
+                  <div class="h-4 w-32 bg-gray-50 rounded-full mb-2"></div>
                 </div>
-                <p class="text-xs font-medium text-gray-500 leading-snug">{{ r.description || 'No description provided.' }}</p>
-              </div>
-            </td>
-            <td class="!py-4 align-top">
-              <div class="flex flex-wrap gap-1.5">
-                <span v-for="p in r.permissions.slice(0, 5)" :key="p" class="px-2 py-1 rounded-lg bg-gray-50 text-gray-600 text-[10px] font-bold uppercase tracking-wider border border-gray-100">
-                  {{ p.replace(/_/g, ' ') }}
-                </span>
-                <span v-if="r.permissions.length > 5" class="px-2 py-1 rounded-lg bg-gray-50 text-[#033958] text-[10px] font-black uppercase tracking-wider border border-gray-100">
-                  +{{ r.permissions.length - 5 }} More
-                </span>
-              </div>
-            </td>
-            <td class="!py-4 !pr-6 text-right align-top">
-              <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <button 
-                  @click="editRole(r)" 
-                  class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-50 text-gray-600 hover:bg-[#033958] hover:text-white transition-all duration-300"
-                  title="Edit Role"
-                >
-                  <Icon name="lucide:edit" class="w-4 h-4" />
-                </button>
-                <button 
-                  v-if="!r.isSystem" 
-                  @click="handleDelete(r)" 
-                  class="w-9 h-9 flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300"
-                  title="Delete Role"
-                >
-                  <Icon name="lucide:trash-2" class="w-4 h-4" />
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              </td>
+            </tr>
+            <tr v-else-if="roles.length === 0">
+              <td colspan="3" class="!py-24">
+                <CoreEmptyState 
+                  icon="lucide:shield-off" 
+                  title="No Custom Roles" 
+                  description="Begin by establishing security profiles for your administration team."
+                />
+              </td>
+            </tr>
+            <tr v-for="r in roles" :key="r._id" v-else class="hover:bg-gray-50/30 transition-colors">
+              <td class="!py-8 !pl-10">
+                <div class="flex items-start gap-5">
+                  <div :class="['w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-black shadow-inner border-2', r.isSystem ? 'bg-amber-50 text-amber-600 border-amber-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100']">
+                    {{ r.name.charAt(0).toUpperCase() }}
+                  </div>
+                  <div class="space-y-1.5">
+                    <div class="flex items-center gap-2">
+                      <h3 class="font-black text-gray-900 text-sm capitalize tracking-tight">{{ r.name }}</h3>
+                      <span v-if="r.isSystem" class="px-2 py-0.5 rounded-lg bg-amber-100 text-amber-700 text-[8px] font-black uppercase tracking-widest border border-amber-200">System Internal</span>
+                    </div>
+                    <p class="text-[10px] font-bold text-gray-400 max-w-xs leading-relaxed uppercase tracking-tight">{{ r.description || 'Global administrative access profile.' }}</p>
+                  </div>
+                </div>
+              </td>
+              <td class="!py-8">
+                <div class="flex flex-wrap gap-2 max-w-md">
+                  <span v-for="p in r.permissions.slice(0, 3)" :key="p" class="px-3 py-1.5 rounded-xl bg-gray-100 text-gray-900 text-[9px] font-black uppercase tracking-widest border border-white shadow-sm">
+                    {{ p.split(':')[1] }} {{ p.split(':')[0] }}
+                  </span>
+                  <span v-if="r.permissions.length > 3" class="px-3 py-1.5 rounded-xl bg-[#033958] text-white text-[9px] font-black uppercase tracking-widest border border-white shadow-md">
+                    +{{ r.permissions.length - 3 }} Privileges
+                  </span>
+                </div>
+              </td>
+              <td class="!py-8 !pr-10 text-right">
+                <div class="flex items-center justify-end gap-3">
+                  <button 
+                    @click="editRole(r)" 
+                    class="w-12 h-12 flex items-center justify-center rounded-2xl bg-gray-900 text-white shadow-xl shadow-black/10 hover:scale-110 active:scale-95 transition-all"
+                  >
+                    <Icon name="lucide:settings-2" class="w-5 h-5" />
+                  </button>
+                  <button 
+                    v-if="!r.isSystem" 
+                    @click="handleDelete(r)" 
+                    class="w-12 h-12 flex items-center justify-center rounded-2xl bg-white border border-gray-100 text-red-500 hover:bg-red-50 hover:border-red-200 shadow-sm hover:scale-110 active:scale-95 transition-all"
+                  >
+                    <Icon name="lucide:trash-2" class="w-5 h-5" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
@@ -227,6 +293,16 @@ async function handleDelete(r: Role) {
   }
 }
 
+function selectAllPermissions() {
+  const allPerms: string[] = []
+  availablePermissions.value.forEach((group: any) => {
+    group.actions.forEach((action: any) => {
+      allPerms.push(action.permission)
+    })
+  })
+  form.value.permissions = allPerms
+}
+
 onMounted(() => {
   fetchRoles()
   fetchPermissions()
@@ -266,6 +342,7 @@ onMounted(() => {
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-gray-200 rounded-full;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
 }
 </style>

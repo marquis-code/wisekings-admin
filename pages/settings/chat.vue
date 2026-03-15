@@ -55,7 +55,7 @@
 
           <div class="space-y-4">
             <div v-for="(ar, i) in config.autoResponses" :key="i" class="p-6 bg-slate-50 rounded-2xl border border-slate-100 group relative">
-              <button @click="config.autoResponses.splice(i, 1)" class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 text-rose-500 hover:scale-110 transition-all">
+              <button @click="config.autoResponses.splice(i, 1)" class="absolute top-4 right-4 text-rose-500 hover:scale-110 transition-all">
                 <Icon name="lucide:trash-2" size="18" />
               </button>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

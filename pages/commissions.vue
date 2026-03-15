@@ -19,14 +19,18 @@
     <!-- Filters -->
     <div class="bg-white rounded-[2rem] p-4 shadow-sm border border-gray-100 mb-8 flex flex-wrap gap-4 items-center">
       <div class="flex flex-wrap gap-3">
-        <select 
+        <SelectInput 
           v-model="statusFilter" 
-          class="bg-gray-50 border-none rounded-2xl px-5 py-3 text-sm font-bold text-gray-700 focus:ring-2 focus:ring-[#033958]/10 transition-all outline-none min-w-[200px]" 
-          @change="handleFetch"
-        >
-          <option value="">All Payout Statuses</option>
-          <option v-for="s in ['pending','approved','paid','reversed']" :key="s" :value="s" class="capitalize">{{ s }}</option>
-        </select>
+          label="Filter by Status"
+          :options="[
+            { label: 'All Payout Statuses', value: '' },
+            { label: 'Pending', value: 'pending' },
+            { label: 'Approved', value: 'approved' },
+            { label: 'Paid', value: 'paid' },
+            { label: 'Reversed', value: 'reversed' }
+          ]"
+          @update:modelValue="handleFetch"
+        />
         <button @click="handleFetch" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#033958]/5 text-[#033958] hover:bg-[#033958] hover:text-white transition-all">
           <Icon name="lucide:rotate-cw" class="w-5 h-5" :class="{ 'animate-spin': loading }" />
         </button>
@@ -137,6 +141,7 @@
 
 <script setup lang="ts">
 import type { Commission } from '~/types'
+import SelectInput from '@/components/core/SelectInput.vue'
 import { useFetchCommissions } from '@/composables/modules/commissions/useFetchCommissions'
 import { useAdjustCommission } from '@/composables/modules/commissions/useAdjustCommission'
 

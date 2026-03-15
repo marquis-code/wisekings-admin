@@ -8,13 +8,13 @@
         <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Settings</h1>
         <p class="text-gray-500 text-sm mt-1 font-medium">Configure global platform parameters and rules</p>
       </div>
-      <div class="flex gap-2 p-1 bg-gray-100 rounded-2xl w-fit">
+      <div class="flex gap-2 p-1 bg-gray-100 rounded-2xl w-full sm:w-fit overflow-x-auto no-scrollbar shrink-0">
         <button 
           v-for="tab in tabs" 
           :key="tab.id"
           @click="activeTab = tab.id"
           :class="[
-            'px-6 py-2.5 text-xs font-black uppercase tracking-widest rounded-xl transition-all',
+            'px-6 py-2.5 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap',
             activeTab === tab.id ? 'bg-white text-[#033958] shadow-sm' : 'text-gray-400 hover:text-gray-600'
           ]"
         >
@@ -24,88 +24,105 @@
     </div>
 
     <!-- General Settings Tab -->
-    <div v-if="activeTab === 'general'" class="max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8">
-      <!-- Commission Rates -->
-      <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100 flex flex-col">
-        <div class="flex items-center gap-3 mb-6">
-          <div class="w-10 h-10 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600">
-            <Icon name="lucide:percent" class="w-5 h-5" />
-          </div>
-          <h2 class="text-lg font-black text-gray-900 tracking-tight">Commission Rates</h2>
-        </div>
-        
-        <div class="space-y-4">
-          <div class="flex items-center justify-between p-4 rounded-2xl bg-gray-50 border border-transparent hover:border-gray-100 transition-all">
-            <div>
-              <p class="text-sm font-bold text-gray-900">Standard</p>
-              <p class="text-[10px] text-gray-400 font-medium uppercase mt-0.5 tracking-tight">Default merchant category</p>
+    <div v-if="activeTab === 'general'" class="max-w-4xl space-y-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Commission Rates -->
+        <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100 flex flex-col">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600">
+                <Icon name="lucide:percent" class="w-5 h-5" />
+              </div>
+              <h2 class="text-lg font-black text-gray-900 tracking-tight">Commissions</h2>
             </div>
-            <span class="text-lg font-black text-[#033958]">3%</span>
+            <button @click="addCommissionRate" class="p-2 rounded-xl bg-gray-50 text-gray-400 hover:text-amber-600 transition-all">
+              <Icon name="lucide:plus" class="w-5 h-5" />
+            </button>
           </div>
           
-          <div class="flex items-center justify-between p-4 rounded-2xl bg-amber-50/30 border border-transparent hover:border-amber-100 transition-all">
-            <div>
-              <p class="text-sm font-bold text-gray-900">Gold</p>
-              <p class="text-[10px] text-amber-600/60 font-medium uppercase mt-0.5 tracking-tight">₦1M+ total sales</p>
+          <div class="space-y-4 flex-1">
+            <div v-for="(rate, i) in globalSettings.commissionRates" :key="i" class="p-4 rounded-2xl bg-gray-50 border border-transparent hover:border-gray-100 transition-all relative group">
+              <div class="grid grid-cols-4 gap-3">
+                <div class="col-span-3 space-y-2">
+                  <input v-model="rate.name" placeholder="Name" class="w-full bg-transparent text-sm font-bold border-none p-0 focus:ring-0" />
+                  <input v-model="rate.description" placeholder="Short description" class="w-full bg-transparent text-[10px] text-gray-400 font-medium uppercase p-0 focus:ring-0" />
+                </div>
+                <div class="flex items-center justify-end">
+                   <div class="flex items-center">
+                    <input v-model.number="rate.percentage" type="number" class="w-12 bg-white px-2 py-1 rounded-lg text-sm font-black text-[#033958] border border-gray-100 focus:ring-0" />
+                    <span class="ml-1 text-sm font-black text-gray-400">%</span>
+                   </div>
+                </div>
+              </div>
+              <button @click="globalSettings.commissionRates.splice(i, 1)" class="absolute -right-2 -top-2 w-6 h-6 rounded-full bg-red-100 text-red-600 flex items-center justify-center shadow-sm transition-all hover:bg-red-200">
+                <Icon name="lucide:x" size="14" />
+              </button>
             </div>
-            <span class="text-lg font-black text-amber-600">5%</span>
-          </div>
-          
-          <div class="flex items-center justify-between p-4 rounded-2xl bg-purple-50/30 border border-transparent hover:border-purple-100 transition-all">
-            <div>
-              <p class="text-sm font-bold text-gray-900">Premium</p>
-              <p class="text-[10px] text-purple-600/60 font-medium uppercase mt-0.5 tracking-tight">₦5M+ total sales</p>
-            </div>
-            <span class="text-lg font-black text-purple-600">7.5%</span>
-          </div>
-        </div>
-        
-        <button class="mt-8 w-full py-4 bg-gray-50 text-gray-500 text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-gray-100 transition-all">
-          Request Changes
-        </button>
-      </div>
-
-      <!-- Rank Thresholds -->
-      <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100 flex flex-col">
-        <div class="flex items-center gap-3 mb-6">
-          <div class="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
-            <Icon name="lucide:trending-up" class="w-5 h-5" />
-          </div>
-          <h2 class="text-lg font-black text-gray-900 tracking-tight">Rank Thresholds</h2>
-        </div>
-        
-        <div class="space-y-2 flex-1">
-          <div v-for="(rank, i) in ranks" :key="i" class="flex items-center justify-between py-2.5 border-b border-gray-50 last:border-0">
-            <span class="text-sm font-bold text-gray-700 capitalize">{{ rank.name }}</span>
-            <span class="text-[11px] font-mono font-bold text-gray-400 bg-gray-50 px-2 py-0.5 rounded">{{ rank.range }}</span>
           </div>
         </div>
 
-        <div class="mt-8 p-4 bg-blue-50 rounded-2xl border border-blue-100">
-          <div class="flex items-center gap-3">
-            <Icon name="lucide:info" class="w-4 h-4 text-blue-600" />
-            <p class="text-[10px] text-blue-700 font-bold leading-tight uppercase tracking-tight">Monthly sales volume required for auto-promotion.</p>
+        <!-- Rank Thresholds -->
+        <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100 flex flex-col">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
+                <Icon name="lucide:trending-up" class="w-5 h-5" />
+              </div>
+              <h2 class="text-lg font-black text-gray-900 tracking-tight">Ranks</h2>
+            </div>
+            <button @click="addRankThreshold" class="p-2 rounded-xl bg-gray-50 text-gray-400 hover:text-blue-600 transition-all">
+              <Icon name="lucide:plus" class="w-5 h-5" />
+            </button>
+          </div>
+          
+          <div class="space-y-3 flex-1">
+            <div v-for="(rank, i) in globalSettings.rankThresholds" :key="i" class="flex items-center justify-between py-2 border-b border-gray-50 last:border-0 group relative">
+              <input v-model="rank.name" class="text-sm font-bold text-gray-700 w-24 bg-transparent border-none p-0 focus:ring-0" />
+              <div class="flex items-center gap-2">
+                <input v-model.number="rank.minSales" type="number" class="w-20 text-[10px] font-mono font-bold text-gray-400 bg-gray-50 px-2 py-1 rounded border border-transparent focus:bg-white focus:border-blue-100" />
+                <span class="text-[10px] text-gray-300">→</span>
+                <input v-model.number="rank.maxSales" type="number" class="w-20 text-[10px] font-mono font-bold text-gray-400 bg-gray-50 px-2 py-1 rounded border border-transparent focus:bg-white focus:border-blue-100" placeholder="Max" />
+              </div>
+              <button @click="globalSettings.rankThresholds.splice(i, 1)" class="absolute -right-0 text-red-400 hover:text-red-600 transition-all">
+                <Icon name="lucide:trash-2" size="14" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Platform Settings -->
-      <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100 md:col-span-2">
-        <div class="flex items-center gap-3 mb-8">
-          <div class="w-10 h-10 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-            <Icon name="lucide:shield-check" class="w-5 h-5" />
+      <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-8">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+              <Icon name="lucide:shield-check" class="w-5 h-5" />
+            </div>
+            <h2 class="text-lg font-black text-gray-900 tracking-tight">Platform Controls</h2>
           </div>
-          <h2 class="text-lg font-black text-gray-900 tracking-tight">Platform Controls</h2>
+          <button 
+            @click="saveGlobalSettings" 
+            :disabled="savingGlobalSettings"
+            class="px-10 py-3 bg-[#033958] text-white text-xs font-black uppercase tracking-widest rounded-2xl hover:opacity-90 transition-all disabled:opacity-50 shadow-lg shadow-[#033958]/20"
+          >
+            {{ savingGlobalSettings ? 'Saving...' : 'Apply Controls' }}
+          </button>
         </div>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div class="p-6 bg-gray-50 rounded-3xl border border-gray-100">
-            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Minimum Withdrawal</p>
-            <p class="text-2xl font-black text-gray-900">₦10,000</p>
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Minimum Withdrawal</p>
+            <div class="flex items-center gap-2">
+              <span class="text-gray-400 font-bold">₦</span>
+              <input v-model.number="globalSettings.minWithdrawal" type="number" class="w-full bg-transparent text-2xl font-black text-gray-900 border-none p-0 focus:ring-0" />
+            </div>
           </div>
           <div class="p-6 bg-gray-50 rounded-3xl border border-gray-100">
-            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Referral Cookie Life</p>
-            <p class="text-2xl font-black text-gray-900">30 <span class="text-sm text-gray-400 uppercase">Days</span></p>
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Referral Cookie Life</p>
+            <div class="flex items-center gap-2">
+              <input v-model.number="globalSettings.referralCookieLife" type="number" class="w-16 bg-transparent text-2xl font-black text-gray-900 border-none p-0 focus:ring-0 text-right" />
+              <span class="text-sm text-gray-400 uppercase font-black">Days</span>
+            </div>
           </div>
         </div>
       </div>
@@ -215,17 +232,15 @@
 
               <!-- Content Filtering -->
               <div class="lg:col-span-4 space-y-4">
-                <div>
-                  <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 block ml-1">Target Account Type</label>
-                  <select 
+                  <SelectInput 
                     v-model="doc.target"
-                    class="w-full px-4 py-3 text-sm font-bold text-gray-900 bg-white border border-gray-200 rounded-[1.25rem] focus:ring-1 focus:ring-[#033958] focus:border-[#033958] outline-none transition-all shadow-sm appearance-none"
-                  >
-                    <option value="merchant">Merchants Only</option>
-                    <option value="partner">Partners Only</option>
-                    <option value="both">Both Merchants & Partners</option>
-                  </select>
-                </div>
+                    label="Target Account Type"
+                    :options="[
+                      { label: 'Merchants Only', value: 'merchant' },
+                      { label: 'Partners Only', value: 'partner' },
+                      { label: 'Both Merchants & Partners', value: 'both' }
+                    ]"
+                  />
                 <div class="space-y-3">
                   <div class="flex items-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-[1.25rem] shadow-sm transition-all hover:border-indigo-100">
                     <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest flex-1">Is this mandatory?</label>
@@ -272,12 +287,29 @@
               <div class="lg:col-span-4 space-y-4">
                 <div>
                   <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 block ml-1">Specific Countries (Optional)</label>
-                  <input 
-                    v-model="countryInputs[i]"
-                    @keydown.enter="addCountry(i)"
-                    placeholder="Enter country then press enter" 
-                    class="w-full px-4 py-3 text-sm font-bold text-gray-900 bg-white border border-gray-200 rounded-[1.25rem] focus:ring-1 focus:ring-[#033958] focus:border-[#033958] outline-none transition-all shadow-sm"
-                  />
+                  <div class="relative group/country">
+                    <input 
+                      v-model="countryInputs[i]"
+                      @input="showCountryDropdown[i] = true"
+                      @focus="showCountryDropdown[i] = true"
+                      placeholder="Search and select country..." 
+                      class="w-full px-4 py-3 text-sm font-bold text-gray-900 bg-white border border-gray-200 rounded-[1.25rem] focus:ring-1 focus:ring-[#033958] focus:border-[#033958] outline-none transition-all shadow-sm"
+                    />
+                    <!-- Searchable Dropdown -->
+                    <div 
+                      v-if="showCountryDropdown[i] && filteredCountries(countryInputs[i]).length"
+                      class="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 max-h-48 overflow-y-auto style-scrollbar border-t-0"
+                    >
+                      <button
+                        v-for="country in filteredCountries(countryInputs[i])"
+                        :key="country.code"
+                        @click="addCountry(i, country.name); showCountryDropdown[i] = false"
+                        class="w-full px-4 py-3 text-left text-xs font-bold text-gray-700 hover:bg-gray-50 transition-all border-b border-gray-50 last:border-0"
+                      >
+                        {{ country.name }}
+                      </button>
+                    </div>
+                  </div>
                   <div class="flex flex-wrap gap-1.5 mt-2">
                     <span 
                       v-for="(c, ci) in doc.countries" 
@@ -297,7 +329,7 @@
               <!-- Delete Button -->
               <button 
                 @click="kycDocumentTypes.splice(i, 1); countryInputs.splice(i, 1)" 
-                class="absolute -right-3 -top-3 w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center shadow-lg hover:bg-red-600 hover:text-white transition-all scale-0 group-hover:scale-100"
+                class="absolute -right-3 -top-3 w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center shadow-lg hover:bg-red-600 hover:text-white transition-all"
               >
                 <Icon name="lucide:trash-2" class="w-4 h-4" />
               </button>
@@ -357,7 +389,17 @@
 
             <div class="space-y-2">
               <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Pickup Store Address</label>
-              <textarea v-model="shippingConfig.pickupAddress" rows="2" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all resize-none"></textarea>
+              <div class="relative group">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-[#033958] transition-colors">
+                  <Icon name="lucide:search" size="18" />
+                </div>
+                <input 
+                  id="pickupAddressInput"
+                  v-model="shippingConfig.warehouseAddress" 
+                  placeholder="Search and select store location..." 
+                  class="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold outline-none focus:border-[#033958] transition-all" 
+                />
+              </div>
             </div>
 
             <!-- Pricing Tiers -->
@@ -370,26 +412,64 @@
                 </button>
               </div>
               
-              <div v-if="shippingConfig.pricingTiers?.length" class="space-y-3">
-                <div v-for="(tier, idx) in shippingConfig.pricingTiers" :key="idx" class="p-4 bg-gray-50 rounded-2xl border border-gray-100 grid grid-cols-12 gap-3 items-center group relative">
-                  <div class="col-span-4 space-y-1">
-                    <label class="text-[8px] font-black uppercase text-gray-400 tracking-tighter">From (Meters)</label>
-                    <input v-model.number="tier.from" type="number" class="w-full px-3 py-2 text-xs font-bold bg-white border border-gray-200 rounded-xl outline-none" />
+              <div v-if="shippingConfig.pricingTiers?.length" class="space-y-4">
+                <div v-for="(tier, idx) in shippingConfig.pricingTiers" :key="idx" class="p-5 bg-gray-50 rounded-3xl border border-gray-100 grid grid-cols-1 sm:grid-cols-3 gap-4 items-center group relative">
+                  <div class="space-y-1">
+                    <label class="text-[8px] font-black uppercase text-gray-400 tracking-tighter ml-1">From (Meters)</label>
+                    <input v-model.number="tier.from" type="number" class="w-full px-3 py-2.5 text-xs font-bold bg-white border border-gray-200 rounded-xl outline-none focus:border-amber-400 transition-all" />
                   </div>
-                  <div class="col-span-4 space-y-1">
-                    <label class="text-[8px] font-black uppercase text-gray-400 tracking-tighter">To (Meters)</label>
-                    <input v-model.number="tier.to" type="number" class="w-full px-3 py-2 text-xs font-bold bg-white border border-gray-200 rounded-xl outline-none" />
+                  <div class="space-y-1">
+                    <label class="text-[8px] font-black uppercase text-gray-400 tracking-tighter ml-1">To (Meters)</label>
+                    <input v-model.number="tier.to" type="number" class="w-full px-3 py-2.5 text-xs font-bold bg-white border border-gray-200 rounded-xl outline-none focus:border-amber-400 transition-all" />
                   </div>
-                  <div class="col-span-4 space-y-1">
-                    <label class="text-[8px] font-black uppercase text-gray-400 tracking-tighter">Price (₦)</label>
-                    <input v-model.number="tier.price" type="number" class="w-full px-3 py-2 text-xs font-bold bg-white border border-gray-200 rounded-xl outline-none" />
+                  <div class="space-y-1">
+                    <label class="text-[8px] font-black uppercase text-gray-400 tracking-tighter ml-1">Price (₦)</label>
+                    <input v-model.number="tier.price" type="number" class="w-full px-3 py-2.5 text-xs font-bold bg-white border border-gray-200 rounded-xl outline-none focus:border-amber-400 transition-all" />
                   </div>
-                  <button @click="shippingConfig.pricingTiers.splice(idx, 1)" class="absolute -right-2 -top-2 w-6 h-6 rounded-full bg-red-100 text-red-600 flex items-center justify-center opacity-0 group-hover:opacity-100 shadow-sm transition-all">
-                    <Icon name="lucide:x" size="12" />
+                  <button @click="shippingConfig.pricingTiers.splice(idx, 1)" class="absolute -right-2 -top-2 w-7 h-7 rounded-full bg-white text-red-500 flex items-center justify-center shadow-lg border border-red-50 shadow-red-100/50 transition-all hover:bg-red-500 hover:text-white">
+                    <Icon name="lucide:trash-2" size="14" />
                   </button>
                 </div>
               </div>
               <p v-else class="text-[10px] text-gray-400 italic text-center py-4 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100">No custom tiers defined. Using base/km rates.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Communications Mapping -->
+        <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
+           <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600">
+                <Icon name="lucide:mail" class="w-6 h-6" />
+              </div>
+              <div>
+                <h2 class="text-xl font-black text-gray-900 tracking-tight">System Emails</h2>
+                <p class="text-sm text-gray-400 font-medium">Map automated triggers to your custom email templates</p>
+              </div>
+            </div>
+            <button 
+              @click="saveGlobalSettings" 
+              :disabled="savingGlobalSettings"
+              class="px-6 py-2 bg-[#033958] text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:opacity-90 disabled:opacity-50"
+            >
+              {{ savingGlobalSettings ? 'Saving...' : 'Save Mappings' }}
+            </button>
+          </div>
+
+          <div class="space-y-6">
+            <div v-for="trigger in emailTriggers" :key="trigger.id" class="p-5 bg-gray-50 rounded-[2rem] border border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div class="flex-1">
+                <p class="text-sm font-black text-gray-900 tracking-tight">{{ trigger.label }}</p>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-0.5 leading-relaxed">{{ trigger.description }}</p>
+              </div>
+              <div class="w-full md:w-[280px]">
+                <SelectInput 
+                  v-model="globalSettings.emailMappings[trigger.id]"
+                  :label="`${trigger.label} Template`"
+                  :options="[{ label: 'System Default', value: '' }, ...emailTemplates.map(t => ({ label: t.name, value: t._id }))]"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -401,14 +481,14 @@
               <div class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
                 <Icon name="lucide:message-circle" class="w-6 h-6" />
               </div>
-              <h2 class="text-xl font-black text-gray-900 tracking-tight">Business Comms</h2>
+              <h2 class="text-xl font-black text-gray-900 tracking-tight">WhatsApp Alerts</h2>
             </div>
             <button 
               @click="saveGlobalSettings" 
               :disabled="savingGlobalSettings"
               class="px-6 py-2 bg-[#033958] text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:opacity-90 disabled:opacity-50"
             >
-              {{ savingGlobalSettings ? 'Saving...' : 'Save Comms' }}
+              {{ savingGlobalSettings ? 'Saving...' : 'Save WhatsApp' }}
             </button>
           </div>
 
@@ -441,16 +521,29 @@
           </div>
           <div class="space-y-4">
             <div class="space-y-2">
-              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Account Name</label>
-              <input v-model="globalSettings.customerBankDetails.accountName" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
-            </div>
-            <div class="space-y-2">
               <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Account Number</label>
-              <input v-model="globalSettings.customerBankDetails.accountNumber" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
+              <div class="relative">
+                <input 
+                  v-model="globalSettings.customerBankDetails.accountNumber" 
+                  @input="resolveBank(globalSettings.customerBankDetails, 'customer')"
+                  maxlength="10"
+                  class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" 
+                />
+                <div v-if="resolvingBank === 'customer'" class="absolute right-4 top-3.5">
+                  <Icon name="lucide:refresh-cw" class="w-4 h-4 text-[#033958] animate-spin" />
+                </div>
+              </div>
             </div>
             <div class="space-y-2">
-              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Bank Name</label>
-              <input v-model="globalSettings.customerBankDetails.bankName" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
+              <SelectInput 
+                v-model="globalSettings.customerBankDetails.bankName" 
+                label="Bank Name"
+                :options="banks.map(b => ({ label: b.name, value: b.name }))"
+              />
+            </div>
+            <div class="space-y-2">
+              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Account Name</label>
+              <input v-model="globalSettings.customerBankDetails.accountName" readonly class="w-full px-4 py-3 text-sm font-bold bg-gray-100/50 border border-gray-100 rounded-2xl outline-none" placeholder="Verified account name..." />
             </div>
           </div>
         </div>
@@ -465,16 +558,29 @@
           </div>
           <div class="space-y-4">
             <div class="space-y-2">
-              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Account Name</label>
-              <input v-model="globalSettings.merchantBankDetails.accountName" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
-            </div>
-            <div class="space-y-2">
               <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Account Number</label>
-              <input v-model="globalSettings.merchantBankDetails.accountNumber" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
+              <div class="relative">
+                <input 
+                  v-model="globalSettings.merchantBankDetails.accountNumber" 
+                  @input="resolveBank(globalSettings.merchantBankDetails, 'merchant')"
+                  maxlength="10"
+                  class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" 
+                />
+                <div v-if="resolvingBank === 'merchant'" class="absolute right-4 top-3.5">
+                  <Icon name="lucide:refresh-cw" class="w-4 h-4 text-[#033958] animate-spin" />
+                </div>
+              </div>
             </div>
             <div class="space-y-2">
-              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Bank Name</label>
-              <input v-model="globalSettings.merchantBankDetails.bankName" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
+              <SelectInput 
+                v-model="globalSettings.merchantBankDetails.bankName" 
+                label="Bank Name"
+                :options="banks.map(b => ({ label: b.name, value: b.name }))"
+              />
+            </div>
+            <div class="space-y-2">
+              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Account Name</label>
+              <input v-model="globalSettings.merchantBankDetails.accountName" readonly class="w-full px-4 py-3 text-sm font-bold bg-gray-100/50 border border-gray-100 rounded-2xl outline-none" placeholder="Verified account name..." />
             </div>
           </div>
         </div>
@@ -489,16 +595,29 @@
           </div>
           <div class="space-y-4">
             <div class="space-y-2">
-              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Account Name</label>
-              <input v-model="globalSettings.partnerBankDetails.accountName" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
-            </div>
-            <div class="space-y-2">
               <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Account Number</label>
-              <input v-model="globalSettings.partnerBankDetails.accountNumber" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
+              <div class="relative">
+                <input 
+                  v-model="globalSettings.partnerBankDetails.accountNumber" 
+                  @input="resolveBank(globalSettings.partnerBankDetails, 'partner')"
+                  maxlength="10"
+                  class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" 
+                />
+                <div v-if="resolvingBank === 'partner'" class="absolute right-4 top-3.5">
+                  <Icon name="lucide:refresh-cw" class="w-4 h-4 text-[#033958] animate-spin" />
+                </div>
+              </div>
             </div>
             <div class="space-y-2">
-              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Bank Name</label>
-              <input v-model="globalSettings.partnerBankDetails.bankName" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
+              <SelectInput 
+                v-model="globalSettings.partnerBankDetails.bankName" 
+                label="Bank Name"
+                :options="banks.map(b => ({ label: b.name, value: b.name }))"
+              />
+            </div>
+            <div class="space-y-2">
+              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Account Name</label>
+              <input v-model="globalSettings.partnerBankDetails.accountName" readonly class="w-full px-4 py-3 text-sm font-bold bg-gray-100/50 border border-gray-100 rounded-2xl outline-none" placeholder="Verified account name..." />
             </div>
           </div>
         </div>
@@ -527,6 +646,7 @@ import { ref, onMounted } from 'vue'
 import { settings_api } from '@/api_factory/modules/settings'
 import { shipping_api } from '@/api_factory/modules/shipping'
 import { currencies_api } from '@/api_factory/modules/currencies'
+import { email_templates_api } from '@/api_factory/modules/email-templates'
 import { useCustomToast } from '@/composables/core/useCustomToast'
 
 definePageMeta({ layout: 'dashboard' })
@@ -543,26 +663,37 @@ const activeTab = ref('general')
 
 // Shipping Config
 const shippingConfig = ref({
-  baseFee: 0,
-  pricePerKm: 0,
-  waybillFee: 0,
+  baseFee: 1000,
+  pricePerKm: 200,
+  waybillFee: 3500,
   warehouseAddress: '',
   warehouseLat: 0,
   warehouseLng: 0,
-  pickupAddress: '',
   pricingTiers: [] as { from: number; to: number; price: number }[]
 })
 const savingShipping = ref(false)
 const loadingShipping = ref(false)
 
-// System Settings
 const globalSettings = ref({
     whatsappNumber: '',
     customerBankDetails: { accountName: '', accountNumber: '', bankName: '' },
     merchantBankDetails: { accountName: '', accountNumber: '', bankName: '' },
-    partnerBankDetails: { accountName: '', accountNumber: '', bankName: '' }
+    partnerBankDetails: { accountName: '', accountNumber: '', bankName: '' },
+    commissionRates: [] as { name: string, percentage: number, description: string }[],
+    rankThresholds: [] as { name: string, minSales: number, maxSales?: number }[],
+    emailMappings: {} as Record<string, string>,
+    minWithdrawal: 10000,
+    referralCookieLife: 30
 })
 const savingGlobalSettings = ref(false)
+
+function addCommissionRate() {
+  globalSettings.value.commissionRates.push({ name: 'New Tier', percentage: 1, description: '' })
+}
+
+function addRankThreshold() {
+  globalSettings.value.rankThresholds.push({ name: 'New Rank', minSales: 0 })
+}
 
 async function fetchShippingConfig() {
   loadingShipping.value = true
@@ -601,7 +732,12 @@ async function fetchGlobalSettings() {
             whatsappNumber: data.whatsappNumber || '',
             customerBankDetails: data.customerBankDetails || { accountName: '', accountNumber: '', bankName: '' },
             merchantBankDetails: data.merchantBankDetails || { accountName: '', accountNumber: '', bankName: '' },
-            partnerBankDetails: data.partnerBankDetails || { accountName: '', accountNumber: '', bankName: '' }
+            partnerBankDetails: data.partnerBankDetails || { accountName: '', accountNumber: '', bankName: '' },
+            commissionRates: data.commissionRates || [],
+            rankThresholds: data.rankThresholds || [],
+            emailMappings: data.emailMappings || {},
+            minWithdrawal: data.minWithdrawal || 10000,
+            referralCookieLife: data.referralCookieLife || 30
         }
     } catch (e) {
         console.error('Failed to load global settings', e)
@@ -649,8 +785,9 @@ async function fetchKycDocuments() {
   loadingKyc.value = true
   try {
     const res = await settings_api.getKycDocuments()
-    kycDocumentTypes.value = res.data?.data?.kycDocumentTypes || res.data?.kycDocumentTypes || []
+    kycDocumentTypes.value = Array.isArray(res.data?.data) ? res.data.data : (res.data?.kycDocumentTypes || [])
     countryInputs.value = kycDocumentTypes.value.map(() => '')
+    showCountryDropdown.value = kycDocumentTypes.value.map(() => false)
   } catch (e) {
     console.error('Failed to load KYC config', e)
   } finally {
@@ -671,12 +808,92 @@ function addDocumentType() {
   countryInputs.value.push('')
 }
 
-function addCountry(index: number) {
-  const val = countryInputs.value[index].trim();
-  if (val && !kycDocumentTypes.value[index].countries.includes(val)) {
-    kycDocumentTypes.value[index].countries.push(val);
+const countries = [
+  { name: 'Nigeria', code: 'NG' },
+  { name: 'Ghana', code: 'GH' },
+  { name: 'Kenya', code: 'KE' },
+  { name: 'South Africa', code: 'ZA' },
+  { name: 'United Kingdom', code: 'GB' },
+  { name: 'United States', code: 'US' },
+  { name: 'Canada', code: 'CA' },
+  { name: 'United Arab Emirates', code: 'AE' }
+]
+
+const banks = [
+  { name: 'Access Bank', code: '044' },
+  { name: 'Citibank', code: '023' },
+  { name: 'Ecobank Nigeria', code: '050' },
+  { name: 'Fidelity Bank Nigeria', code: '070' },
+  { name: 'First Bank of Nigeria', code: '011' },
+  { name: 'First City Monument Bank', code: '214' },
+  { name: 'Guaranty Trust Bank', code: '058' },
+  { name: 'Heritage Bank PLC', code: '030' },
+  { name: 'Keystone Bank Limited', code: '082' },
+  { name: 'Moniepoint MFB', code: '50515' },
+  { name: 'OPay Digital Services', code: '999992' },
+  { name: 'PalmPay', code: '999991' },
+  { name: 'Polaris Bank', code: '076' },
+  { name: 'Providus Bank Limited', code: '101' },
+  { name: 'Stanbic IBTC Bank Nigeria Limited', code: '221' },
+  { name: 'Standard Chartered Bank', code: '068' },
+  { name: 'Sterling Bank', code: '232' },
+  { name: 'Suntrust Bank Nigeria Limited', code: '100' },
+  { name: 'Union Bank of Nigeria', code: '032' },
+  { name: 'United Bank for Africa', code: '033' },
+  { name: 'Unity Bank plc', code: '215' },
+  { name: 'Wema Bank', code: '035' },
+  { name: 'Zenith Bank', code: '057' }
+]
+
+const showCountryDropdown = ref<boolean[]>([])
+const resolvingBank = ref<string | null>(null)
+
+function filteredCountries(search: string) {
+  if (!search) return countries
+  return countries.filter(c => c.name.toLowerCase().includes(search.toLowerCase()))
+}
+
+async function resolveBank(details: any, type: string) {
+  if (details.accountNumber?.length === 10 && details.bankName) {
+    resolvingBank.value = type
+    try {
+      // Mock resolution for now, or use a real API if available
+      setTimeout(() => {
+        details.accountName = 'VERIFIED NAME (' + details.accountNumber + ')'
+        resolvingBank.value = null
+      }, 1500)
+    } catch (e) {
+      resolvingBank.value = null
+    }
+  }
+}
+
+function addCountry(index: number, countryName: string) {
+  if (countryName && !kycDocumentTypes.value[index].countries.includes(countryName)) {
+    kycDocumentTypes.value[index].countries.push(countryName);
   }
   countryInputs.value[index] = '';
+}
+
+// Email Templates
+const emailTemplates = ref<any[]>([])
+const emailTriggers = [
+  { id: 'welcome_email', label: 'Welcome Email', description: 'Sent to new users upon registration' },
+  { id: 'order_confirmation', label: 'Order Confirmation', description: 'Sent after successful payment' },
+  { id: 'order_shipped', label: 'Order Shipped', description: 'Sent when order status changes to shipped' },
+  { id: 'order_delivered', label: 'Order Delivered', description: 'Sent when order is marked as delivered' },
+  { id: 'kyc_approved', label: 'KYC Approved', description: 'Sent when merchant/partner KYC is verified' },
+  { id: 'kyc_rejected', label: 'KYC Rejected', description: 'Sent when KYC documents are declined' },
+  { id: 'withdrawal_processed', label: 'Withdrawal Success', description: 'Sent after payout is completed' }
+]
+
+async function fetchEmailTemplates() {
+  try {
+    const res = await email_templates_api.findAll()
+    emailTemplates.value = res.data?.data || res.data || []
+  } catch (e) {
+    console.error('Failed to load email templates', e)
+  }
 }
 
 async function saveKycDocuments() {
@@ -734,5 +951,46 @@ onMounted(() => {
   fetchShippingConfig()
   fetchGlobalSettings()
   fetchRates()
+  fetchEmailTemplates()
+  loadGoogleMaps()
 })
+
+function loadGoogleMaps() {
+  if ((window as any).google) {
+    initAutocomplete()
+    return
+  }
+
+  const script = document.createElement('script')
+  const apiKey = 'AIzaSyCa0Rx0TJ9BGkQ9NC23BZc51zCql_Xrhs0'
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`
+  script.async = true
+  script.defer = true
+  script.onload = () => {
+    initAutocomplete()
+  }
+  document.head.appendChild(script)
+}
+
+function initAutocomplete() {
+  const input = document.getElementById('pickupAddressInput') as HTMLInputElement
+  const google = (window as any).google
+  if (!input || !google) return
+
+  const autocomplete = new google.maps.places.Autocomplete(input, {
+    types: ['address'],
+    componentRestrictions: { country: ['NG'] }
+  })
+
+  autocomplete.addListener('place_changed', () => {
+    const place = autocomplete.getPlace()
+    if (place.formatted_address) {
+      shippingConfig.value.warehouseAddress = place.formatted_address
+      if (place.geometry?.location) {
+        shippingConfig.value.warehouseLat = place.geometry.location.lat()
+        shippingConfig.value.warehouseLng = place.geometry.location.lng()
+      }
+    }
+  })
+}
 </script>

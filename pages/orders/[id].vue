@@ -108,12 +108,19 @@
           <div class="space-y-4">
             <div>
               <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block ml-1">Current Order Status</label>
-              <select 
+              <SelectInput 
                 v-model="selectedStatus" 
-                class="w-full bg-gray-50 border-none rounded-2xl px-5 py-3 text-sm font-bold text-gray-700 focus:ring-2 focus:ring-[#033958]/10 transition-all outline-none"
-              >
-                <option v-for="s in ['pending','confirmed','processing','shipped','delivered','completed','cancelled']" :key="s" :value="s" class="capitalize">{{ s }}</option>
-              </select>
+                label="Order Status"
+                :options="[
+                  { label: 'Pending', value: 'pending' },
+                  { label: 'Confirmed', value: 'confirmed' },
+                  { label: 'Processing', value: 'processing' },
+                  { label: 'Shipped', value: 'shipped' },
+                  { label: 'Delivered', value: 'delivered' },
+                  { label: 'Completed', value: 'completed' },
+                  { label: 'Cancelled', value: 'cancelled' }
+                ]"
+              />
             </div>
             
             <button 
@@ -165,8 +172,9 @@
           <div class="space-y-6">
             <div class="aspect-video rounded-3xl overflow-hidden border border-gray-100 bg-gray-50 group relative cursor-pointer" @click="openProof(order.paymentProof)">
               <img :src="order.paymentProof" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-              <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <div class="absolute inset-0 bg-black/30 flex flex-col items-center justify-center gap-2">
                  <Icon name="lucide:maximize" class="w-8 h-8 text-white" />
+                 <span class="text-[10px] font-black uppercase text-white tracking-widest">Click to View Original</span>
               </div>
             </div>
 
@@ -199,6 +207,7 @@
 
 <script setup lang="ts">
 import type { Order, OrderStatus } from '~/types'
+import SelectInput from '@/components/core/SelectInput.vue'
 import { orders_api } from '@/api_factory/modules/orders'
 import { useCustomToast } from '@/composables/core/useCustomToast'
 

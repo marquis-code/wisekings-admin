@@ -29,16 +29,17 @@
         />
       </div>
       <div class="flex flex-wrap gap-3">
-        <select 
+        <SelectInput 
           v-model="statusFilter" 
-          class="bg-gray-50 border-none rounded-2xl px-5 py-3 text-sm font-bold text-gray-700 focus:ring-2 focus:ring-indigo-600/10 transition-all outline-none min-w-[150px]" 
-          @change="handleFetch"
-        >
-          <option value="">All Statuses</option>
-          <option value="pending">Pending</option>
-          <option value="processed">Processed</option>
-          <option value="archived">Archived</option>
-        </select>
+          label="Filter by Status"
+          :options="[
+            { label: 'All Statuses', value: '' },
+            { label: 'Pending', value: 'pending' },
+            { label: 'Processed', value: 'processed' },
+            { label: 'Archived', value: 'archived' }
+          ]"
+          @update:modelValue="handleFetch"
+        />
         <button @click="handleFetch" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-indigo-600/5 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all">
           <Icon name="lucide:rotate-cw" class="w-5 h-5" :class="{ 'animate-spin': loading }" />
         </button>
@@ -176,6 +177,7 @@
 </template>
 
 <script setup lang="ts">
+import SelectInput from '@/components/core/SelectInput.vue'
 import { useFetchInquiries } from '@/composables/modules/inquiries/useFetchInquiries'
 import { useUpdateInquiryStatus } from '@/composables/modules/inquiries/useUpdateInquiryStatus'
 import { useConfirm } from '@/composables/core/useConfirm'
@@ -186,9 +188,18 @@ const { inquiries, loading, total, fetchInquiries } = useFetchInquiries()
 const { updateStatus } = useUpdateInquiryStatus()
 const { openConfirm } = useConfirm()
 
-const search = ref('')
 const statusFilter = ref('')
 const selectedInquiry = ref<any>(null)
+
+interface Inquiry {
+  _id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  status: string;
+  createdAt: string;
+}
 
 let debounceTimer: ReturnType<typeof setTimeout>
 function debouncedFetch() {

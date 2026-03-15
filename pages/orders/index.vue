@@ -27,22 +27,33 @@
         />
       </div>
       <div class="flex flex-wrap gap-3">
-        <select 
+        <SelectInput 
           v-model="statusFilter" 
-          class="bg-gray-50 border-none rounded-2xl px-5 py-3 text-sm font-bold text-gray-700 focus:ring-2 focus:ring-[#033958]/10 transition-all outline-none min-w-[150px]" 
-          @change="handleFetch"
-        >
-          <option value="">All Statuses</option>
-          <option v-for="s in ['pending','confirmed','processing','shipped','delivered','completed','cancelled']" :key="s" :value="s" class="capitalize">{{ s }}</option>
-        </select>
-        <select 
+          label="Filter by Status"
+          :options="[
+            { label: 'All Statuses', value: '' },
+            { label: 'Pending', value: 'pending' },
+            { label: 'Confirmed', value: 'confirmed' },
+            { label: 'Processing', value: 'processing' },
+            { label: 'Shipped', value: 'shipped' },
+            { label: 'Delivered', value: 'delivered' },
+            { label: 'Completed', value: 'completed' },
+            { label: 'Cancelled', value: 'cancelled' }
+          ]"
+          @update:modelValue="handleFetch"
+        />
+        <SelectInput 
           v-model="paymentFilter" 
-          class="bg-gray-50 border-none rounded-2xl px-5 py-3 text-sm font-bold text-gray-700 focus:ring-2 focus:ring-[#033958]/10 transition-all outline-none min-w-[150px]" 
-          @change="handleFetch"
-        >
-          <option value="">All Payments</option>
-          <option v-for="s in ['pending','paid','failed','refunded']" :key="s" :value="s" class="capitalize">{{ s }}</option>
-        </select>
+          label="Filter by Payment"
+          :options="[
+            { label: 'All Payments', value: '' },
+            { label: 'Pending', value: 'pending' },
+            { label: 'Paid', value: 'paid' },
+            { label: 'Failed', value: 'failed' },
+            { label: 'Refunded', value: 'refunded' }
+          ]"
+          @update:modelValue="handleFetch"
+        />
         <button @click="handleFetch" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#033958]/5 text-[#033958] hover:bg-[#033958] hover:text-white transition-all">
           <Icon name="lucide:rotate-cw" class="w-5 h-5" :class="{ 'animate-spin': loading }" />
         </button>
@@ -205,6 +216,7 @@
 
 <script setup lang="ts">
 import type { Order } from '~/types'
+import SelectInput from '@/components/core/SelectInput.vue'
 import { useFetchOrders } from '@/composables/modules/orders/useFetchOrders'
 import { orders_api } from '@/api_factory/modules/orders'
 import { useCustomToast } from '@/composables/core/useCustomToast'

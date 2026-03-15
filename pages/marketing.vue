@@ -69,9 +69,9 @@
               </span>
             </td>
             <td class="!py-4 !pr-6 text-right">
-              <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button @click="openBannerModal(b)" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#033958] hover:text-white transition-all"><Icon name="lucide:edit" class="w-4 h-4" /></button>
-                <button @click="handleDeleteBanner(b)" class="w-9 h-9 flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all"><Icon name="lucide:trash-2" class="w-4 h-4" /></button>
+              <div class="flex items-center justify-end gap-3 transition-opacity">
+                <button @click="openBannerModal(b)" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-gray-900 text-white shadow-xl shadow-black/10 hover:scale-110 active:scale-95 transition-all"><Icon name="lucide:edit" class="w-5 h-5" /></button>
+                <button @click="handleDeleteBanner(b)" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-white border border-gray-100 text-red-500 hover:bg-red-50 shadow-sm hover:scale-110 active:scale-95 transition-all"><Icon name="lucide:trash-2" class="w-5 h-5" /></button>
               </div>
             </td>
           </tr>
@@ -125,9 +125,9 @@
               </span>
             </td>
             <td class="!py-4 !pr-6 text-right">
-              <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button @click="openPromoModal(p)" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#033958] hover:text-white transition-all"><Icon name="lucide:edit" class="w-4 h-4" /></button>
-                <button @click="handleDeletePromo(p)" class="w-9 h-9 flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all"><Icon name="lucide:trash-2" class="w-4 h-4" /></button>
+              <div class="flex items-center justify-end gap-3 transition-opacity">
+                <button @click="openPromoModal(p)" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-gray-900 text-white shadow-xl shadow-black/10 hover:scale-110 active:scale-95 transition-all"><Icon name="lucide:edit" class="w-5 h-5" /></button>
+                <button @click="handleDeletePromo(p)" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-white border border-gray-100 text-red-500 hover:bg-red-50 shadow-sm hover:scale-110 active:scale-95 transition-all"><Icon name="lucide:trash-2" class="w-5 h-5" /></button>
               </div>
             </td>
           </tr>
@@ -174,9 +174,9 @@
               </span>
             </td>
             <td class="!py-4 !pr-6 text-right">
-              <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button @click="openTemplateModal(t)" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#033958] hover:text-white transition-all"><Icon name="lucide:edit-3" class="w-4 h-4" /></button>
-                <button @click="handleDeleteTemplate(t)" class="w-9 h-9 flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all"><Icon name="lucide:trash-2" class="w-4 h-4" /></button>
+              <div class="flex items-center justify-end gap-3 transition-opacity">
+                <button @click="openTemplateModal(t)" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-gray-900 text-white shadow-xl shadow-black/10 hover:scale-110 active:scale-95 transition-all"><Icon name="lucide:edit-3" class="w-5 h-5" /></button>
+                <button @click="handleDeleteTemplate(t)" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-white border border-gray-100 text-red-500 hover:bg-red-50 shadow-sm hover:scale-110 active:scale-95 transition-all"><Icon name="lucide:trash-2" class="w-5 h-5" /></button>
               </div>
             </td>
           </tr>
@@ -224,10 +224,10 @@
              <td class="!py-4 font-medium text-gray-500">{{ c.subject }}</td>
              <td class="!py-4 text-xs font-bold text-gray-500">{{ new Date(c.createdAt).toLocaleDateString() }}</td>
              <td class="!py-4 !pr-6 text-right">
-               <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                 <button @click="$router.push('/campaigns/' + c._id)" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#033958] hover:text-white transition-all" title="View"><Icon name="lucide:eye" class="w-4 h-4" /></button>
-                 <button @click="openCampaignModal(c, 'edit')" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#033958] hover:text-white transition-all" title="Edit / Resend"><Icon name="lucide:edit" class="w-4 h-4" /></button>
-                 <button @click="handleDeleteCampaign(c)" class="w-9 h-9 flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all" title="Delete"><Icon name="lucide:trash-2" class="w-4 h-4" /></button>
+               <div class="flex items-center justify-end gap-3 transition-opacity">
+                 <button @click="$router.push('/campaigns/' + c._id)" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition-all border border-gray-200" title="View"><Icon name="lucide:eye" class="w-5 h-5" /></button>
+                 <button @click="openCampaignModal(c, 'edit')" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-gray-900 text-white shadow-xl shadow-black/10 hover:scale-110 active:scale-95 transition-all" title="Edit / Resend"><Icon name="lucide:edit" class="w-5 h-5" /></button>
+                 <button @click="handleDeleteCampaign(c)" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-white border border-gray-100 text-red-500 hover:bg-red-50 shadow-sm hover:scale-110 active:scale-95 transition-all" title="Delete"><Icon name="lucide:trash-2" class="w-5 h-5" /></button>
                </div>
              </td>
           </tr>
@@ -236,100 +236,22 @@
     </div>
 
     <!-- Banner Modal -->
-    <Teleport to="body">
-      <Transition name="modal-fade">
-        <div v-if="showBannerForm" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          <div class="absolute inset-0 bg-black/20 backdrop-blur-sm" @click="showBannerForm = false"></div>
-          <div class="relative bg-white rounded-[2.5rem] p-8 w-full max-w-xl shadow-2xl animate-modal-in border border-white overflow-hidden">
-            <div class="relative z-10">
-              <div class="flex items-center justify-between mb-8">
-                <h2 class="text-2xl font-black text-gray-900">{{ bannerEditId ? 'Edit' : 'Create' }} Banner</h2>
-                <button @click="showBannerForm = false" class="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center text-gray-400 hover:bg-gray-200 hover:text-gray-900 transition-all"><Icon name="lucide:x" class="w-6 h-6" /></button>
-              </div>
-              <form @submit.prevent="handleSaveBanner" class="space-y-5">
-                <div><label class="text-sm font-bold text-gray-700 mb-1 block">Title</label><input v-model="bannerForm.title" required class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 font-medium focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all" /></div>
-                <div>
-                  <label class="text-sm font-bold text-gray-700 mb-2 block">Banner Image</label>
-                  <CoreImageUploader v-model="bannerForm.image" folder="banners" />
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                  <div><label class="text-sm font-bold text-gray-700 mb-1 block">Link</label><input v-model="bannerForm.link" class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 font-medium focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all" /></div>
-                  <div>
-                    <label class="text-sm font-bold text-gray-700 mb-1 block">Position</label>
-                    <select v-model="bannerForm.position" class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 font-medium focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all">
-                      <option value="home">Home</option>
-                      <option value="category">Category</option>
-                      <option value="offers">Offers</option>
-                      <option value="global">Global</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-2xl border border-gray-100">
-                  <input v-model="bannerForm.isActive" type="checkbox" id="bannerActive" class="custom-checkbox" />
-                  <label for="bannerActive" class="text-sm font-bold text-gray-700 cursor-pointer">Active</label>
-                </div>
-                <button type="submit" class="w-full btn-primary !rounded-2xl !py-4 shadow-xl shadow-[#033958]/20" :disabled="savingBanner">
-                  {{ savingBanner ? 'Saving...' : (bannerEditId ? 'Save Changes' : 'Create Banner') }}
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </Transition>
-    </Teleport>
+    <MarketingBannerModal 
+      :show="showBannerForm" 
+      :banner-data="selectedBanner"
+      :saving="savingBanner"
+      @close="showBannerForm = false"
+      @save="handleSaveBanner"
+    />
 
     <!-- Promotion Modal -->
-    <Teleport to="body">
-      <Transition name="modal-fade">
-        <div v-if="showPromoForm" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          <div class="absolute inset-0 bg-black/20 backdrop-blur-sm" @click="showPromoForm = false"></div>
-          <div class="relative bg-white rounded-[2.5rem] p-8 w-full max-w-xl shadow-2xl animate-modal-in border border-white overflow-hidden">
-            <div class="relative z-10">
-              <div class="flex items-center justify-between mb-8">
-                <h2 class="text-2xl font-black text-gray-900">{{ promoEditId ? 'Edit' : 'Create' }} Promotion</h2>
-                <button @click="showPromoForm = false" class="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center text-gray-400 hover:bg-gray-200 hover:text-gray-900 transition-all"><Icon name="lucide:x" class="w-6 h-6" /></button>
-              </div>
-              <form @submit.prevent="handleSavePromo" class="space-y-5">
-                <div><label class="text-sm font-bold text-gray-700 mb-1 block">Title</label><input v-model="promoForm.title" required class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 font-medium focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all" /></div>
-                <div>
-                  <label class="text-sm font-bold text-gray-700 mb-2 block">Promotion Image</label>
-                  <CoreImageUploader v-model="promoForm.image" folder="promotions" />
-                </div>
-                <div>
-                  <label class="text-sm font-bold text-gray-700 mb-2 block">Description & Terms</label>
-                  <CoreRichTextEditor v-model="promoForm.description" />
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                  <div>
-                    <label class="text-sm font-bold text-gray-700 mb-1 block">Type</label>
-                    <select v-model="promoForm.type" class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 font-medium focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all">
-                      <option value="sale">Sale</option>
-                      <option value="gifting">Gifting</option>
-                      <option value="holiday">Holiday</option>
-                      <option value="special">Special</option>
-                      <option value="new_arrival">New Arrival</option>
-                    </select>
-                  </div>
-                  <div><label class="text-sm font-bold text-gray-700 mb-1 block">Discount %</label><input v-model.number="promoForm.discountPercentage" type="number" class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 font-medium focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all" /></div>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                  <div><label class="text-sm font-bold text-gray-700 mb-1 block">Badge Text</label><input v-model="promoForm.badgeText" class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 font-medium focus:ring-2 focus:ring-[#033958]/20 focus:border-[#033958] outline-none transition-all" placeholder="e.g. 🔥 Hot Deal" /></div>
-                  <div class="flex items-end">
-                    <div class="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-2xl border border-gray-100 w-full">
-                      <input v-model="promoForm.isActive" type="checkbox" id="promoActive" class="custom-checkbox" />
-                      <label for="promoActive" class="text-sm font-bold text-gray-700 cursor-pointer">Active</label>
-                    </div>
-                  </div>
-                </div>
-                <button type="submit" class="w-full btn-primary !rounded-2xl !py-4 shadow-xl shadow-[#033958]/20" :disabled="savingPromo">
-                  {{ savingPromo ? 'Saving...' : (promoEditId ? 'Save Changes' : 'Create Promotion') }}
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </Transition>
-    </Teleport>
+    <MarketingPromoModal 
+      :show="showPromoForm" 
+      :promo-data="selectedPromo"
+      :saving="savingPromo"
+      @close="showPromoForm = false"
+      @save="handleSavePromo"
+    />
 
     <!-- Template Editor Modal -->
     <MarketingTemplateEditorModal 
@@ -363,9 +285,8 @@ const activeTab = ref('banners')
 const banners = ref<any[]>([])
 const loadingBanners = ref(true)
 const showBannerForm = ref(false)
-const bannerEditId = ref('')
+const selectedBanner = ref<any>(null)
 const savingBanner = ref(false)
-const bannerForm = ref({ title: '', image: '', link: '', position: 'home', isActive: true })
 
 async function fetchBanners() {
   loadingBanners.value = true
@@ -374,16 +295,15 @@ async function fetchBanners() {
 }
 
 function openBannerModal(b?: any) {
-  bannerEditId.value = b?._id || ''
-  bannerForm.value = b ? { title: b.title, image: b.image, link: b.link || '', position: b.position, isActive: b.isActive } : { title: '', image: '', link: '', position: 'home', isActive: true }
+  selectedBanner.value = b || null
   showBannerForm.value = true
 }
 
-async function handleSaveBanner() {
+async function handleSaveBanner(formData: any) {
   savingBanner.value = true
   try {
-    if (bannerEditId.value) await marketing_api.updateBanner(bannerEditId.value, bannerForm.value)
-    else await marketing_api.createBanner(bannerForm.value)
+    if (selectedBanner.value?._id) await marketing_api.updateBanner(selectedBanner.value._id, formData)
+    else await marketing_api.createBanner(formData)
     showBannerForm.value = false; fetchBanners()
   } catch (e) { console.error(e) }
   savingBanner.value = false
@@ -398,9 +318,8 @@ async function handleDeleteBanner(b: any) {
 const promos = ref<any[]>([])
 const loadingPromos = ref(true)
 const showPromoForm = ref(false)
-const promoEditId = ref('')
+const selectedPromo = ref<any>(null)
 const savingPromo = ref(false)
-const promoForm = ref({ title: '', description: '', image: '', type: 'sale', discountPercentage: 0, badgeText: '', isActive: true })
 
 async function fetchPromos() {
   loadingPromos.value = true
@@ -409,16 +328,15 @@ async function fetchPromos() {
 }
 
 function openPromoModal(p?: any) {
-  promoEditId.value = p?._id || ''
-  promoForm.value = p ? { title: p.title, description: p.description || '', image: p.image || '', type: p.type, discountPercentage: p.discountPercentage || 0, badgeText: p.badgeText || '', isActive: p.isActive } : { title: '', description: '', image: '', type: 'sale', discountPercentage: 0, badgeText: '', isActive: true }
+  selectedPromo.value = p || null
   showPromoForm.value = true
 }
 
-async function handleSavePromo() {
+async function handleSavePromo(formData: any) {
   savingPromo.value = true
   try {
-    if (promoEditId.value) await marketing_api.updatePromotion(promoEditId.value, promoForm.value)
-    else await marketing_api.createPromotion(promoForm.value)
+    if (selectedPromo.value?._id) await marketing_api.updatePromotion(selectedPromo.value._id, formData)
+    else await marketing_api.createPromotion(formData)
     showPromoForm.value = false; fetchPromos()
   } catch (e) { console.error(e) }
   savingPromo.value = false

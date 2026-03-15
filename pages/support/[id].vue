@@ -19,16 +19,17 @@
         </div>
       </div>
       <div>
-        <select 
+        <SelectInput 
           v-model="ticket.status" 
-          @change="updateStatus"
-          class="bg-white border border-gray-100 rounded-2xl px-6 py-3 font-bold text-sm text-[#033958] outline-none shadow-sm"
-        >
-          <option value="open">Open</option>
-          <option value="in_progress">In Progress</option>
-          <option value="resolved">Resolved</option>
-          <option value="closed">Closed</option>
-        </select>
+          label="Ticket Status"
+          :options="[
+            { label: 'Open', value: 'open' },
+            { label: 'In Progress', value: 'in_progress' },
+            { label: 'Resolved', value: 'resolved' },
+            { label: 'Closed', value: 'closed' }
+          ]"
+          @update:modelValue="updateStatus"
+        />
       </div>
     </div>
 
@@ -133,6 +134,7 @@
 </template>
 
 <script setup lang="ts">
+import SelectInput from '@/components/core/SelectInput.vue'
 import { support_api } from '@/api_factory/modules/support'
 // Re-importing common auth patterns found in WiseKings
 const user = useCookie('wk_admin_user') // Often WiseKings stores user in cookie

@@ -39,14 +39,12 @@
         />
       </div>
       <div class="flex gap-3">
-        <select 
+        <SelectInput 
           v-model="categoryFilter" 
-          class="bg-gray-50 border-none rounded-2xl px-5 py-3 text-sm font-bold text-gray-700 focus:ring-2 focus:ring-[#033958]/10 transition-all outline-none min-w-[180px]" 
-          @change="handleFetch"
-        >
-          <option value="">All Categories</option>
-          <option v-for="c in categories" :key="c._id" :value="c._id">{{ c.name }}</option>
-        </select>
+          label="Filter by Category"
+          :options="[{ label: 'All Categories', value: '' }, ...categories.map(c => ({ label: c.name, value: c._id }))]"
+          @update:modelValue="handleFetch"
+        />
         <button @click="handleFetch" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#033958]/5 text-[#033958] hover:bg-[#033958] hover:text-white transition-all">
           <Icon name="lucide:rotate-cw" class="w-5 h-5" :class="{ 'animate-spin': loading }" />
         </button>
@@ -136,7 +134,7 @@
               <span :class="p.isActive ? 'badge-success' : 'badge-danger'">{{ p.isActive ? 'Active' : 'Inactive' }}</span>
             </td>
             <td class="!py-4 !pr-6 text-right">
-              <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div class="flex items-center justify-end gap-2">
                 <NuxtLink 
                   :to="`/products/${p._id}/edit`" 
                   class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#033958] hover:text-white transition-all duration-300"
@@ -212,6 +210,7 @@
 
 <script setup lang="ts">
 import type { Product, Category } from '~/types'
+import SelectInput from '@/components/core/SelectInput.vue'
 import { useFetchProducts } from '@/composables/modules/products/useFetchProducts'
 import { useDeleteProduct } from '@/composables/modules/products/useDeleteProduct'
 import { products_api } from '@/api_factory/modules/products'

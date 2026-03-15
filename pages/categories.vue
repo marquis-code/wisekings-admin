@@ -69,20 +69,20 @@
               </span>
             </td>
             <td class="!py-4 !pr-6 text-right">
-              <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div class="flex items-center justify-end gap-3 transition-opacity">
                 <button 
                   @click="editCategory(c)" 
-                  class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#033958] hover:text-white transition-all duration-300"
+                  class="w-10 h-10 flex items-center justify-center rounded-2xl bg-gray-900 text-white shadow-xl shadow-black/10 hover:scale-110 active:scale-95 transition-all"
                   title="Edit Category"
                 >
-                  <Icon name="lucide:edit" class="w-4 h-4" />
+                  <Icon name="lucide:settings-2" class="w-5 h-5" />
                 </button>
                 <button 
                   @click="handleDelete(c)" 
-                  class="w-9 h-9 flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300"
+                  class="w-10 h-10 flex items-center justify-center rounded-2xl bg-white border border-gray-100 text-red-500 hover:bg-red-50 hover:border-red-200 shadow-sm hover:scale-110 active:scale-95 transition-all"
                   title="Delete Category"
                 >
-                  <Icon name="lucide:trash-2" class="w-4 h-4" />
+                  <Icon name="lucide:trash-2" class="w-5 h-5" />
                 </button>
               </div>
             </td>
@@ -288,10 +288,22 @@ onMounted(() => fetchCategories())
 }
 
 .badge-success {
-  @apply inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-bold border;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.625rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-width: 1px;
 }
 
 .badge-danger {
-  @apply inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-bold border;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.625rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-width: 1px;
 }
 </style>

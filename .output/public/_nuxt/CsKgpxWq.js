@@ -1,0 +1,1 @@
+import{G as t}from"./CgtdMy43.js";const i={askAssistant:a=>t.post("/ai/assistant",{question:a}),getForecast:()=>t.get("/ai/forecast"),getChurnAnalysis:()=>t.get("/ai/churn-analysis"),getProductivity:()=>t.get("/ai/productivity")};export{i as a};

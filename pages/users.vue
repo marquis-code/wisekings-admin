@@ -31,14 +31,20 @@
         />
       </div>
       <div class="flex gap-3">
-        <select 
+        <SelectInput 
           v-model="roleFilter" 
-          class="bg-gray-50 border-none rounded-2xl px-5 py-3 text-sm font-bold text-gray-700 focus:ring-2 focus:ring-[#033958]/10 transition-all outline-none min-w-[160px]" 
-          @change="handleFetch"
-        >
-          <option value="">All Roles</option>
-          <option v-for="r in ['superadmin','admin','finance','support','viewer','user']" :key="r" :value="r" class="capitalize">{{ r }}</option>
-        </select>
+          label="Filter by Role"
+          :options="[
+            { label: 'All Roles', value: '' },
+            { label: 'Super Admin', value: 'superadmin' },
+            { label: 'Admin', value: 'admin' },
+            { label: 'Finance', value: 'finance' },
+            { label: 'Support', value: 'support' },
+            { label: 'Viewer', value: 'viewer' },
+            { label: 'User', value: 'user' }
+          ]"
+          @update:modelValue="handleFetch"
+        />
         <button @click="handleFetch" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#033958]/5 text-[#033958] hover:bg-[#033958] hover:text-white transition-all">
           <Icon name="lucide:rotate-cw" class="w-5 h-5" :class="{ 'animate-spin': loading }" />
         </button>
@@ -105,7 +111,7 @@
               <p class="text-[10px] text-gray-400 font-medium">{{ u.lastLogin ? new Date(u.lastLogin).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : '—' }}</p>
             </td>
             <td class="!py-4 !pr-6 text-right">
-              <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div class="flex items-center justify-end gap-2">
                 <button 
                   v-if="u.isActive" 
                   @click="handleDeactivate(u)" 
@@ -161,6 +167,7 @@
 
 <script setup lang="ts">
 import type { User } from '~/types'
+import SelectInput from '@/components/core/SelectInput.vue'
 import { useFetchUsers } from '@/composables/modules/users/useFetchUsers'
 import { useActivateUser } from '@/composables/modules/users/useActivateUser'
 import { useDeactivateUser } from '@/composables/modules/users/useDeactivateUser'

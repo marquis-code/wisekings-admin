@@ -1,1 +1,0 @@
-import{G as s}from"./DzP-nKMj.js";const o={getTickets:t=>s.get("/support/tickets",{params:t}),getMyTickets:()=>s.get("/support/tickets/me"),getTicket:t=>s.get(`/support/tickets/${t}`),updateStatus:(t,e)=>s.patch(`/support/tickets/${t}/status`,{status:e}),addComment:(t,e)=>s.post(`/support/tickets/${t}/comments`,{message:e})};export{o as s};

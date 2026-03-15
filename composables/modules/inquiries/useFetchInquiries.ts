@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 
 export function useFetchInquiries() {
-    const inquiries = ref([])
+    const inquiries = ref<any[]>([])
     const loading = ref(false)
     const total = ref(0)
     const config = useRuntimeConfig()

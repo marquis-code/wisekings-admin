@@ -29,6 +29,8 @@ export const CoreSelectInput: typeof import("../components/core/SelectInput.vue"
 export const CoreSkeletonLoader: typeof import("../components/core/SkeletonLoader.vue")['default']
 export const CoreToast: typeof import("../components/core/Toast.vue")['default']
 export const MarketingCampaignModal: typeof import("../components/marketing/CampaignModal.vue")['default']
+export const MarketingBannerModal: typeof import("../components/marketing/MarketingBannerModal.vue")['default']
+export const MarketingPromoModal: typeof import("../components/marketing/MarketingPromoModal.vue")['default']
 export const MarketingTemplateEditorModal: typeof import("../components/marketing/TemplateEditorModal.vue")['default']
 export const UsersUserInviteModal: typeof import("../components/users/UserInviteModal.vue")['default']
 export const NuxtWelcome: typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
@@ -72,6 +74,8 @@ export const LazyCoreSelectInput: LazyComponent<typeof import("../components/cor
 export const LazyCoreSkeletonLoader: LazyComponent<typeof import("../components/core/SkeletonLoader.vue")['default']>
 export const LazyCoreToast: LazyComponent<typeof import("../components/core/Toast.vue")['default']>
 export const LazyMarketingCampaignModal: LazyComponent<typeof import("../components/marketing/CampaignModal.vue")['default']>
+export const LazyMarketingBannerModal: LazyComponent<typeof import("../components/marketing/MarketingBannerModal.vue")['default']>
+export const LazyMarketingPromoModal: LazyComponent<typeof import("../components/marketing/MarketingPromoModal.vue")['default']>
 export const LazyMarketingTemplateEditorModal: LazyComponent<typeof import("../components/marketing/TemplateEditorModal.vue")['default']>
 export const LazyUsersUserInviteModal: LazyComponent<typeof import("../components/users/UserInviteModal.vue")['default']>
 export const LazyNuxtWelcome: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']>

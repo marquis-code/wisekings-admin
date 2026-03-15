@@ -55,10 +55,14 @@
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
-              <select v-model="form.category" class="w-full px-4 py-2 border rounded-lg">
-                <option value="gold">Gold (Credit)</option>
-                <option value="diamond">Diamond (Equity)</option>
-              </select>
+              <SelectInput 
+                v-model="form.category" 
+                label="Category"
+                :options="[
+                  { label: 'Gold (Credit)', value: 'gold' },
+                  { label: 'Diamond (Equity)', value: 'diamond' }
+                ]"
+              />
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Target (₦)</label>
@@ -80,6 +84,7 @@
 </template>
 
 <script setup>
+import SelectInput from '@/components/core/SelectInput.vue'
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 

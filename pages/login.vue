@@ -24,7 +24,7 @@
           </template>
         </CoreAnimatedInput>
 
-        <div class="relative">
+        <div class="space-y-4">
           <CoreAnimatedInput
             v-model="credentials.password"
             label="Password"
@@ -32,7 +32,11 @@
             placeholder="••••••••••••"
             required
           />
-          <NuxtLink to="/forgot-password" class="absolute right-0 -top-7 text-[10px] font-bold uppercase tracking-wider text-[#033958] hover:underline">Forgot password?</NuxtLink>
+          <div class="flex justify-end px-1">
+            <NuxtLink to="/forgot-password" class="text-[10px] font-black uppercase tracking-widest text-[#033958] hover:text-emerald-500 transition-colors">
+              Forgot password?
+            </NuxtLink>
+          </div>
         </div>
       </div>
 

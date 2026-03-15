@@ -29,16 +29,17 @@
         />
       </div>
       <div class="flex flex-wrap gap-3">
-        <select 
+        <SelectInput 
           v-model="statusFilter" 
-          class="bg-gray-50 border-none rounded-2xl px-5 py-3 text-sm font-bold text-gray-700 focus:ring-2 focus:ring-[#033958]/10 transition-all outline-none min-w-[150px]" 
-          @change="handleFetch"
-        >
-          <option value="">All Statuses</option>
-          <option value="active">Active</option>
-          <option value="pending">Pending</option>
-          <option value="suspended">Suspended</option>
-        </select>
+          label="Filter by Status"
+          :options="[
+            { label: 'All Statuses', value: '' },
+            { label: 'Active', value: 'active' },
+            { label: 'Pending', value: 'pending' },
+            { label: 'Suspended', value: 'suspended' }
+          ]"
+          @update:modelValue="handleFetch"
+        />
         <button @click="handleFetch" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#033958]/5 text-[#033958] hover:bg-[#033958] hover:text-white transition-all">
           <Icon name="lucide:rotate-cw" class="w-5 h-5" :class="{ 'animate-spin': loading }" />
         </button>
@@ -165,6 +166,7 @@
 
 <script setup lang="ts">
 import type { Partner } from '~/types'
+import SelectInput from '@/components/core/SelectInput.vue'
 import { useFetchPartners } from '@/composables/modules/partners/useFetchPartners'
 import { useApprovePartner } from '@/composables/modules/partners/useApprovePartner'
 import { useSuspendPartner } from '@/composables/modules/partners/useSuspendPartner'
