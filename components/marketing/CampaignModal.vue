@@ -245,11 +245,12 @@ const showSamples = ref(false)
 const audienceDropdown = ref<HTMLElement>()
 
 const audiencesList = [
-  { val: 'all', label: 'Entire Community' },
-  { val: 'customers', label: 'Snack Enthusiasts' },
-  { val: 'merchants', label: 'Store Owners' },
-  { val: 'partners', label: 'Logistics Partners' },
-  { val: 'specific', label: 'Handpicked Guests' }
+  { val: 'all', label: 'All Users' },
+  { val: 'active', label: 'Active Users' },
+  { val: 'customers', label: 'Only Customers' },
+  { val: 'merchants', label: 'Only Merchants' },
+  { val: 'partners', label: 'Only Partners' },
+  { val: 'specific', label: 'Handpicked Guests (Custom)' }
 ]
 
 const campaignSamples = [
@@ -331,10 +332,11 @@ onMounted(() => {
     form.content = props.campaign.content || ''
     
     const audiences: Record<string, string> = {
-      'all': 'Entire Community',
-      'merchants': 'Store Owners',
-      'partners': 'Logistics Partners',
-      'customers': 'Snack Enthusiasts',
+      'all': 'All Users',
+      'active': 'Active Users',
+      'merchants': 'Only Merchants',
+      'partners': 'Only Partners',
+      'customers': 'Only Customers',
       'specific': 'Handpicked Guests'
     }
     form.targetAudience = props.campaign.targetAudience || 'all'

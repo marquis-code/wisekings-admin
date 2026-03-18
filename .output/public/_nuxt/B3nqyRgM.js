@@ -1,1 +1,0 @@
-import{G as t}from"./DzP-nKMj.js";const m={findAll:()=>t.get("/email-templates"),findById:e=>t.get(`/email-templates/${e}`),create:e=>t.post("/email-templates",e),update:(e,a)=>t.patch(`/email-templates/${e}`,a),delete:e=>t.delete(`/email-templates/${e}`)};export{m as e};

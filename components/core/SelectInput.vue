@@ -184,11 +184,11 @@
     let val: string | number
     if (typeof option === 'string') {
       val = option
-    } else if (option.value) {
+    } else if (option.value !== undefined && option.value !== null) {
       val = option.value
-    } else if (option.code) {
+    } else if (option.code !== undefined && option.code !== null) {
       val = option.code
-    } else if (option.name) {
+    } else if (option.name !== undefined && option.name !== null) {
       val = option.name
     } else {
       val = option
@@ -208,7 +208,10 @@
   
   const getValue = (option: any): string | number => {
     if (typeof option === 'string') return option
-    return option.value || option.code || option.name || option
+    if (option.value !== undefined && option.value !== null) return option.value
+    if (option.code !== undefined && option.code !== null) return option.code
+    if (option.name !== undefined && option.name !== null) return option.name
+    return option
   }
   
   const selectedLabel = computed(() => {

@@ -14,7 +14,7 @@ export const useFetchProducts = () => {
         try {
             const res = await products_api.get(params) as any
             products.value = res.data || []
-            total.value = res.total || 0
+            total.value = res.meta?.total || products.value.length || 0
         } catch (err: any) {
             showToast({ title: "Error", message: err.message || "Failed to fetch products", toastType: "error" })
         } finally {

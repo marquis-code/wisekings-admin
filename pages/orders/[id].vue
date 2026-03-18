@@ -244,6 +244,6 @@ async function fetchOrder() {
     loading.value = false 
   } 
 }
-async function updateStatus() { if (!selectedStatus.value) return; updating.value = true; try { await orders_api.updateStatus(order.value!._id, selectedStatus.value as OrderStatus); showToast({ title: 'Success', message: 'Order status updated', toastType: 'success' }); fetchOrder() } catch { showToast({ title: 'Error', message: 'Failed to update status', toastType: 'error' }) } finally { updating.value = false } }
+async function updateStatus() { if (!selectedStatus.value) return; updating.value = true; try { await orders_api.updateStatus(order.value!._id, { status: selectedStatus.value as OrderStatus }); showToast({ title: 'Success', message: 'Order status updated', toastType: 'success' }); fetchOrder() } catch { showToast({ title: 'Error', message: 'Failed to update status', toastType: 'error' }) } finally { updating.value = false } }
 onMounted(fetchOrder)
 </script>

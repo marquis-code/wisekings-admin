@@ -12,7 +12,7 @@
         <button 
           v-for="tab in tabs" 
           :key="tab.id"
-          @click="activeTab = tab.id"
+          @click="activeTab = tab.id as any"
           :class="[
             'px-6 py-2.5 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap',
             activeTab === tab.id ? 'bg-white text-[#033958] shadow-sm' : 'text-gray-400 hover:text-gray-600'
@@ -126,6 +126,52 @@
           </div>
         </div>
       </div>
+
+      <!-- Pickup Locations Configuration -->
+      <div class="bg-white rounded-[2.5rem] p-8 mt-8 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-8">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
+              <Icon name="lucide:map-pin" class="w-5 h-5" />
+            </div>
+            <h2 class="text-lg font-black text-gray-900 tracking-tight">Pickup Locations</h2>
+          </div>
+          <button @click="addPickupLocation" class="p-2 rounded-xl bg-gray-50 text-gray-400 hover:text-blue-600 transition-all">
+            <Icon name="lucide:plus" class="w-5 h-5" />
+          </button>
+        </div>
+        
+        <div class="space-y-6">
+          <div v-for="(loc, i) in globalSettings.pickupLocations" :key="i" class="p-6 rounded-3xl bg-gray-50 border border-transparent hover:border-gray-100 transition-all relative group">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+              <div class="md:col-span-3">
+                <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 block ml-1">Location Name</label>
+                <input v-model="loc.name" class="w-full bg-white px-4 py-2 rounded-xl text-sm font-bold border border-gray-100 focus:ring-0" />
+              </div>
+              <div class="md:col-span-4">
+                <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 block ml-1">Full Address</label>
+                <input v-model="loc.address" class="w-full bg-white px-4 py-2 rounded-xl text-sm font-bold border border-gray-100 focus:ring-0" />
+              </div>
+              <div class="md:col-span-3">
+                <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 block ml-1">Contact Phone</label>
+                <input v-model="loc.phone" class="w-full bg-white px-4 py-2 rounded-xl text-sm font-bold border border-gray-100 focus:ring-0" />
+              </div>
+              <div class="md:col-span-2 flex items-center justify-between">
+                <div class="flex flex-col items-center">
+                  <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 block">Visible</label>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" v-model="loc.isActive" class="sr-only peer">
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#033958]"></div>
+                  </label>
+                </div>
+                <button @click="globalSettings.pickupLocations.splice(i, 1)" class="p-2 rounded-xl text-red-100 group-hover:text-red-400 hover:bg-red-50 hover:text-red-600 transition-all">
+                  <Icon name="lucide:trash-2" size="18" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Currency Rates Tab -->
@@ -164,6 +210,36 @@
             </div>
             <p class="text-2xl font-black text-gray-900">{{ formatSignificant(rate) }}</p>
             <p class="text-[9px] text-gray-400 font-bold uppercase tracking-tight mt-1">1 NGN = {{ formatSignificant(rate) }} {{ code }}</p>
+          </div>
+        </div>
+
+        <div class="mt-10 p-8 bg-[#033958] rounded-[2.5rem] border border-[#033958]/10 relative overflow-hidden group">
+          <!-- Background Accent -->
+          <div class="absolute -right-20 -bottom-20 p-20 opacity-5 group-hover:scale-110 transition-transform duration-1000 text-white">
+            <Icon name="lucide:dollar-sign" size="300" />
+          </div>
+
+          <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
+            <div class="flex items-center gap-6">
+              <div class="w-16 h-16 rounded-[2rem] bg-white/10 backdrop-blur-md flex items-center justify-center text-white border border-white/10 shadow-xl">
+                <Icon name="lucide:calculator" class="w-8 h-8" />
+              </div>
+              <div class="space-y-1">
+                <h3 class="text-xl font-black text-white tracking-tight">Shipping Exchange Rate</h3>
+                <p class="text-xs text-white/60 font-medium max-w-md">This USD rate is used globally for calculating international surcharges (e.g., Canada Home Delivery).</p>
+              </div>
+            </div>
+
+            <div class="p-6 bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl min-w-[240px]">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-black text-white/40 uppercase tracking-widest">Base Rate (1 USD)</span>
+                <span class="px-2 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-300 text-[9px] font-black uppercase tracking-widest">Live</span>
+              </div>
+              <div class="flex items-baseline gap-2">
+                <span class="text-3xl font-black text-white">₦ {{ formatSignificant(1 / (exchangeRates['USD'] || 0.00065)) }}</span>
+              </div>
+              <p class="text-[9px] text-white/40 font-medium uppercase mt-2 tracking-widest">Calculated: 1 / {{ formatSignificant(exchangeRates['USD']) }}</p>
+            </div>
           </div>
         </div>
 
@@ -350,159 +426,204 @@
     </div>
 
     <!-- Shipping & Communications Tab -->
-    <div v-if="activeTab === 'shipping'" class="max-w-5xl space-y-8">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <!-- Delivery Rates -->
-        <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
-          <div class="flex items-center justify-between mb-8">
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600">
-                <Icon name="lucide:truck" class="w-6 h-6" />
+    <div v-if="activeTab === 'shipping'" class="max-w-7xl space-y-10 animate-fade-in">
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-10">
+        <!-- Delivery Rates (Left Side - Wider) -->
+        <div class="xl:col-span-8 bg-white rounded-[3rem] p-10 shadow-xl shadow-gray-200/50 border border-gray-100 flex flex-col">
+          <div class="flex items-center justify-between mb-10 overflow-hidden">
+            <div class="flex items-center gap-5">
+              <div class="w-14 h-14 rounded-[2rem] bg-orange-50 flex items-center justify-center text-orange-600 border-2 border-orange-100 shadow-inner">
+                <Icon name="lucide:truck" class="w-7 h-7" />
               </div>
-              <h2 class="text-xl font-black text-gray-900 tracking-tight">Delivery Logistics</h2>
+              <div>
+                <h2 class="text-2xl font-black text-gray-900 tracking-tight">Logistics Engine</h2>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Configure automated pricing algorithms</p>
+              </div>
             </div>
             <button 
               @click="saveShippingConfig" 
               :disabled="savingShipping"
-              class="px-6 py-2 bg-[#033958] text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:opacity-90 disabled:opacity-50"
+              class="group relative bg-[#033958] text-white px-10 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-[#022f42] transition-all disabled:opacity-50 shadow-2xl shadow-[#033958]/20 flex items-center gap-3 active:scale-95"
             >
-              {{ savingShipping ? 'Saving...' : 'Save Logistics' }}
+              <Icon v-if="savingShipping" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
+              <Icon v-else name="lucide:save" class="w-4 h-4 group-hover:scale-110 transition-transform" />
+              {{ savingShipping ? 'Synchronizing...' : 'Save Logistics' }}
             </button>
           </div>
 
-          <div class="space-y-6">
-            <div class="grid grid-cols-2 gap-4">
-              <div class="space-y-2">
-                <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Base Dispatch Fee (₦)</label>
-                <input v-model.number="shippingConfig.baseFee" type="number" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
-              </div>
-              <div class="space-y-2">
-                <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Price Per Km (₦)</label>
-                <input v-model.number="shippingConfig.pricePerKm" type="number" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
-              </div>
-            </div>
-
-            <div class="space-y-2">
-              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Waybill Fee (Outside Lagos) (₦)</label>
-              <input v-model.number="shippingConfig.waybillFee" type="number" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-[#033958] transition-all" />
-            </div>
-
-            <div class="space-y-2">
-              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Pickup Store Address</label>
-              <div class="relative group">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-[#033958] transition-colors">
-                  <Icon name="lucide:search" size="18" />
-                </div>
-                <input 
-                  id="pickupAddressInput"
-                  v-model="shippingConfig.warehouseAddress" 
-                  placeholder="Search and select store location..." 
-                  class="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold outline-none focus:border-[#033958] transition-all" 
-                />
-              </div>
-            </div>
-
+          <div class="space-y-10 flex-1">
             <!-- Pricing Tiers -->
-            <div class="pt-6 border-t border-gray-100 space-y-4">
+            <div class="p-8 bg-gray-50/50 rounded-[2.5rem] border border-gray-100 space-y-6">
               <div class="flex items-center justify-between">
-                <h3 class="text-xs font-black uppercase tracking-widest text-[#033958]">Distance Pricing Tiers</h3>
-                <button @click="addPricingTier" class="text-[10px] font-black uppercase tracking-widest text-amber-600 hover:text-amber-700 flex items-center gap-1">
+                <div>
+                  <h3 class="text-sm font-black uppercase tracking-[0.2em] text-[#033958]">Local Delivery Tiers</h3>
+                  <p class="text-[10px] text-gray-400 font-medium mt-1 italic">Based on Google Maps distance (Meters)</p>
+                </div>
+                <button @click="addPricingTier" class="bg-white px-6 py-2.5 rounded-xl border border-gray-100 text-[10px] font-black uppercase tracking-widest text-[#033958] hover:bg-[#033958] hover:text-white hover:shadow-lg transition-all flex items-center gap-2">
                   <Icon name="lucide:plus" size="14" />
                   Add Tier
                 </button>
               </div>
               
-              <div v-if="shippingConfig.pricingTiers?.length" class="space-y-4">
-                <div v-for="(tier, idx) in shippingConfig.pricingTiers" :key="idx" class="p-5 bg-gray-50 rounded-3xl border border-gray-100 grid grid-cols-1 sm:grid-cols-3 gap-4 items-center group relative">
-                  <div class="space-y-1">
-                    <label class="text-[8px] font-black uppercase text-gray-400 tracking-tighter ml-1">From (Meters)</label>
-                    <input v-model.number="tier.from" type="number" class="w-full px-3 py-2.5 text-xs font-bold bg-white border border-gray-200 rounded-xl outline-none focus:border-amber-400 transition-all" />
+              <div v-if="shippingConfig.pricingTiers?.length" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div v-for="(tier, idx) in shippingConfig.pricingTiers" :key="idx" class="p-6 bg-white rounded-3xl border border-gray-100 grid grid-cols-3 gap-4 items-end group relative shadow-md hover:shadow-xl transition-all">
+                  <div class="space-y-2">
+                    <label class="text-[9px] font-black uppercase text-gray-400 tracking-widest ml-1">From (m)</label>
+                    <input v-model.number="tier.from" type="number" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 transition-all font-mono" />
                   </div>
-                  <div class="space-y-1">
-                    <label class="text-[8px] font-black uppercase text-gray-400 tracking-tighter ml-1">To (Meters)</label>
-                    <input v-model.number="tier.to" type="number" class="w-full px-3 py-2.5 text-xs font-bold bg-white border border-gray-200 rounded-xl outline-none focus:border-amber-400 transition-all" />
+                  <div class="space-y-2">
+                    <label class="text-[9px] font-black uppercase text-gray-400 tracking-widest ml-1">To (m)</label>
+                    <input v-model.number="tier.to" type="number" class="w-full px-4 py-3 text-sm font-bold bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 transition-all font-mono" />
                   </div>
-                  <div class="space-y-1">
-                    <label class="text-[8px] font-black uppercase text-gray-400 tracking-tighter ml-1">Price (₦)</label>
-                    <input v-model.number="tier.price" type="number" class="w-full px-3 py-2.5 text-xs font-bold bg-white border border-gray-200 rounded-xl outline-none focus:border-amber-400 transition-all" />
+                  <div class="space-y-2">
+                    <label class="text-[9px] font-black uppercase text-gray-400 tracking-widest ml-1">Price (₦)</label>
+                    <input v-model.number="tier.price" type="number" class="w-full px-4 py-3 text-sm font-black text-[#033958] bg-orange-50/30 border-none rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/50 transition-all font-mono" />
                   </div>
-                  <button @click="shippingConfig.pricingTiers.splice(idx, 1)" class="absolute -right-2 -top-2 w-7 h-7 rounded-full bg-white text-red-500 flex items-center justify-center shadow-lg border border-red-50 shadow-red-100/50 transition-all hover:bg-red-500 hover:text-white">
-                    <Icon name="lucide:trash-2" size="14" />
+                  <button @click="shippingConfig.pricingTiers.splice(idx, 1)" class="absolute -right-3 -top-3 w-8 h-8 rounded-full bg-white text-red-500 flex items-center justify-center shadow-xl border border-red-50 hover:bg-red-500 hover:text-white transition-all scale-0 group-hover:scale-100">
+                    <Icon name="lucide:trash-2" size="16" />
                   </button>
                 </div>
               </div>
-              <p v-else class="text-[10px] text-gray-400 italic text-center py-4 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100">No custom tiers defined. Using base/km rates.</p>
+              <p v-else class="text-[10px] text-gray-400 italic text-center py-10 bg-white rounded-3xl border-2 border-dashed border-gray-100">No local tiers defined.</p>
             </div>
-          </div>
-        </div>
 
-        <!-- System Communications Mapping -->
-        <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
-           <div class="flex items-center justify-between mb-8">
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600">
-                <Icon name="lucide:mail" class="w-6 h-6" />
-              </div>
-              <div>
-                <h2 class="text-xl font-black text-gray-900 tracking-tight">System Emails</h2>
-                <p class="text-sm text-gray-400 font-medium">Map automated triggers to your custom email templates</p>
-              </div>
-            </div>
-            <button 
-              @click="saveGlobalSettings" 
-              :disabled="savingGlobalSettings"
-              class="px-6 py-2 bg-[#033958] text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:opacity-90 disabled:opacity-50"
-            >
-              {{ savingGlobalSettings ? 'Saving...' : 'Save Mappings' }}
-            </button>
-          </div>
-
-          <div class="space-y-6">
-            <div v-for="trigger in emailTriggers" :key="trigger.id" class="p-5 bg-gray-50 rounded-[2rem] border border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-6">
-              <div class="flex-1">
-                <p class="text-sm font-black text-gray-900 tracking-tight">{{ trigger.label }}</p>
-                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-0.5 leading-relaxed">{{ trigger.description }}</p>
-              </div>
-              <div class="w-full md:w-[280px]">
-                <SelectInput 
-                  v-model="globalSettings.emailMappings[trigger.id]"
-                  :label="`${trigger.label} Template`"
-                  :options="[{ label: 'System Default', value: '' }, ...emailTemplates.map(t => ({ label: t.name, value: t._id }))]"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Business Comms -->
-        <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
-           <div class="flex items-center justify-between mb-8">
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-                <Icon name="lucide:message-circle" class="w-6 h-6" />
-              </div>
-              <h2 class="text-xl font-black text-gray-900 tracking-tight">WhatsApp Alerts</h2>
-            </div>
-            <button 
-              @click="saveGlobalSettings" 
-              :disabled="savingGlobalSettings"
-              class="px-6 py-2 bg-[#033958] text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:opacity-90 disabled:opacity-50"
-            >
-              {{ savingGlobalSettings ? 'Saving...' : 'Save WhatsApp' }}
-            </button>
-          </div>
-
-          <div class="space-y-6">
-             <div class="space-y-2">
-              <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Order Notifications WhatsApp</label>
-              <div class="relative group">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-emerald-500 transition-colors">
-                  <Icon name="lucide:phone" size="18" />
+            <!-- International Zones -->
+            <div class="p-8 bg-gray-50/50 rounded-[2.5rem] border border-gray-100 space-y-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-sm font-black uppercase tracking-[0.2em] text-[#033958]">Global Shipping Zones</h3>
+                  <p class="text-[10px] text-gray-400 font-medium mt-1 italic">Weight-based international rates</p>
                 </div>
-                <input v-model="globalSettings.whatsappNumber" placeholder="234..." class="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold outline-none focus:border-emerald-500 transition-all" />
+                <button @click="addInternationalZone" class="bg-white px-6 py-2.5 rounded-xl border border-gray-100 text-[10px] font-black uppercase tracking-widest text-[#033958] hover:bg-[#033958] hover:text-white hover:shadow-lg transition-all flex items-center gap-2">
+                  <Icon name="lucide:plus" size="14" />
+                  Add Zone
+                </button>
               </div>
-              <p class="text-[9px] text-gray-400 font-medium italic mt-1 ml-1">Format: CountryCode + Number (e.g., 234814...)</p>
+
+              <div v-if="shippingConfig.internationalZones?.length" class="space-y-6">
+                <div v-for="(zone, idx) in shippingConfig.internationalZones" :key="idx" class="p-8 bg-white rounded-[2.5rem] border border-gray-100 space-y-8 relative group shadow-md hover:shadow-2xl transition-all">
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="space-y-2">
+                      <label class="text-[9px] font-black uppercase text-gray-400 tracking-widest ml-1">Target Country</label>
+                      <SelectInput 
+                         v-model="zone.country" 
+                         :options="countries.map(c => ({ label: c.name, value: c.name }))"
+                         class="!mb-0"
+                      />
+                    </div>
+                    <div class="space-y-2">
+                      <label class="text-[9px] font-black uppercase text-gray-400 tracking-widest ml-1">Min Weight (KG)</label>
+                      <input v-model.number="zone.minWeight" type="number" class="w-full px-5 py-3.5 text-sm font-bold bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all" />
+                    </div>
+                    <div class="space-y-2">
+                      <label class="text-[9px] font-black uppercase text-gray-400 tracking-widest ml-1">Rate / KG (₦)</label>
+                      <input v-model.number="zone.baseRatePerKg" type="number" class="w-full px-5 py-3.5 text-sm font-black text-emerald-600 bg-emerald-50/30 border-none rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all font-mono" />
+                    </div>
+                    <div class="space-y-2">
+                      <label class="text-[9px] font-black uppercase text-gray-400 tracking-widest ml-1">ETA Details</label>
+                      <input v-model="zone.deliveryTime" class="w-full px-5 py-3.5 text-sm font-bold bg-orange-50/30 border-none rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 transition-all" placeholder="e.g. 7-14 Days" />
+                    </div>
+                  </div>
+                  
+                  <div v-if="zone.country === 'Canada'" class="flex items-center gap-6 p-6 bg-amber-50 rounded-[2rem] border-2 border-dashed border-amber-200">
+                    <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-amber-600 shadow-sm border border-amber-100">
+                      <Icon name="lucide:home" size="28" />
+                    </div>
+                    <div class="flex-1">
+                      <p class="text-[11px] font-black text-amber-900 uppercase tracking-[0.1em]">Doorstep Surcharge (Canada Special)</p>
+                      <p class="text-[9px] text-amber-800/60 font-medium mb-2 uppercase italic leading-none">Added to base rate if user selects Home Delivery</p>
+                      <div class="flex items-center gap-3">
+                        <div class="h-12 w-32 bg-white rounded-xl flex items-center px-4 border border-amber-100">
+                          <span class="text-amber-400 font-bold mr-2">USD $</span>
+                          <input v-model.number="zone.surchargePerKg" type="number" class="bg-transparent text-xl font-black text-amber-950 border-none p-0 focus:ring-0 w-full" />
+                        </div>
+                        <span class="text-[10px] text-amber-500 font-black uppercase tracking-widest">per KG applied globally</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button @click="shippingConfig.internationalZones.splice(idx, 1)" class="absolute -right-3 -top-3 w-10 h-10 rounded-full bg-white text-red-500 flex items-center justify-center shadow-xl border border-red-50 hover:bg-red-500 hover:text-white transition-all scale-0 group-hover:scale-100">
+                    <Icon name="lucide:trash-2" size="20" />
+                  </button>
+                </div>
+              </div>
+              <p v-else class="text-[10px] text-gray-400 italic text-center py-10 bg-white rounded-3xl border-2 border-dashed border-gray-100">No international zones defined.</p>
             </div>
+          </div>
+        </div>
+
+        <!-- Comms (Right Side - More Narrow) -->
+        <div class="xl:col-span-4 space-y-10">
+          <!-- System Comms -->
+          <div class="bg-white rounded-[3rem] p-10 shadow-xl shadow-gray-200/50 border border-gray-100 space-y-8">
+             <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 border border-indigo-100">
+                  <Icon name="lucide:mail" class="w-6 h-6" />
+                </div>
+                <div>
+                  <h2 class="text-xl font-black text-gray-900 tracking-tight">Email Triggers</h2>
+                  <p class="text-[10px] text-gray-400 font-bold uppercase tracking-tight mt-1">Map automation logic</p>
+                </div>
+              </div>
+
+              <div class="space-y-6">
+                <div v-for="trigger in emailTriggers" :key="trigger.id" class="p-6 bg-gray-50/50 rounded-3xl border border-gray-100 space-y-4">
+                  <div>
+                    <p class="text-sm font-black text-gray-900 tracking-tight">{{ trigger.label }}</p>
+                    <p class="text-[9px] text-gray-400 font-bold uppercase tracking-wide mt-1 leading-relaxed">{{ trigger.description }}</p>
+                  </div>
+                  <SelectInput 
+                    v-model="globalSettings.emailMappings[trigger.id]"
+                    :label="`${trigger.label} Template`"
+                    :options="[{ label: 'System Default', value: '' }, ...emailTemplates.map(t => ({ label: t.name, value: t._id }))]"
+                    class="!mb-0"
+                  />
+                </div>
+              </div>
+
+              <button 
+                @click="saveGlobalSettings" 
+                :disabled="savingGlobalSettings"
+                class="w-full py-5 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-indigo-700 transition-all disabled:opacity-50 shadow-xl shadow-indigo-100 flex items-center justify-center gap-3"
+              >
+                <Icon name="lucide:workflow" size="16" />
+                Update Mappings
+              </button>
+          </div>
+
+          <!-- WhatsApp alerts -->
+          <div class="bg-white rounded-[3rem] p-10 shadow-xl shadow-gray-200/50 border border-gray-100 space-y-8">
+             <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 border border-emerald-100">
+                  <Icon name="lucide:message-circle" class="w-6 h-6" />
+                </div>
+                <div>
+                  <h2 class="text-xl font-black text-gray-900 tracking-tight">WhatsApp HQ</h2>
+                  <p class="text-[10px] text-gray-400 font-bold uppercase tracking-tight mt-1">Core notification hub</p>
+                </div>
+              </div>
+
+              <div class="space-y-6">
+                 <div class="space-y-3">
+                  <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Main Support/Order Phone</label>
+                  <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-300 group-focus-within:text-emerald-500 transition-colors">
+                      <Icon name="lucide:phone" size="20" />
+                    </div>
+                    <input v-model="globalSettings.whatsappNumber" placeholder="234..." class="w-full pl-14 pr-6 py-4.5 bg-gray-50 border-none rounded-2xl text-sm font-black outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all font-mono" />
+                  </div>
+                  <p class="text-[9px] text-gray-400 font-medium italic mt-2 ml-1">Include country code without + (e.g., 23490...)</p>
+                </div>
+              </div>
+
+              <button 
+                @click="saveGlobalSettings" 
+                :disabled="savingGlobalSettings"
+                class="w-full py-5 bg-emerald-600 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-emerald-700 transition-all disabled:opacity-50 shadow-xl shadow-emerald-100 flex items-center justify-center gap-3"
+              >
+                <Icon name="lucide:zap" size="16" />
+                Update WhatsApp
+              </button>
           </div>
         </div>
       </div>
@@ -659,7 +780,7 @@ const tabs = [
   { id: 'shipping', name: 'Shipping & Comms' },
   { id: 'bank', name: 'Bank Accounts' }
 ]
-const activeTab = ref('general')
+const activeTab = ref<'general' | 'kyc' | 'currencies' | 'shipping' | 'bank'>('general')
 
 // Shipping Config
 const shippingConfig = ref({
@@ -669,7 +790,8 @@ const shippingConfig = ref({
   warehouseAddress: '',
   warehouseLat: 0,
   warehouseLng: 0,
-  pricingTiers: [] as { from: number; to: number; price: number }[]
+  pricingTiers: [] as { from: number; to: number; price: number }[],
+  internationalZones: [] as { country: string; minWeight: number; baseRatePerKg: number; deliveryTime: string; surchargePerKg: number }[]
 })
 const savingShipping = ref(false)
 const loadingShipping = ref(false)
@@ -683,9 +805,14 @@ const globalSettings = ref({
     rankThresholds: [] as { name: string, minSales: number, maxSales?: number }[],
     emailMappings: {} as Record<string, string>,
     minWithdrawal: 10000,
-    referralCookieLife: 30
+    referralCookieLife: 30,
+    pickupLocations: [
+      { name: 'Company Depot', address: '20, Olorunfunmi street behind philips factory ojota', phone: '', isActive: false },
+      { name: 'Factory Address', address: '13, Sonubi street, off Bakare street ketu, Lagos', phone: '', isActive: true }
+    ]
 })
 const savingGlobalSettings = ref(false)
+
 
 function addCommissionRate() {
   globalSettings.value.commissionRates.push({ name: 'New Tier', percentage: 1, description: '' })
@@ -724,6 +851,11 @@ function addPricingTier() {
   shippingConfig.value.pricingTiers.push({ from: 0, to: 1000, price: 0 })
 }
 
+function addInternationalZone() {
+  if (!shippingConfig.value.internationalZones) shippingConfig.value.internationalZones = []
+  shippingConfig.value.internationalZones.push({ country: '', minWeight: 11, baseRatePerKg: 0, deliveryTime: '2-3 Weeks', surchargePerKg: 0 })
+}
+
 async function fetchGlobalSettings() {
     try {
         const res = await settings_api.getSettings()
@@ -737,11 +869,19 @@ async function fetchGlobalSettings() {
             rankThresholds: data.rankThresholds || [],
             emailMappings: data.emailMappings || {},
             minWithdrawal: data.minWithdrawal || 10000,
-            referralCookieLife: data.referralCookieLife || 30
+            referralCookieLife: data.referralCookieLife || 30,
+            pickupLocations: data.pickupLocations || [
+              { name: 'Company Depot', address: '20, Olorunfunmi street behind philips factory ojota', phone: '', isActive: false },
+              { name: 'Factory Address', address: '13, Sonubi street, off Bakare street ketu, Lagos', phone: '', isActive: true }
+            ]
         }
     } catch (e) {
         console.error('Failed to load global settings', e)
     }
+}
+
+function addPickupLocation() {
+    globalSettings.value.pickupLocations.push({ name: '', address: '', phone: '', isActive: true })
 }
 
 async function saveGlobalSettings() {
@@ -816,6 +956,9 @@ const countries = [
   { name: 'United Kingdom', code: 'GB' },
   { name: 'United States', code: 'US' },
   { name: 'Canada', code: 'CA' },
+  { name: 'Germany', code: 'DE' },
+  { name: 'France', code: 'FR' },
+  { name: 'China', code: 'CN' },
   { name: 'United Arab Emirates', code: 'AE' }
 ]
 
