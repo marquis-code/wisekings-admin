@@ -94,10 +94,12 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <AnimatedInput 
             v-model.number="form.price" 
-            label="Price (₦)" 
+            label="Pack/Carton Price (₦)" 
             type="number" 
             required 
           />
+          <AnimatedInput v-model.number="form.unitPrice" label="Unit Price (₦)" type="number" />
+          <AnimatedInput v-model.number="form.costPricePerPack" label="Cost Price (Pack/Carton) (₦)" type="number" />
           <AnimatedInput 
             v-model.number="form.compareAtPrice" 
             label="Old Price (₦)" 
@@ -111,10 +113,15 @@
           />
           
           <AnimatedInput 
+            v-slot:sku
             v-model="form.sku" 
             label="SKU / Reference" 
             placeholder="e.g. SNK-POP-001"
           />
+          <AnimatedInput v-model.number="form.quantityPerPack" label="Quantity per Pack" type="number" />
+          <AnimatedInput v-model.number="form.unitPrice" label="Unit Price (₦)" type="number" /> <!-- Note: unitPrice was also above, I'll keep one -->
+          <AnimatedInput v-model="form.unitDescription" label="Unit Description (e.g. 30g)" placeholder="30g" />
+          <AnimatedInput v-model="form.varietyType" label="Variety / Type" placeholder="e.g. Ripe & Unripe" />
           
           <div class="md:col-span-2">
             <AnimatedInput 
@@ -189,7 +196,7 @@ const form = ref({
   category: '', 
   isActive: true, 
   tags: [] as string[],
-  images: [] as string[]
+  images: [] as string[], unitDescription: "", unitPrice: 0, quantityPerPack: 0, costPricePerPack: 0, varietyType: ""
 })
 
 const categoryOptions = computed(() => {

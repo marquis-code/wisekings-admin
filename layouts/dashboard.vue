@@ -37,7 +37,7 @@
               </div>
               <div v-if="sidebarOpen" class="flex-1 text-left overflow-hidden animate-in fade-in slide-in-from-left duration-500">
                 <p class="text-sm font-black text-gray-900 truncate">{{ group.label }}</p>
-                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter truncate">{{ group.children.length ? `${group.children.length} Modules` : 'Dashboard' }}</p>
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter truncate">{{ group.children.length ? `${group.children.length} Items` : 'Dashboard' }}</p>
               </div>
               <Icon v-if="sidebarOpen && group.children.length" name="lucide:chevron-right" class="w-4 h-4 text-gray-300 group-hover:translate-x-1 duration-300" />
             </button>
@@ -45,8 +45,8 @@
         </div>
 
         <!-- System Footer -->
-        <div v-if="sidebarOpen" class="p-8 pt-4 border-t border-gray-50 bg-gray-50/30">
-            <div class="flex items-center justify-between mb-4">
+        <div class="p-8 pt-4 border-t border-gray-50 bg-gray-50/30">
+            <div v-if="sidebarOpen" class="flex items-center justify-between mb-4">
                <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-full bg-[#033958] flex items-center justify-center text-white text-xs font-bold ring-2 ring-white shadow-xl shadow-[#033958]/20">
                     {{ initials }}
@@ -59,17 +59,17 @@
                     </div>
                   </div>
                </div>
-               <CoreLanguageSwitcher />
             </div>
            <button @click="sidebarOpen = !sidebarOpen" class="w-full py-3 rounded-xl bg-white border border-gray-100 flex items-center justify-center gap-2 hover:bg-gray-50 transition-all shadow-sm">
-              <Icon name="lucide:panel-left-close" class="w-4 h-4 text-gray-400" />
-              <span class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Minimize</span>
+              <Icon :name="sidebarOpen ? 'lucide:panel-left-close' : 'lucide:panel-left-open'" class="w-4 h-4 text-gray-400" />
+              <span v-if="sidebarOpen" class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Minimize</span>
            </button>
         </div>
       </div>
 
       <!-- Layer 2: Sub-items (Flipped) -->
       <div 
+        v-if="sidebarOpen"
         class="absolute inset-0 flex flex-col transition-all duration-500 bg-white"
         :class="[activeCategory ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 pointer-events-none']"
       >
@@ -81,7 +81,7 @@
             <div class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center group-hover:bg-[#033958]/5 transition-all">
               <Icon name="lucide:arrow-left" class="w-5 h-5 group-hover:-translate-x-1 duration-300" />
             </div>
-            <span class="text-[10px] font-black uppercase tracking-[0.2em]">Return Back</span>
+            <span class="text-[10px] font-black uppercase tracking-[0.2em]">Back</span>
           </button>
 
           <div class="flex items-center gap-4 animate-in slide-in-from-left duration-500">
@@ -126,7 +126,7 @@
                <span class="text-[10px] font-black text-amber-600 uppercase tracking-widest leading-none">Management Tip</span>
              </div>
              <p class="text-[10px] text-amber-600/80 font-medium leading-relaxed">
-               Use these specialized modules to control {{ navGroups.find(g => g.id === activeCategory)?.label }} operations across the business network.
+               Use these tools to manage {{ navGroups.find(g => g.id === activeCategory)?.label }} operations across the network.
              </p>
            </div>
         </div>
@@ -143,7 +143,7 @@
           </button>
           <div class="hidden sm:block">
             <h1 class="text-2xl font-black text-gray-900 tracking-tight leading-none mb-1">{{ pageTitle }}</h1>
-            <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em]">WiseKings Admin Console</p>
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em]">WiseKings Admin</p>
           </div>
         </div>
 
@@ -215,7 +215,7 @@
                     class="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-50 rounded-xl transition-all font-black uppercase tracking-widest group"
                   >
                     <Icon name="lucide:log-out" class="w-5 h-5 group-hover:-translate-x-1 duration-300" />
-                    Sign Out Terminal
+                    Sign Out
                   </button>
                 </div>
               </div>
@@ -259,7 +259,7 @@ const userMenuRef = ref<HTMLElement>()
 const navGroups = [
   {
     id: 'dashboard',
-    label: 'Intelligence',
+    label: 'Dashboard',
     icon: 'lucide:layout-dashboard',
     path: '/',
     children: [],
@@ -267,71 +267,73 @@ const navGroups = [
   },
   {
     id: 'commerce',
-    label: 'Commerce Hub',
+    label: 'Commerce',
     icon: 'lucide:shopping-bag',
     roles: ['superadmin', 'admin', 'manager', 'finance'],
     children: [
-      { label: 'Inventory', icon: 'lucide:package', path: '/products', roles: ['superadmin', 'admin'] },
+      { label: 'Products', icon: 'lucide:package', path: '/products', roles: ['superadmin', 'admin'] },
       { label: 'Categories', icon: 'lucide:tags', path: '/categories', roles: ['superadmin', 'admin'] },
-      { label: 'Order Pipeline', icon: 'lucide:shopping-cart', path: '/orders', roles: ['superadmin', 'admin', 'manager', 'staff', 'finance'] },
-      { label: 'Marketing Engine', icon: 'lucide:megaphone', path: '/marketing', roles: ['superadmin', 'admin'] },
-      { label: 'Investment Products', icon: 'lucide:piggy-bank', path: '/investments/products', roles: ['superadmin', 'admin', 'finance'] },
+      { label: 'Orders', icon: 'lucide:shopping-cart', path: '/orders', roles: ['superadmin', 'admin', 'manager', 'staff', 'finance'] },
+      { label: 'Marketing', icon: 'lucide:megaphone', path: '/marketing', roles: ['superadmin', 'admin'] },
+      { label: 'Investments', icon: 'lucide:piggy-bank', path: '/investments/products', roles: ['superadmin', 'admin', 'finance'] },
+      { label: 'Gifting', icon: 'lucide:gift', path: '/gifting', roles: ['superadmin', 'admin', 'manager'] },
     ]
   },
   {
     id: 'production',
-    label: 'Production ERP',
+    label: 'Manufacturing',
     icon: 'lucide:factory',
     roles: ['superadmin', 'admin', 'finance'],
     children: [
-      { label: 'Batch Tracking', icon: 'lucide:clipboard-list', path: '/production', roles: ['superadmin', 'admin', 'finance'] },
-      { label: 'Raw Materials', icon: 'lucide:milk', path: '/production/materials', roles: ['superadmin', 'admin', 'finance'] },
+      { label: 'Batches', icon: 'lucide:clipboard-list', path: '/production', roles: ['superadmin', 'admin', 'finance'] },
+      { label: 'Materials', icon: 'lucide:milk', path: '/production/materials', roles: ['superadmin', 'admin', 'finance'] },
       { label: 'Vendor Orders', icon: 'lucide:file-signature', path: '/production/orders', roles: ['superadmin', 'admin', 'finance'] },
     ]
   },
   {
     id: 'network',
-    label: 'Ecosystem',
+    label: 'Network',
     icon: 'lucide:users-2',
     roles: ['superadmin', 'admin', 'finance'],
     children: [
-      { label: 'Merchant Directory', icon: 'lucide:store', path: '/merchants', roles: ['superadmin', 'admin', 'finance'] },
-      { label: 'Partner Network', icon: 'lucide:handshake', path: '/partners', roles: ['superadmin', 'admin', 'finance'] },
+      { label: 'Merchants', icon: 'lucide:store', path: '/merchants', roles: ['superadmin', 'admin', 'finance'] },
+      { label: 'Market Inventory', icon: 'lucide:eye', path: '/inventory', roles: ['superadmin', 'admin', 'finance'] },
+      { label: 'Partners', icon: 'lucide:handshake', path: '/partners', roles: ['superadmin', 'admin', 'finance'] },
       { label: 'Commissions', icon: 'lucide:percent', path: '/commissions', roles: ['superadmin', 'admin', 'finance'] },
     ]
   },
   {
     id: 'finance',
-    label: 'Settlements',
+    label: 'Finance',
     icon: 'lucide:wallet',
     roles: ['superadmin', 'admin', 'accountant', 'finance'],
     children: [
-      { label: 'Withdrawal Center', icon: 'lucide:banknote', path: '/wallets/withdrawals', roles: ['superadmin', 'admin', 'finance'] },
+      { label: 'Withdrawals', icon: 'lucide:banknote', path: '/wallets/withdrawals', roles: ['superadmin', 'admin', 'finance'] },
     ]
   },
   {
     id: 'system',
-    label: 'Administration',
+    label: 'Admin',
     icon: 'lucide:settings-2',
     roles: ['superadmin', 'admin', 'support'],
     children: [
-      { label: 'Identity Review', icon: 'lucide:shield-check', path: '/kyc', roles: ['superadmin', 'admin', 'support'] },
-      { label: 'Support Terminal', icon: 'lucide:message-square', path: '/chat', roles: ['superadmin', 'admin', 'support'] },
-      { label: 'Staff Roster', icon: 'lucide:users', path: '/users', roles: ['superadmin'] },
-      { label: 'Security Profiles', icon: 'lucide:shield', path: '/roles', roles: ['superadmin'] },
-      { label: 'Platform Logs', icon: 'lucide:clipboard-list', path: '/audit', roles: ['superadmin'] },
-      { label: 'Communications', icon: 'lucide:bell', path: '/notifications', roles: ['superadmin', 'admin'] },
-      { label: 'Platform Core', icon: 'lucide:settings', path: '/settings', roles: ['superadmin'] },
+      { label: 'KYC Approvals', icon: 'lucide:shield-check', path: '/kyc', roles: ['superadmin', 'admin', 'support'] },
+      { label: 'Live Chat', icon: 'lucide:message-square', path: '/chat', roles: ['superadmin', 'admin', 'support'] },
+      { label: 'Staff', icon: 'lucide:users', path: '/users', roles: ['superadmin'] },
+      { label: 'Roles', icon: 'lucide:shield', path: '/roles', roles: ['superadmin'] },
+      { label: 'Audit Logs', icon: 'lucide:clipboard-list', path: '/audit', roles: ['superadmin'] },
+      { label: 'Notifications', icon: 'lucide:bell', path: '/notifications', roles: ['superadmin', 'admin'] },
+      { label: 'Settings', icon: 'lucide:settings', path: '/settings', roles: ['superadmin'] },
     ]
   },
   {
     id: 'intelligence',
-    label: 'Support & AI',
+    label: 'Support',
     icon: 'lucide:brain-circuit',
     roles: ['superadmin', 'admin', 'support'],
     children: [
-      { label: 'AI Forecasting', icon: 'lucide:sparkles', path: '/ai-insights', roles: ['superadmin'] },
-      { label: 'User Inquiries', icon: 'lucide:mail-open', path: '/support/inquiries', roles: ['superadmin', 'admin', 'support'] },
+      { label: 'AI Insights', icon: 'lucide:sparkles', path: '/ai-insights', roles: ['superadmin'] },
+      { label: 'Support Tickets', icon: 'lucide:mail-open', path: '/support/inquiries', roles: ['superadmin', 'admin', 'support'] },
     ]
   }
 ]
@@ -398,30 +400,32 @@ async function handleLogout() {
 const pageTitle = computed(() => {
   const path = route.path
   const titles: Record<string, string> = {
-    '/': 'Executive Overview',
-    '/merchants': 'Merchant Network',
-    '/partners': 'Partner Ecosystem',
-    '/products': 'Inventory Matrix',
-    '/categories': 'Classification Hub',
-    '/marketing': 'Campaign Engine',
-    '/orders': 'Order Pipeline',
-    '/commissions': 'Commission Ledger',
-    '/wallets/withdrawals': 'Payout Terminal',
-    '/users': 'Identity Roster',
-    '/roles': 'Security Profiles',
-    '/audit': 'Platform Logs',
-    '/notifications': 'Bulletin Center',
-    '/settings': 'Platform Core',
-    '/chat': 'Support Terminal',
-    '/kyc': 'Compliance Review',
-    '/ai-insights': 'Predictive Growth',
-    '/support': 'Help Center',
-    '/production': 'Production Metrics',
-    '/production/materials': 'Inventory Matrix',
-    '/production/orders': 'Procurement Ledger',
-    '/investments/products': 'Wealth Portfolio',
+    '/': 'Dashboard',
+    '/merchants': 'Merchants',
+    '/inventory': 'Market Inventory',
+    '/partners': 'Partners',
+    '/products': 'Products',
+    '/categories': 'Categories',
+    '/marketing': 'Marketing',
+    '/orders': 'Orders',
+    '/gifting': 'Gifting',
+    '/commissions': 'Commissions',
+    '/wallets/withdrawals': 'Withdrawals',
+    '/users': 'Staff',
+    '/roles': 'Roles',
+    '/audit': 'Audit Logs',
+    '/notifications': 'Notifications',
+    '/settings': 'Settings',
+    '/chat': 'Live Chat',
+    '/kyc': 'KYC Approvals',
+    '/ai-insights': 'AI Insights',
+    '/support': 'Support',
+    '/production': 'Batches',
+    '/production/materials': 'Materials',
+    '/production/orders': 'Vendor Orders',
+    '/investments/products': 'Investments',
   }
-  return titles[path] || 'WiseKings Control'
+  return titles[path] || 'WiseKings Admin'
 })
 
 function isActive(path: string | undefined) {

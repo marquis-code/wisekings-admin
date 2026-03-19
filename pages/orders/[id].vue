@@ -132,7 +132,32 @@
               <Icon v-else name="lucide:save" class="w-4 h-4" />
               {{ updating ? 'Processing...' : 'Save Status' }}
             </button>
+
+            <button 
+              @click="downloadInvoice" 
+              class="w-full h-12 flex items-center justify-center gap-2 rounded-2xl bg-white text-[#033958] border-2 border-[#033958] font-black text-xs uppercase tracking-widest hover:bg-[#033958]/5 transition-all duration-300" 
+              :disabled="downloadingInvoice"
+            >
+              <Icon v-if="downloadingInvoice" name="lucide:loader-2" class="w-4 h-4 animate-spin" />
+              <Icon v-else name="lucide:file-down" class="w-4 h-4" />
+              {{ downloadingInvoice ? 'Generating...' : 'Generate Invoice' }}
+            </button>
           </div>
+        </div>
+
+        <!-- Delivery QR Tagging -->
+        <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100 flex flex-col items-center text-center">
+          <div class="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600 mb-4">
+            <Icon name="lucide:qr-code" class="w-6 h-6" />
+          </div>
+          <h3 class="text-base font-black text-gray-900 tracking-tight mb-2">Delivery Tagging</h3>
+          <p class="text-xs text-gray-500 font-medium mb-6">Shelf persons scan this to link delivery</p>
+          
+          <div class="p-4 bg-white rounded-3xl border-4 border-gray-50 shadow-inner">
+            <qrcode-vue :value="order.orderNumber" :size="160" level="H" />
+          </div>
+          
+          <p class="mt-4 text-[10px] font-mono font-black text-gray-400 uppercase tracking-widest">{{ order.orderNumber }}</p>
         </div>
 
         <!-- Payment & Context Summary -->
@@ -208,12 +233,13 @@
 <script setup lang="ts">
 import type { Order, OrderStatus } from '~/types'
 import SelectInput from '@/components/core/SelectInput.vue'
+import QrcodeVue from 'qrcode.vue'
 import { orders_api } from '@/api_factory/modules/orders'
 import { useCustomToast } from '@/composables/core/useCustomToast'
 
 definePageMeta({ layout: 'dashboard' })
 const route = useRoute(); const { showToast } = useCustomToast()
-const order = ref<any | null>(null); const loading = ref(true); const updating = ref(false); const verifying = ref(false)
+const order = ref<any | null>(null); const loading = ref(true); const updating = ref(false); const verifying = ref(false); const downloadingInvoice = ref(false)
 const selectedStatus = ref('')
 
 function openProof(url: string) { window.open(url, '_blank') }
@@ -245,5 +271,24 @@ async function fetchOrder() {
   } 
 }
 async function updateStatus() { if (!selectedStatus.value) return; updating.value = true; try { await orders_api.updateStatus(order.value!._id, { status: selectedStatus.value as OrderStatus }); showToast({ title: 'Success', message: 'Order status updated', toastType: 'success' }); fetchOrder() } catch { showToast({ title: 'Error', message: 'Failed to update status', toastType: 'error' }) } finally { updating.value = false } }
+
+async function downloadInvoice() {
+  downloadingInvoice.value = true
+  try {
+    const response = await orders_api.getInvoice(order.value!._id)
+    const url = window.URL.createObjectURL(new Blob([response.data]))
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', `Invoice-${order.value!.orderNumber}.pdf`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    showToast({ title: 'Success', message: 'Invoice generated successfully', toastType: 'success' })
+  } catch {
+    showToast({ title: 'Error', message: 'Failed to generate invoice', toastType: 'error' })
+  } finally {
+    downloadingInvoice.value = false
+  }
+}
 onMounted(fetchOrder)
 </script>

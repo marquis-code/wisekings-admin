@@ -143,25 +143,12 @@
     </div>
 
     <!-- Pagination -->
-    <div v-if="totalPages > 1" class="flex flex-col sm:flex-row items-center justify-between mt-8 bg-white p-4 rounded-[2rem] border border-gray-100 shadow-sm gap-4">
-      <p class="text-sm font-bold text-gray-500 ml-4">Showing page {{ page }} of {{ totalPages }}</p>
-      <div class="flex gap-2">
-        <button 
-          @click="page--; handleFetch()" 
-          :disabled="page <= 1" 
-          class="btn-secondary !rounded-2xl !px-6 disabled:opacity-20 transition-all font-bold"
-        >
-          Previous
-        </button>
-        <button 
-          @click="page++; handleFetch()" 
-          :disabled="page >= totalPages" 
-          class="btn-primary !rounded-2xl !px-6 disabled:opacity-20 transition-all font-bold"
-        >
-          Next
-        </button>
-      </div>
-    </div>
+    <CorePagination 
+      v-model="page" 
+      :total="total" 
+      :limit="limit" 
+      @update:modelValue="handleFetch"
+    />
   </div>
 </template>
 

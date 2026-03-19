@@ -187,25 +187,13 @@
     </Transition>
 
     <!-- Pagination -->
-    <div v-if="totalPages > 1" class="flex items-center justify-between mt-8 bg-white p-4 rounded-[2rem] border border-gray-100 shadow-sm">
-      <p class="text-sm font-bold text-gray-500 ml-4">Showing page {{ page }} of {{ totalPages }}</p>
-      <div class="flex gap-2">
-        <button 
-          @click="page--; handleFetch()" 
-          :disabled="page <= 1" 
-          class="btn-secondary !rounded-2xl !px-6 disabled:opacity-20 transition-all"
-        >
-          Previous
-        </button>
-        <button 
-          @click="page++; handleFetch()" 
-          :disabled="page >= totalPages" 
-          class="btn-primary !rounded-2xl !px-6 disabled:opacity-20 transition-all"
-        >
-          Next
-        </button>
-      </div>
-    </div>
+    <Pagination 
+      v-if="total > limit"
+      v-model="page" 
+      :total="total" 
+      :limit="limit" 
+      @update:modelValue="handleFetch"
+    />
   </div>
 </template>
 
@@ -227,7 +215,7 @@ const { showToast } = useCustomToast()
 
 const categories = ref<Category[]>([])
 const page = ref(1)
-const limit = ref(10)
+const limit = ref(9999)
 const search = ref('')
 const categoryFilter = ref('')
 const selectedIds = ref<string[]>([])

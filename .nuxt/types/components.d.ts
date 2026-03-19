@@ -23,6 +23,7 @@ interface _GlobalComponents {
   CoreImageUploader: typeof import("../../components/core/ImageUploader.vue")['default']
   CoreKycDocumentModal: typeof import("../../components/core/KycDocumentModal.vue")['default']
   CoreLanguageSwitcher: typeof import("../../components/core/LanguageSwitcher.vue")['default']
+  CorePagination: typeof import("../../components/core/Pagination.vue")['default']
   CorePasswordInput: typeof import("../../components/core/PasswordInput.vue")['default']
   CorePhoneInput: typeof import("../../components/core/PhoneInput.vue")['default']
   CoreRichTextEditor: typeof import("../../components/core/RichTextEditor.vue")['default']
@@ -73,6 +74,7 @@ interface _GlobalComponents {
   LazyCoreImageUploader: LazyComponent<typeof import("../../components/core/ImageUploader.vue")['default']>
   LazyCoreKycDocumentModal: LazyComponent<typeof import("../../components/core/KycDocumentModal.vue")['default']>
   LazyCoreLanguageSwitcher: LazyComponent<typeof import("../../components/core/LanguageSwitcher.vue")['default']>
+  LazyCorePagination: LazyComponent<typeof import("../../components/core/Pagination.vue")['default']>
   LazyCorePasswordInput: LazyComponent<typeof import("../../components/core/PasswordInput.vue")['default']>
   LazyCorePhoneInput: LazyComponent<typeof import("../../components/core/PhoneInput.vue")['default']>
   LazyCoreRichTextEditor: LazyComponent<typeof import("../../components/core/RichTextEditor.vue")['default']>

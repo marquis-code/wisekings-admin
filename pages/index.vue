@@ -31,7 +31,7 @@
         <div class="flex items-center justify-between mb-8">
           <div>
             <h2 class="text-xl font-bold text-gray-900 tracking-tight">Recent Orders</h2>
-            <p class="text-sm text-gray-500 font-medium">Manage and track latest purchases</p>
+            <p class="text-sm text-gray-500 font-medium">Track recent customer orders</p>
           </div>
           <NuxtLink to="/orders" class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gray-50 text-gray-400 hover:text-gray-900 transition-all border border-gray-100">
             <Icon name="lucide:arrow-right" class="w-5 h-5" />
@@ -63,8 +63,8 @@
       <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
         <div class="flex items-center justify-between mb-8">
           <div>
-            <h2 class="text-xl font-bold text-gray-900 tracking-tight">Latest Merchants</h2>
-            <p class="text-sm text-gray-500 font-medium">Professional store partners</p>
+            <h2 class="text-xl font-bold text-gray-900 tracking-tight">Recent Merchants</h2>
+            <p class="text-sm text-gray-500 font-medium">Newly joined merchants</p>
           </div>
           <NuxtLink to="/merchants" class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gray-50 text-gray-400 hover:text-gray-900 transition-all border border-gray-100">
             <Icon name="lucide:arrow-right" class="w-5 h-5" />
@@ -135,7 +135,7 @@ const stats = computed(() => [
     iconColor: 'text-purple-400',
   },
   {
-    label: 'Pending Withdrawals',
+    label: 'Pending Payouts',
     value: orderStats.value?.pendingWithdrawals || 0,
     subtitle: 'Awaiting action',
     icon: 'lucide:wallet',

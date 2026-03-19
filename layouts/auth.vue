@@ -5,7 +5,7 @@
       <!-- Background Image with Overlay -->
       <div class="absolute inset-0 z-0">
         <img 
-          src="@/assets/images/auth-bg.png" 
+          src="@/assets/images/group.jpg" 
           alt="Admin Command Center" 
           class="w-full h-full object-cover opacity-60 scale-100 group-hover:scale-105 transition-transform duration-[10s]"
         >
@@ -18,22 +18,12 @@
         <!-- Logo -->
         <div>
           <NuxtLink to="/" class="flex items-center gap-4 group">
-            <div class="w-14 h-14 bg-white/10 backdrop-blur-2xl rounded-2xl flex items-center justify-center border border-white/20 group-hover:bg-white transition-all duration-500 shadow-2xl">
-              <span class="text-white group-hover:text-[#033958] font-black text-3xl italic tracking-tighter transition-colors">W</span>
-            </div>
-            <div class="flex flex-col">
-              <span class="text-2xl font-black tracking-[0.3em] text-white leading-none">WISEKINGS</span>
-              <span class="text-[9px] font-black tracking-[0.4em] text-emerald-400 mt-1 uppercase">Unified Enterprise OS</span>
-            </div>
+           <img src="@/assets/images/logo.jpg" class="w-auto h-12" />
           </NuxtLink>
         </div>
 
         <!-- Featured Content -->
         <div class="max-w-2xl">
-          <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-emerald-500/10 backdrop-blur-md border border-emerald-500/20 mb-10">
-            <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-            <span class="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400">Security Protocols Active</span>
-          </div>
           <h1 class="text-7xl font-black text-white leading-[0.95] mb-10 tracking-tighter">
             Total Control.<br/>
             <span class="italic text-emerald-400 underline decoration-emerald-400/30 underline-offset-8">Zero Compromise.</span>

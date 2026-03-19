@@ -7,4 +7,5 @@ export const orders_api = {
     bulkUpdateStatus: (payload: { ids: string[]; status: string }) => GATEWAY_ENDPOINT.patch("/orders/bulk/status", payload),
     verifyProof: (id: string, status: 'verified' | 'rejected') => GATEWAY_ENDPOINT.patch(`/orders/${id}/verify-proof`, { status }),
     getStats: () => GATEWAY_ENDPOINT.get("/orders/stats"),
+    getInvoice: (id: string) => GATEWAY_ENDPOINT.get(`/orders/${id}/invoice`, { responseType: 'blob' }),
 }

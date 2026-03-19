@@ -23,6 +23,7 @@ export const CoreImageUpload: typeof import("../components/core/ImageUpload.vue"
 export const CoreImageUploader: typeof import("../components/core/ImageUploader.vue")['default']
 export const CoreKycDocumentModal: typeof import("../components/core/KycDocumentModal.vue")['default']
 export const CoreLanguageSwitcher: typeof import("../components/core/LanguageSwitcher.vue")['default']
+export const CorePagination: typeof import("../components/core/Pagination.vue")['default']
 export const CorePasswordInput: typeof import("../components/core/PasswordInput.vue")['default']
 export const CorePhoneInput: typeof import("../components/core/PhoneInput.vue")['default']
 export const CoreRichTextEditor: typeof import("../components/core/RichTextEditor.vue")['default']
@@ -73,6 +74,7 @@ export const LazyCoreImageUpload: LazyComponent<typeof import("../components/cor
 export const LazyCoreImageUploader: LazyComponent<typeof import("../components/core/ImageUploader.vue")['default']>
 export const LazyCoreKycDocumentModal: LazyComponent<typeof import("../components/core/KycDocumentModal.vue")['default']>
 export const LazyCoreLanguageSwitcher: LazyComponent<typeof import("../components/core/LanguageSwitcher.vue")['default']>
+export const LazyCorePagination: LazyComponent<typeof import("../components/core/Pagination.vue")['default']>
 export const LazyCorePasswordInput: LazyComponent<typeof import("../components/core/PasswordInput.vue")['default']>
 export const LazyCorePhoneInput: LazyComponent<typeof import("../components/core/PhoneInput.vue")['default']>
 export const LazyCoreRichTextEditor: LazyComponent<typeof import("../components/core/RichTextEditor.vue")['default']>

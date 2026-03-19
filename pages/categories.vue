@@ -91,6 +91,14 @@
       </table>
     </div>
 
+    <!-- Pagination -->
+    <CorePagination 
+      v-model="page" 
+      :total="total" 
+      :limit="limit" 
+      @update:modelValue="fetchCategories({ page, limit })"
+    />
+
     <!-- Category Form Modal (Premium White Design) -->
     <Teleport to="body">
       <Transition name="modal-fade">
@@ -209,11 +217,13 @@ import ImageUpload from '@/components/core/ImageUpload.vue'
 
 definePageMeta({ layout: 'dashboard' })
 
-const { categories, loading, fetchCategories } = useFetchCategories()
+const { categories, loading, total, fetchCategories } = useFetchCategories()
 const { saveCategory: saveAction, loading: saving } = useSaveCategory()
 const { deleteCategory: deleteAction } = useDeleteCategory()
 const { confirmDelete } = useConfirm()
 
+const page = ref(1)
+const limit = ref(10)
 const showForm = ref(false)
 const editingId = ref('')
 const form = ref({ name: '', slug: '', description: '', image: '', sortOrder: 0, isActive: true })
@@ -254,11 +264,11 @@ async function handleSave() {
 async function handleDelete(c: Category) {
   if (await confirmDelete('Delete Category', `Are you sure you want to delete "${c.name}"? This action cannot be undone.`)) {
     const success = await deleteAction(c._id)
-    if (success) fetchCategories()
+    if (success) fetchCategories({ page: page.value, limit: limit.value })
   }
 }
 
-onMounted(() => fetchCategories())
+onMounted(() => fetchCategories({ page: page.value, limit: limit.value }))
 </script>
 
 <style scoped>

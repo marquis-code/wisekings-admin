@@ -6,6 +6,7 @@ import type { Category } from "@/types"
 export const useFetchCategories = () => {
     const loading = ref(false)
     const categories = ref<Category[]>([])
+    const total = ref(0)
     const { showToast } = useCustomToast()
 
     const fetchCategories = async (params?: any) => {
@@ -13,6 +14,7 @@ export const useFetchCategories = () => {
         try {
             const res = await products_api.getCategories(params) as any
             categories.value = res.data || res || []
+            total.value = res.total || categories.value.length
         } catch (err: any) {
             showToast({ title: "Error", message: err.message || "Failed to fetch categories", toastType: "error" })
         } finally {
@@ -20,5 +22,5 @@ export const useFetchCategories = () => {
         }
     }
 
-    return { loading, fetchCategories, categories }
+    return { loading, fetchCategories, categories, total }
 }
