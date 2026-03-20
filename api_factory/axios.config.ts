@@ -40,7 +40,7 @@ GATEWAY_ENDPOINT.interceptors.response.use(
 
     if (error.response?.status === 401 && !originalRequest._retry && !isRefreshRequest) {
       originalRequest._retry = true;
-      
+
       try {
         // Get refresh token from cookie
         const rawRefreshToken = document.cookie.split('; ').find(row => row.startsWith('wk_admin_refresh_token='))?.split('=')[1] || '';

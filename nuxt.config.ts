@@ -28,6 +28,13 @@ export default defineNuxtConfig({
                 { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
                 { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap' },
             ],
+            script: [
+                {
+                    src: `https://maps.googleapis.com/maps/api/js?key=AIzaSyCa0Rx0TJ9BGkQ9NC23BZc51zCql_Xrhs0&libraries=places`,
+                    async: true,
+                    defer: true,
+                },
+            ],
         },
     },
 

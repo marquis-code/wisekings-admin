@@ -132,7 +132,7 @@
           </div>
         </div>
 
-        <div class="mt-8 p-6 bg-gray-50 rounded-[1.5rem] border border-gray-100">
+        <div class="mt-8 p-6 bg-gray-50 rounded-[1.5rem] border border-gray-100 space-y-6">
           <div class="flex items-center gap-4">
             <input 
               v-model="form.isActive" 
@@ -143,6 +143,19 @@
             <div>
               <label for="isActive" class="text-sm font-bold text-gray-900 cursor-pointer select-none">Make product visible to customers</label>
               <p class="text-xs text-gray-500 font-medium mt-0.5">Inactive products will not appear on the storefront</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4 pt-6 border-t border-gray-200">
+            <input 
+              v-model="form.sellPerUnit" 
+              type="checkbox" 
+              id="sellPerUnit" 
+              class="custom-checkbox !w-6 !h-6" 
+            />
+            <div>
+              <label for="sellPerUnit" class="text-sm font-bold text-gray-900 cursor-pointer select-none">Sell by Unit (Instead of Carton)</label>
+              <p class="text-xs text-gray-500 font-medium mt-0.5">When enabled, customers will add single units to their cart based on the Unit Price.</p>
             </div>
           </div>
         </div>
@@ -196,7 +209,7 @@ const form = ref({
   category: '', 
   isActive: true, 
   tags: [] as string[],
-  images: [] as string[], unitDescription: "", unitPrice: 0, quantityPerPack: 0, costPricePerPack: 0, varietyType: ""
+  images: [] as string[], unitDescription: "", unitPrice: 0, quantityPerPack: 0, costPricePerPack: 0, varietyType: "", sellPerUnit: false
 })
 
 const categoryOptions = computed(() => {

@@ -452,6 +452,59 @@
           </div>
 
           <div class="space-y-10 flex-1">
+            <!-- Warehouse Origin -->
+            <div class="p-8 bg-[#033958]/5 rounded-[2.5rem] border border-[#033958]/10 space-y-6">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-[#033958] shadow-sm border border-gray-100">
+                  <Icon name="lucide:warehouse" size="24" />
+                </div>
+                <div>
+                  <h3 class="text-sm font-black uppercase tracking-[0.2em] text-[#033958]">Warehouse Origin</h3>
+                  <p class="text-[10px] text-gray-400 font-medium mt-1 italic">This address is the center of all local delivery calculations</p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="md:col-span-2">
+                  <label class="text-[10px] font-black uppercase tracking-widest text-[#033958]/40 ml-1 mb-2 block">Warehouse Street Address</label>
+                  <CoreAddressAutocomplete 
+                    v-model="shippingConfig.warehouseAddress" 
+                    label="Warehouse Street Address" 
+                    placeholder="Search for the warehouse location..." 
+                    @place-changed="(data: any) => {
+                      shippingConfig.warehouseAddress = data.address;
+                      shippingConfig.warehouseLat = data.lat;
+                      shippingConfig.warehouseLng = data.lng;
+                    }"
+                  />
+                </div>
+                <div class="p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                  <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1 mb-1 block">Latitude</label>
+                  <input v-model.number="shippingConfig.warehouseLat" type="number" step="any" readonly class="w-full bg-transparent text-sm font-bold text-gray-900 border-none p-0 focus:ring-0" />
+                </div>
+                <div class="p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                  <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1 mb-1 block">Longitude</label>
+                  <input v-model.number="shippingConfig.warehouseLng" type="number" step="any" readonly class="w-full bg-transparent text-sm font-bold text-gray-900 border-none p-0 focus:ring-0" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Base Rates -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="p-6 bg-gray-50 rounded-3xl border border-gray-100">
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Base Delivery Fee (₦)</p>
+                <input v-model.number="shippingConfig.baseFee" type="number" class="w-full bg-transparent text-2xl font-black text-[#033958] border-none p-0 focus:ring-0" />
+              </div>
+              <div class="p-6 bg-gray-50 rounded-3xl border border-gray-100">
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Price Per KM (₦)</p>
+                <input v-model.number="shippingConfig.pricePerKm" type="number" class="w-full bg-transparent text-2xl font-black text-[#033958] border-none p-0 focus:ring-0" />
+              </div>
+              <div class="p-6 bg-gray-50 rounded-3xl border border-gray-100">
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Waybill Fee (₦)</p>
+                <input v-model.number="shippingConfig.waybillFee" type="number" class="w-full bg-transparent text-2xl font-black text-[#033958] border-none p-0 focus:ring-0" />
+              </div>
+            </div>
+
             <!-- Pricing Tiers -->
             <div class="p-8 bg-gray-50/50 rounded-[2.5rem] border border-gray-100 space-y-6">
               <div class="flex items-center justify-between">
@@ -774,13 +827,13 @@ definePageMeta({ layout: 'dashboard' })
 const { showToast } = useCustomToast()
 
 const tabs = [
+  { id: 'shipping', name: 'Shipping & Comms' },
   { id: 'general', name: 'General Platform' },
   { id: 'currencies', name: 'Currency Rates' },
   { id: 'kyc', name: 'KYC Configuration' },
-  { id: 'shipping', name: 'Shipping & Comms' },
   { id: 'bank', name: 'Bank Accounts' }
 ]
-const activeTab = ref<'general' | 'kyc' | 'currencies' | 'shipping' | 'bank'>('general')
+const activeTab = ref<'general' | 'kyc' | 'currencies' | 'shipping' | 'bank'>('shipping')
 
 // Shipping Config
 const shippingConfig = ref({

@@ -16,6 +16,7 @@ type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {},
 interface _GlobalComponents {
   AiAssistant: typeof import("../../components/ai/AiAssistant.vue")['default']
   ChatWidget: typeof import("../../components/chat/ChatWidget.vue")['default']
+  CoreAddressAutocomplete: typeof import("../../components/core/AddressAutocomplete.vue")['default']
   CoreAnimatedInput: typeof import("../../components/core/AnimatedInput.vue")['default']
   CoreConfirmModal: typeof import("../../components/core/ConfirmModal.vue")['default']
   CoreEmptyState: typeof import("../../components/core/EmptyState.vue")['default']
@@ -67,6 +68,7 @@ interface _GlobalComponents {
   NuxtIsland: typeof import("../../node_modules/nuxt/dist/app/components/nuxt-island")['default']
   LazyAiAssistant: LazyComponent<typeof import("../../components/ai/AiAssistant.vue")['default']>
   LazyChatWidget: LazyComponent<typeof import("../../components/chat/ChatWidget.vue")['default']>
+  LazyCoreAddressAutocomplete: LazyComponent<typeof import("../../components/core/AddressAutocomplete.vue")['default']>
   LazyCoreAnimatedInput: LazyComponent<typeof import("../../components/core/AnimatedInput.vue")['default']>
   LazyCoreConfirmModal: LazyComponent<typeof import("../../components/core/ConfirmModal.vue")['default']>
   LazyCoreEmptyState: LazyComponent<typeof import("../../components/core/EmptyState.vue")['default']>

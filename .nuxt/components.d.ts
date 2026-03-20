@@ -16,6 +16,7 @@ type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {},
 
 export const AiAssistant: typeof import("../components/ai/AiAssistant.vue")['default']
 export const ChatWidget: typeof import("../components/chat/ChatWidget.vue")['default']
+export const CoreAddressAutocomplete: typeof import("../components/core/AddressAutocomplete.vue")['default']
 export const CoreAnimatedInput: typeof import("../components/core/AnimatedInput.vue")['default']
 export const CoreConfirmModal: typeof import("../components/core/ConfirmModal.vue")['default']
 export const CoreEmptyState: typeof import("../components/core/EmptyState.vue")['default']
@@ -67,6 +68,7 @@ export const Body: typeof import("../node_modules/nuxt/dist/head/runtime/compone
 export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
 export const LazyAiAssistant: LazyComponent<typeof import("../components/ai/AiAssistant.vue")['default']>
 export const LazyChatWidget: LazyComponent<typeof import("../components/chat/ChatWidget.vue")['default']>
+export const LazyCoreAddressAutocomplete: LazyComponent<typeof import("../components/core/AddressAutocomplete.vue")['default']>
 export const LazyCoreAnimatedInput: LazyComponent<typeof import("../components/core/AnimatedInput.vue")['default']>
 export const LazyCoreConfirmModal: LazyComponent<typeof import("../components/core/ConfirmModal.vue")['default']>
 export const LazyCoreEmptyState: LazyComponent<typeof import("../components/core/EmptyState.vue")['default']>
