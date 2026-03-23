@@ -12,7 +12,6 @@
           v-model="form.fullName"
           label="Full Name"
           type="text"
-          placeholder="e.g. John Doe"
           required
         />
 
@@ -20,7 +19,6 @@
           v-model="form.email"
           label="Email Address"
           type="email"
-          placeholder="admin@wisekings.com"
           required
         />
 
@@ -35,7 +33,6 @@
           v-model="form.password"
           label="Password"
           type="password"
-          placeholder="••••••••••••"
           required
         />
       </div>

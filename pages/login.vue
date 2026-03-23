@@ -16,7 +16,6 @@
           v-model="credentials.email"
           label="Email Address"
           type="email"
-          placeholder="e.g. admin@wisekings.com"
           required
         >
           <template #right>
@@ -29,7 +28,6 @@
             v-model="credentials.password"
             label="Password"
             type="password"
-            placeholder="••••••••••••"
             required
           />
           <div class="flex justify-end px-1">
