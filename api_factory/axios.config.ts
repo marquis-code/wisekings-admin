@@ -51,7 +51,7 @@ GATEWAY_ENDPOINT.interceptors.response.use(
           const { accessToken, refreshToken: newRefreshToken } = res.data.data.tokens;
 
           // Update tokens in cookies (with expiration)
-          const cookieOptions = "; path=/; max-age=604800; SameSite=Lax"; // 7 days
+          const cookieOptions = "; path=/; max-age=2592000; SameSite=Lax"; // 30 days
           document.cookie = `wk_admin_token=${accessToken}${cookieOptions}`;
           document.cookie = `wk_admin_refresh_token=${newRefreshToken}${cookieOptions}`;
 
