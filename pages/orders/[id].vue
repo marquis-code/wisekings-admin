@@ -69,7 +69,7 @@
         </div>
 
         <!-- Shipping Manifest -->
-        <div v-if="order.shippingAddress" class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
+        <div v-if="order.recipientDetails || order.orderingCustomer || order.shippingAddress" class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
           <div class="flex items-center gap-3 mb-6">
             <div class="w-10 h-10 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600">
               <Icon name="lucide:truck" class="w-5 h-5" />
@@ -79,16 +79,16 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="p-6 bg-gray-50 rounded-3xl border border-gray-100">
               <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Recipient</p>
-              <p class="text-base font-black text-gray-900">{{ order.shippingAddress.fullName }}</p>
+              <p class="text-base font-black text-gray-900">{{ order.recipientDetails?.firstName || order.orderingCustomer?.firstName || order.shippingAddress?.fullName }} {{ order.recipientDetails?.surname || order.orderingCustomer?.surname || '' }}</p>
               <p class="text-sm font-bold text-gray-500 mt-1 flex items-center gap-2">
                 <Icon name="lucide:phone" class="w-3 h-3" />
-                {{ order.shippingAddress.phone }}
+                {{ order.recipientDetails?.whatsapp || order.orderingCustomer?.whatsapp || order.shippingAddress?.phone }}
               </p>
             </div>
             <div class="space-y-1">
               <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Delivery Address</p>
-              <p class="text-sm font-bold text-gray-700 leading-relaxed">{{ order.shippingAddress.address }}</p>
-              <p class="text-xs font-black text-indigo-600 lowercase tracking-tight">{{ order.shippingAddress.city }}, {{ order.shippingAddress.state }}</p>
+              <p class="text-sm font-bold text-gray-700 leading-relaxed">{{ order.recipientDetails?.address || order.orderingCustomer?.address || order.shippingAddress?.address }}</p>
+              <p class="text-xs font-black text-indigo-600 lowercase tracking-tight">{{ order.recipientDetails?.city || order.orderingCustomer?.city || order.shippingAddress?.city }}, {{ order.recipientDetails?.country || order.orderingCustomer?.country || order.shippingAddress?.state }}</p>
             </div>
           </div>
         </div>
