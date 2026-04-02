@@ -300,6 +300,7 @@ const navGroups = [
       { label: 'Market Inventory', icon: 'lucide:eye', path: '/inventory', roles: ['superadmin', 'admin', 'finance'] },
       { label: 'Partners', icon: 'lucide:handshake', path: '/partners', roles: ['superadmin', 'admin', 'finance'] },
       { label: 'Commissions', icon: 'lucide:percent', path: '/commissions', roles: ['superadmin', 'admin', 'finance'] },
+      { label: 'Staff Program', icon: 'lucide:award', path: '/staff-program', roles: ['superadmin', 'admin', 'finance', 'staff'] },
     ]
   },
   {
@@ -350,7 +351,10 @@ function canAccess(item: any) {
   // Check if item has role restrictions
   if (item.roles) {
     const authorizedRoles = item.roles.map((r: string) => r.toLowerCase().trim())
-    return authorizedRoles.includes(userRole) || authorizedRoles.includes(userType)
+    return authorizedRoles.includes(userRole) || 
+           authorizedRoles.includes(userType) ||
+           (authorizedRoles.includes('staff') && user.value.isStaff) ||
+           (authorizedRoles.includes('coordinator') && user.value.isCoordinator)
   }
   
   return true
@@ -424,6 +428,7 @@ const pageTitle = computed(() => {
     '/production/materials': 'Materials',
     '/production/orders': 'Vendor Orders',
     '/investments/products': 'Investments',
+    '/staff-program': 'Staff Support Program',
   }
   return titles[path] || 'WiseKings Admin'
 })
