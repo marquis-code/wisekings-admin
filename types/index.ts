@@ -80,6 +80,9 @@ export interface User {
     isEmailVerified: boolean
     isInvited: boolean
     avatar?: string
+    isStaff: boolean
+    isCoordinator: boolean
+    staffCode?: string
     lastLogin?: string
     createdAt: string
     updatedAt: string
